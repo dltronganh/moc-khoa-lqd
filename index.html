@@ -66,6 +66,8 @@ ol.steps,ul.notes{margin:0;padding-left:22px;display:flex;flex-direction:column;
 .warn{border-left:3px solid var(--warn);border-radius:0;padding:4px 0 4px 12px;list-style:none;margin-left:-22px}
 .hint{font-size:12.5px;color:var(--muted);margin:0}
 a{color:var(--accent)}
+.hist summary{cursor:pointer;font-size:13px;color:var(--muted)}
+.hist .rev{margin-top:6px}
 .rev{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;font-size:13.5px;margin:0}
 .rev b{font-family:var(--f-mono);font-weight:600;color:var(--accent)}
 .cmp td:first-child{color:var(--muted);width:28%}
@@ -75,12 +77,15 @@ a{color:var(--accent)}
 
 <div class="wrap">
 <header>
-  <span class="eyebrow">Bản vẽ LQD-FD-001 · Rev F · 13.11.2026</span>
+  <span class="eyebrow">Bản vẽ LQD-FD-001 · Rev G · 13.11.2026</span>
   <h1>Móc khóa đĩa mềm LQĐ</h1>
-  <p class="lede">Bộ lắp ráp 30 × 30 × 4 mm, toàn bộ mica cắt xuyên ở một tiệm CO2, ghép bằng trụ mica ẩn và hàn dung môi. Rev D có hai phương án shutter để so sánh. Đơn vị: mm. Các số đang làm tròn, sẽ chốt sau khi cắt thử.</p>
-  <p class="rev"><b>Rev F</b><span>L1 chỉ còn nửa dưới; shutter phủ hết dải trên từ mép trái tới mép phải. Chỉ góc dưới trái của shutter bo R5.65 quanh tâm xoay. Rev E vẫn kẹt: góc vuông của shutter quét vào phần L1 trên trái, chỉ mở được khoảng 35°. Giờ shutter mở 90° thì dựng đứng và tự dừng.</span></p>
-  <p class="rev"><b>Rev E</b><span>Hốc shutter ở L1 mở cả mép phải: ở Rev D, cột mica bên phải chặn góc dưới của shutter khi xoay nên phương án A không mở được. Shutter giờ dài 28.3, chạy hết mép phải.</span></p>
-  <p class="rev"><b>Rev D</b><span>Shutter đưa ra mặt ngoài, nằm trong hốc của L1, chạm mép trên giống đĩa mềm thật. Bỏ rãnh trượt, ngạnh và khắc bậc. Thêm trụ P6, P7 để giữ phần trên. Hai phương án: A nắp xoay, C cố định.</span></p>
+  <p class="lede">Bộ lắp ráp 30 × 30 × 4 mm, toàn bộ mica cắt xuyên ở một tiệm CO2, ghép bằng trụ mica ẩn và hàn dung môi. Có hai phương án shutter để so sánh. Đơn vị: mm. Các số đang làm tròn, sẽ chốt sau khi cắt thử.</p>
+  <p class="rev"><b>Rev G</b><span>Thêm bộ kiểm tra hình học tự động (xem mục cuối trang). Bộ kiểm tra phát hiện hai lỗi của Rev F: trụ P7 chỉ cách mép ngoài 0.8 mm, và trụ P6 lộ ra ở góc dưới trái shutter khi nhìn mặt trước. Đã dời P3–P7 để mọi thành mica ≥ 1.1 mm và mọi trụ bị che kín; cửa sổ WT hẹp lại còn 11.3 mm. Shutter phương án C làm vuông góc dưới trái vì không cần xoay. Nút chuyển A/C không còn phụ thuộc vào địa chỉ trang.</span></p>
+  <details class="hist"><summary>Lịch sử sửa đổi trước</summary>
+  <p class="rev"><b>Rev F</b><span>L1 chỉ còn nửa dưới; shutter phủ hết dải trên. Chỉ góc dưới trái của shutter bo R5.65 quanh tâm xoay. Rev E còn kẹt ở khoảng 31° vì góc vuông của shutter quét vào phần L1 trên trái. Giờ shutter mở tới 92° mới chạm L1.</span></p>
+  <p class="rev"><b>Rev E</b><span>Hốc shutter mở cả mép phải vì ở Rev D cột L1 bên phải chặn shutter ngay khi xoay (khoảng 2.5°).</span></p>
+  <p class="rev"><b>Rev D</b><span>Shutter đưa ra mặt ngoài, nằm trong hốc của L1. Bỏ rãnh trượt, ngạnh và khắc bậc. Hai phương án: A nắp xoay, C cố định.</span></p>
+  </details>
 </header>
 
 <div class="switch" role="group" aria-label="Chọn phương án">
@@ -162,6 +167,15 @@ a{color:var(--accent)}
   </ul>
 </section>
 
+<section class="sheet" aria-labelledby="ttest">
+  <div class="sheet-head"><h2 id="ttest">Kiểm tra hình học tự động · <span class="vname">A · Nắp xoay</span></h2><span class="code" id="testSummary">đang chạy…</span></div>
+  <p class="hint">Trang tự kiểm tra lại toàn bộ kích thước mỗi lần mở: thành mica giữa các lỗ, va chạm khi xoay shutter, che và lộ tài khoản, chồng lớp theo chiều dày, và các số trong bảng có khớp với hình vẽ không. Ngưỡng thành mica tối thiểu 1.0 mm cho tấm 1 mm.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Nhóm</th><th>Kiểm tra</th><th>Giá trị</th><th>Yêu cầu</th><th>Kết quả</th></tr></thead>
+    <tbody id="tests"></tbody>
+  </table></div>
+</section>
+
 <section class="sheet" aria-labelledby="tcheck">
   <div class="sheet-head"><h2 id="tcheck">Cần xác nhận khi cắt thử</h2></div>
   <ul class="notes" id="checks"></ul>
@@ -173,6 +187,7 @@ a{color:var(--accent)}
 <script>
 (function(){
 /* ================= geometry (mm, origin bottom-left seen from front, z: back=0, front=4) ================= */
+const ROUND_WARN=[];
 function roundPoly(pts,r,seg=6){
   const out=[],n=pts.length;
   for(let i=0;i<n;i++){
@@ -181,7 +196,9 @@ function roundPoly(pts,r,seg=6){
     let v1=[p0[0]-p1[0],p0[1]-p1[1]],v2=[p2[0]-p1[0],p2[1]-p1[1]];
     const l1=Math.hypot(...v1),l2=Math.hypot(...v2); v1=[v1[0]/l1,v1[1]/l1]; v2=[v2[0]/l2,v2[1]/l2];
     const th=Math.acos(Math.max(-1,Math.min(1,v1[0]*v2[0]+v1[1]*v2[1])));
-    const d=R/Math.tan(th/2), bis=[v1[0]+v2[0],v1[1]+v2[1]], bl=Math.hypot(...bis), h=R/Math.sin(th/2);
+    const d=R/Math.tan(th/2);
+    if(d>Math.min(l1,l2)/2+1e-9) ROUND_WARN.push(`R${R} tại (${p1[0].toFixed(2)}, ${p1[1].toFixed(2)})`);
+    const bis=[v1[0]+v2[0],v1[1]+v2[1]], bl=Math.hypot(...bis), h=R/Math.sin(th/2);
     const c=[p1[0]+bis[0]/bl*h,p1[1]+bis[1]/bl*h], s=[p1[0]+v1[0]*d,p1[1]+v1[1]*d], e=[p1[0]+v2[0]*d,p1[1]+v2[1]*d];
     let a0=Math.atan2(s[1]-c[1],s[0]-c[0]),a1=Math.atan2(e[1]-c[1],e[0]-c[0]),da=a1-a0;
     while(da>Math.PI)da-=2*Math.PI; while(da<-Math.PI)da+=2*Math.PI;
@@ -198,12 +215,15 @@ const OUT=roundPoly([[0,0],[30,0],[30,28],[28,30],[0,30]],[1,1,0.6,0.6,1]);
 const L1=roundPoly([[0,0],[30,0],[30,18.5],[0,18.5]],[1,1,0.4,0.4]);
 const shArc=arc(PV[0],PV[1],5.65,180,270,16);
 const SHUT=roundPoly([[30,18.7],[30,28],[28,30],[0,30],...shArc],[0.4,0.6,0.6,1,...new Array(shArc.length).fill(0)]);
+const SHUT_C=roundPoly([[30,18.7],[30,28],[28,30],[0,30],[0,18.7]],[0.4,0.6,0.6,1,0.4]);   // variant C: fixed, so no swing clearance needed: plain band
 const REC=[[0,18.5],[30,18.5]];
 const G={
-  W1:[6,6,24,17,1.2], WT:[13.5,19.5,25,28.5,0.6], SLOT:[17,20.5,21,27.5,0.6],
-  pins:[[3.5,3.5],[15,3.2],[26.5,8.5],[27.5,15.5],[3.5,12],[2.5,20.5],[27.7,24]],
+  W1:[6,6,24,17,1.2], WT:[13.5,19.5,24.8,28.5,0.6], TKZ:[14,20,24.3,28], SLOT:[17,20.5,21,27.5,0.6],
+  pins:[[3.5,3.5],[15,3.2],[26.8,9],[27.3,15.5],[3.3,12],[9.8,27.2],[27.4,24]],
   K:[27,3], kR:1.6, pR:1.5, pvR:1.5, pvHole:1.8, capR:2.75,
-  zL:{L4:[0,1],L3:[1,2],L2:[2,3],L1:[3,4]}, cutX:20
+  zL:{L4:[0,1],L3:[1,2],L2:[2,3],L1:[3,4]}, cutX:20,
+  pinLen:3, stem:[1.1,4.1], cap:[4.1,5.1], shZ:[3,4],
+  OPEN_DEG:90                     // swing angle used by the 3D model; must stay below the computed stop angle
 };
 
 /* ================= variant data ================= */
@@ -225,7 +245,7 @@ const V={
     feat:[
       ['W1','Cửa sổ logo, xuyên sáng','6.0 – 24.0','6.0 – 17.0','18 × 11, R1.2','L1, L2, L4'],
       ['R','Vùng shutter (L1 không có nửa trên)','0 – 30','18.5 – 30','Shutter phủ hết dải trên','L1'],
-      ['WT','Cửa sổ nhìn tài khoản (dưới shutter)','13.5 – 25.0','19.5 – 28.5','11.5 × 9, R0.6','L2'],
+      ['WT','Cửa sổ nhìn tài khoản (dưới shutter)','13.5 – 24.8','19.5 – 28.5','11.3 × 9, R0.6','L2'],
       ['N','Tâm xoay / chốt nấm','5.65','24.35','Lỗ Ø3.0 (L2–L4), Ø3.6 (shutter)','L2, L3, L4, 5'],
       ['P1–P7','Trụ','xem hình','xem hình','Lỗ Ø3.0','L2, L3, L4'],
       ['K','Lỗ khoen','27.0','3.0','Ø3.2','L1–L4']],
@@ -264,7 +284,7 @@ const V={
     feat:[
       ['W1','Cửa sổ logo, xuyên sáng','6.0 – 24.0','6.0 – 17.0','18 × 11, R1.2','L1, L2, L4'],
       ['R','Vùng shutter (L1 không có nửa trên)','0 – 30','18.5 – 30','Shutter phủ hết dải trên','L1'],
-      ['WT','Cửa sổ đọc tài khoản ở mặt sau','13.5 – 25.0','19.5 – 28.5','11.5 × 9, R0.6','L4'],
+      ['WT','Cửa sổ đọc tài khoản ở mặt sau','13.5 – 24.8','19.5 – 28.5','11.3 × 9, R0.6','L4'],
       ['SL','Khe trang trí trên shutter','17.0 – 21.0','20.5 – 27.5','4 × 7, R0.6','5'],
       ['P1–P7','Trụ','xem hình','xem hình','Lỗ Ø3.0','L2, L3, L4'],
       ['K','Lỗ khoen','27.0','3.0','Ø3.2','L1–L4']],
@@ -334,7 +354,7 @@ function build3D(){
     P.L3=new THREE.Group(); const l3=extr(s,...Z.L3,M.mica,M.edgeMica); l3.children[0].renderOrder=2; P.L3.add(l3);
     const plane=(tex,cx,cy,w,h,flip)=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tex,transparent:true,depthWrite:false,side:DS}));m.position.set(cx,cy,Z.L3[0]+0.03);if(flip)m.rotation.y=Math.PI;m.renderOrder=3;return m;};
     P.L3.add(plane(logoTex,15,11.5,18,11,false));
-    P.L3.add(plane(A?accFront:accBack,19.25,24,11.5,9,!A));
+    P.L3.add(plane(A?accFront:accBack,(G.TKZ[0]+G.TKZ[2])/2,(G.TKZ[1]+G.TKZ[3])/2,G.TKZ[2]-G.TKZ[0],G.TKZ[3]-G.TKZ[1],!A));
     s=shape(OUT); s.holes.push(rr(G.W1),circ(...G.K,G.kR),...pinH()); if(A) s.holes.push(circ(...PV,G.pvR)); else s.holes.push(rr(G.WT));
     P.L4=new THREE.Group(); P.L4.add(extr(s,...Z.L4,M.navy));
     const K3=new THREE.Vector3(G.K[0],G.K[1],2), dv=new THREE.Vector3(1,-1,0).normalize(), up=new THREE.Vector3(0,0,1), R=9;
@@ -343,10 +363,10 @@ function build3D(){
     const ringC=K3.clone().addScaledVector(dv,R); torus.position.copy(ringC); P.L4.add(torus);
     // shutter: geometry relative to pivot so the group can rotate about it
     P.SH=new THREE.Group(); P.SH.position.set(PV[0],PV[1],0);
-    s=shape(SHUT.map(p=>[p[0]-PV[0],p[1]-PV[1]])); if(A) s.holes.push(circ(0,0,G.pvHole)); else s.holes.push(rr([G.SLOT[0]-PV[0],G.SLOT[1]-PV[1],G.SLOT[2]-PV[0],G.SLOT[3]-PV[1],G.SLOT[4]]));
+    s=shape((A?SHUT:SHUT_C).map(p=>[p[0]-PV[0],p[1]-PV[1]])); if(A) s.holes.push(circ(0,0,G.pvHole)); else s.holes.push(rr([G.SLOT[0]-PV[0],G.SLOT[1]-PV[1],G.SLOT[2]-PV[0],G.SLOT[3]-PV[1],G.SLOT[4]]));
     P.SH.add(extr(s,...Z.L1,M.mirror));
     P.PIN=new THREE.Group(); G.pins.forEach(p=>P.PIN.add(cyl(G.pR-0.04,0,3,p[0],p[1],M.pin)));
-    if(A){ P.MU=new THREE.Group(); P.MU.add(cyl(G.pvR-0.04,1.1,4.1,PV[0],PV[1],M.pin)); P.MU.add(cyl(G.capR,4.1,5.1,PV[0],PV[1],M.mirror)); }
+    if(A){ P.MU=new THREE.Group(); P.MU.add(cyl(G.pvR-0.04,...G.stem,PV[0],PV[1],M.pin)); P.MU.add(cyl(G.capR,...G.cap,PV[0],PV[1],M.mirror)); }
     for(const k in P) root.add(P[k]);
     const OFF=A?{L4:0,L3:4.5,L2:9,L1:14,SH:18,MU:23,PIN:-7}:{L4:0,L3:4.5,L2:9,L1:14,SH:18,PIN:-7};
     const anchors=[[1,P.L1,[0.5,9,4]],[2,P.L2,[0,16,2.5]],[3,P.L3,[30,12,1.5]],[4,P.L4,[10,0,0.5]],[5,P.SH,[14,0,1]],[6,P.PIN,[3.5,3.5,0]],
@@ -392,7 +412,7 @@ function build3D(){
     const m=models[state.v];
     models.a.root.visible=state.v==='a'; models.c.root.visible=state.v==='c';
     for(const key in m.P){ m.P[key].position.z=(m.OFF[key]||0)*state.e; }
-    m.P.SH.rotation.z=m.swing?state.s*Math.PI*0.62:0;
+    m.P.SH.rotation.z=m.swing?state.s*G.OPEN_DEG*Math.PI/180:0;
     controls.update(); renderer.render(scene,camera); drawBalloons(el.clientWidth,el.clientHeight,m);
     requestAnimationFrame(loop);
   })();
@@ -461,7 +481,7 @@ function build2D(v){
   poly(F,OUT,'v','fill:var(--tint-navy)');
   rrect(F,W,'v','fill:var(--tint-mica)',S);
   out.push(`<polyline points="${P(REC,F)}" class="t"/>`);
-  poly(F,SHUT,'v','fill:var(--tint-al)');
+  poly(F,A?SHUT:SHUT_C,'v','fill:var(--tint-al)');
   if(A){ rrect(F,G.WT,'h','',S); circle(F,...PV,G.capR,'v',S,'fill:var(--sheet)'); cross(F,...PV,34); }
   else rrect(F,G.SLOT,'v','fill:var(--tint-navy)',S);
   circle(F,...G.K,G.kR,'v',S,'fill:var(--sheet)'); cross(F,...G.K,22);
@@ -510,7 +530,7 @@ function build2D(v){
   txt(H(9,4)[0],H(9,4)[1]-8,'mặt trước ↑','tx','middle');
   [[0,1],[1,2],[2,3],[3,4]].forEach(z=>dimV(98,H(0,z[1])[1],H(0,z[0])[1],116,116,'1','l'));
   dimV(62,H(0,4)[1],H(0,0)[1],92,92,'4.0','l');
-  balloon(770,510,'1',H(5,3.5)[0]+60,H(5,3.5)[1]);
+  balloon(H(3,4)[0],468,'1',H(3,3.5)[0],H(3,3.5)[1]);
   balloon(770,530,'2',H(29.6,2.5)[0],H(29.6,2.5)[1]);
   balloon(770,550,'3',H(29.6,1.5)[0],H(29.6,1.5)[1]);
   balloon(770,570,'4',H(29.6,0.5)[0],H(29.6,0.5)[1]);
@@ -526,16 +546,16 @@ function build2D(v){
   const pinsH=Mp=>G.pins.forEach(p=>circle(Mp,...p,G.pR,'v',LS,'fill:var(--sheet)'));
   layer(40,'L1 · MẶT TRƯỚC','màu 1 mm · cắt',Mp=>{poly(Mp,L1,'v','fill:var(--tint-navy)');rrect(Mp,W,'v','fill:var(--sheet)',LS);circle(Mp,...G.K,G.kR,'v',LS,'fill:var(--sheet)');});
   layer(235,'L2',A?'màu 1 mm · cắt · có WT':'màu 1 mm · cắt',Mp=>{poly(Mp,OUT,'v','fill:var(--tint-navy)');rrect(Mp,W,'v','fill:var(--sheet)',LS);circle(Mp,...G.K,G.kR,'v',LS,'fill:var(--sheet)');pinsH(Mp);if(A){rrect(Mp,G.WT,'v','fill:var(--sheet)',LS);circle(Mp,...PV,G.pvR,'v',LS,'fill:var(--sheet)');}});
-  layer(430,'L3 · LÕI KHẮC','trong 1 mm · cắt + khắc mặt B',Mp=>{poly(Mp,OUT,'v','fill:var(--tint-mica)');circle(Mp,...G.K,G.kR,'v',LS,'fill:var(--sheet)');pinsH(Mp);if(A)circle(Mp,...PV,G.pvR,'v',LS,'fill:var(--sheet)');rect(Mp,6.8,6.6,23.2,16.4,0.6,'zn','',LS);rect(Mp,14,20,24.5,28,0.4,'zn','',LS);txt(Mp(15,11.5)[0],Mp(15,11.5)[1]+3,'LOGO','tz','middle');txt(Mp(19.25,24)[0],Mp(19.25,24)[1]+3,'TK','tz','middle');});
+  layer(430,'L3 · LÕI KHẮC','trong 1 mm · cắt + khắc mặt B',Mp=>{poly(Mp,OUT,'v','fill:var(--tint-mica)');circle(Mp,...G.K,G.kR,'v',LS,'fill:var(--sheet)');pinsH(Mp);if(A)circle(Mp,...PV,G.pvR,'v',LS,'fill:var(--sheet)');rect(Mp,6.8,6.6,23.2,16.4,0.6,'zn','',LS);rect(Mp,G.TKZ[0],G.TKZ[1],G.TKZ[2],G.TKZ[3],0.4,'zn','',LS);txt(Mp(15,11.5)[0],Mp(15,11.5)[1]+3,'LOGO','tz','middle');txt(Mp((G.TKZ[0]+G.TKZ[2])/2,24)[0],Mp(0,24)[1]+3,'TK','tz','middle');});
   layer(625,'L4 · MẶT SAU',A?'màu 1 mm · cắt':'màu 1 mm · cắt · có WT',Mp=>{poly(Mp,OUT,'v','fill:var(--tint-navy)');rrect(Mp,W,'v','fill:var(--sheet)',LS);circle(Mp,...G.K,G.kR,'v',LS,'fill:var(--sheet)');pinsH(Mp);if(A)circle(Mp,...PV,G.pvR,'v',LS,'fill:var(--sheet)');else rrect(Mp,G.WT,'v','fill:var(--sheet)',LS);});
 
   /* shutter 5:1 */
   const Sh=(x,y)=>[40+x*5,900+(30-y)*5];
-  poly(Sh,SHUT,'v','fill:var(--tint-al)');
+  poly(Sh,A?SHUT:SHUT_C,'v','fill:var(--tint-al)');
   if(A){ circle(Sh,...PV,G.pvHole,'v',5,'fill:var(--sheet)'); cross(Sh,...PV,14); leader(Sh(PV[0]+1.3,PV[1]+1.3),[Sh(PV[0],30)[0]+20,888],'Ø3.6'); }
   else rrect(Sh,G.SLOT,'v','fill:var(--sheet)',5);
   dimH(Sh(0,0)[0],Sh(30,0)[0],982,Sh(0,18.7)[1]+4,Sh(30,18.7)[1]+4,'30');
-  txt(40,1040,A?'5 · SHUTTER XOAY   5:1':'5 · SHUTTER CỐ ĐỊNH   5:1','tt'); txt(40,1056,'gương 1 mm · cao 11.3 · R5.65','tx');
+  txt(40,1040,A?'5 · SHUTTER XOAY   5:1':'5 · SHUTTER CỐ ĐỊNH   5:1','tt'); txt(40,1056,A?'gương 1 mm · cao 11.3 · R5.65':'gương 1 mm · cao 11.3','tx');
 
   if(A){
     /* swivel pin section 10:1 */
@@ -573,7 +593,7 @@ function build2D(v){
   tb(540,900,180,36,'TÊN','MÓC KHÓA ĐĨA MỀM LQĐ');
   tb(720,900,90,36,'SỐ BẢN VẼ','LQD-FD-001');
   tb(540,936,90,32,'PHƯƠNG ÁN',A?'A · xoay':'C · cố định');
-  tb(630,936,70,32,'PHIÊN BẢN','Rev F');
+  tb(630,936,70,32,'PHIÊN BẢN','Rev G');
   tb(700,936,110,32,'NGÀY','13.11.2026');
   tb(540,968,130,32,'VẬT LIỆU','Mica (PMMA)');
   tb(670,968,140,32,'CHIẾU','Góc 1 (E)');
@@ -616,6 +636,102 @@ function build2D(v){
   </svg>`;
 }
 
+/* ================= self-tests (pure geometry, no rendering) ================= */
+const T={
+  densify(poly,step=0.2){const o=[];for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length];const n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/step));for(let k=0;k<n;k++)o.push([a[0]+(b[0]-a[0])*k/n,a[1]+(b[1]-a[1])*k/n]);}return o;},
+  circle(c,r,n=96){const o=[];for(let k=0;k<n;k++){const a=2*Math.PI*k/n;o.push([c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)]);}return o;},
+  rr(a){return roundPoly([[a[0],a[1]],[a[2],a[1]],[a[2],a[3]],[a[0],a[3]]],[a[4],a[4],a[4],a[4]],8);},
+  inside(p,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if(((a[1]>p[1])!==(b[1]>p[1]))&&(p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0]))c=!c;}return c;},
+  segDist(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],L=dx*dx+dy*dy;let t=L?((p[0]-a[0])*dx+(p[1]-a[1])*dy)/L:0;t=Math.max(0,Math.min(1,t));return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy);},
+  ptPolyDist(p,poly){let m=Infinity;for(let i=0;i<poly.length;i++){const d=T.segDist(p,poly[i],poly[(i+1)%poly.length]);if(d<m)m=d;}return m;},
+  /* clear distance between two regions; -1 when they overlap */
+  gap(A,B){const a=T.densify(A),b=T.densify(B);let m=Infinity;
+    for(const p of a){if(T.inside(p,B))return -1;const d=T.ptPolyDist(p,B);if(d<m)m=d;}
+    for(const p of b){if(T.inside(p,A))return -1;}return m;},
+  /* how far region A stays inside region B; negative when A pokes out */
+  margin(A,B){const a=T.densify(A);let m=Infinity;for(const p of a){const d=T.ptPolyDist(p,B);if(!T.inside(p,B)&&d>1e-6)return -d;if(d<m)m=d;}return m;},
+  rot(poly,c,deg){const t=deg*Math.PI/180,cs=Math.cos(t),sn=Math.sin(t);return poly.map(p=>{const dx=p[0]-c[0],dy=p[1]-c[1];return [c[0]+dx*cs-dy*sn,c[1]+dx*sn+dy*cs];});},
+  bbox(poly){const xs=poly.map(p=>p[0]),ys=poly.map(p=>p[1]);return [Math.min(...xs),Math.min(...ys),Math.max(...xs),Math.max(...ys)];},
+  nums(s){return (String(s).match(/-?\d+(\.\d+)?/g)||[]).map(Number);},
+  /* first angle (deg) at which the swinging shutter touches L1 */
+  stopAngle(){const touch=d=>T.gap(T.rot(SHUT,PV,d),L1)<0.02;let d=0;while(d<=180&&!touch(d))d+=1;if(d>180)return 180;let lo=d-1,hi=d;for(let k=0;k<12;k++){const mid=(lo+hi)/2;if(touch(mid))hi=mid;else lo=mid;}return lo;}
+};
+const TEST_CACHE={};
+function runTests(v){
+  if(TEST_CACHE[v])return TEST_CACHE[v];
+  const A=v==='a', SH=A?SHUT:SHUT_C, rows=[], f2=x=>(Math.round(x*100)/100).toFixed(2);
+  const add=(grp,name,val,rule,pass)=>rows.push({grp,name,val,rule,pass:!!pass});
+  const WEB=1.0;
+  const pinH=G.pins.map((p,i)=>['P'+(i+1),T.circle(p,G.pR)]);
+  const layers={
+    L1:{o:L1,h:[['W1',T.rr(G.W1)],['K',T.circle(G.K,G.kR)]]},
+    L2:{o:OUT,h:[['W1',T.rr(G.W1)],['K',T.circle(G.K,G.kR)],...pinH,...(A?[['WT',T.rr(G.WT)],['N',T.circle(PV,G.pvR)]]:[])]},
+    L3:{o:OUT,h:[['K',T.circle(G.K,G.kR)],...pinH,...(A?[['N',T.circle(PV,G.pvR)]]:[])]},
+    L4:{o:OUT,h:[['W1',T.rr(G.W1)],['K',T.circle(G.K,G.kR)],...pinH,...(A?[['N',T.circle(PV,G.pvR)]]:[['WT',T.rr(G.WT)]])]},
+    Shutter:{o:SH,h:A?[['lỗ xoay',T.circle(PV,G.pvHole)]]:[['khe SL',T.rr(G.SLOT)]]}
+  };
+  for(const [ln,L] of Object.entries(layers)){
+    let worst={d:Infinity,what:''};
+    L.h.forEach(([n,poly])=>{const d=T.margin(poly,L.o);if(d<worst.d)worst={d,what:`${n} ↔ mép ngoài`};});
+    for(let i=0;i<L.h.length;i++)for(let j=i+1;j<L.h.length;j++){const d=T.gap(L.h[i][1],L.h[j][1]);if(d<worst.d)worst={d,what:`${L.h[i][0]} ↔ ${L.h[j][0]}`};}
+    add('Thành mica',`${ln}: chỗ mỏng nhất (${worst.what})`,worst.d<0?'chồng lấn':f2(worst.d)+' mm','≥ '+WEB.toFixed(1)+' mm',worst.d>=WEB-1e-6);
+  }
+  /* front face (shutter closed) must hide every pin: each pin point lies under L1 or under the shutter */
+  let hideWorst={d:Infinity,p:''};
+  G.pins.forEach((c,i)=>{T.densify(T.circle(c,G.pR),0.1).forEach(p=>{const d=T.inside(p,L1)?T.ptPolyDist(p,L1):T.inside(p,SH)?T.ptPolyDist(p,SH):-T.ptPolyDist(p,T.inside(p,L1)?L1:SH);if(d<hideWorst.d)hideWorst={d,p:'P'+(i+1)};});});
+  add('Mặt trước','Trụ bị che kín khi nhìn mặt trước (shutter đóng)',hideWorst.d<0?`${hideWorst.p} lộ ra`:`che, thừa ${f2(hideWorst.d)} mm (${hideWorst.p})`,'thừa ≥ 0.3 mm',hideWorst.d>=0.3);
+  const tkM=T.margin(T.rr([...G.TKZ,0]),T.rr(G.WT));
+  add('Tài khoản','Vùng khắc tài khoản nằm trong cửa sổ WT',tkM<0?'lòi ra':f2(tkM)+' mm','≥ 0.2 mm',tkM>=0.2);
+  const lgM=T.margin(T.rr([6.8,6.6,23.2,16.4,0.6]),T.rr(G.W1));
+  add('Logo','Vùng khắc logo nằm trong cửa sổ W1',lgM<0?'lòi ra':f2(lgM)+' mm','≥ 0.2 mm',lgM>=0.2);
+  const mOut=T.margin(SH,OUT);
+  add('Shutter','Nằm trong viền móc khóa khi đóng',mOut<0?`lòi ra ${f2(-mOut)} mm`:'trong viền','không lòi ra ngoài',mOut>=-0.01);
+  const gClosed=T.gap(SH,L1);
+  add('Shutter','Khe giữa shutter và L1 khi đóng',gClosed<0?'chồng lấn':f2(gClosed)+' mm','0.15 – 0.30 mm',gClosed>=0.15&&gClosed<=0.3);
+  if(A){
+    const stop=T.stopAngle();
+    add('Xoay','Góc xoay tới khi chạm L1 (tính toán)',f2(stop)+'°','≥ 85°',stop>=85);
+    let minG=Infinity,at=0; for(let a=0;a<=G.OPEN_DEG;a+=0.25){const g=T.gap(T.rot(SH,PV,a),L1);if(g<minG){minG=g;at=a;}}
+    add('Xoay',`Quét 0–${G.OPEN_DEG}° từng 0.25°: khe nhỏ nhất tới L1`,minG<0?'chồng lấn':`${f2(minG)} mm tại ${at}°`,'≥ 0.02 mm (không chạm)',minG>=0.02);
+    add('Xoay','Góc mở dùng trong mô hình 3D',G.OPEN_DEG+'°',`≤ ${f2(stop-1)}° (dừng trước điểm chạm)`,G.OPEN_DEG<=stop-1);
+    const cov=T.margin(T.rr(G.WT),SH);
+    add('Tài khoản','Shutter đóng che kín cửa sổ WT',cov<0?'lộ ra':'che, thừa '+f2(cov)+' mm','thừa ≥ 0.5 mm',cov>=0.5);
+    const vis=T.gap(T.rot(SH,PV,G.OPEN_DEG),T.rr(G.WT));
+    add('Tài khoản',`Mở ${G.OPEN_DEG}°: cửa sổ WT lộ hoàn toàn`,vis<0?'còn bị che':'cách shutter '+f2(vis)+' mm','≥ 0.5 mm',vis>=0.5);
+    const capM=T.margin(T.circle(PV,G.capR),SH);
+    add('Chốt nấm','Mũ chốt nằm trọn trên shutter',capM<0?'lòi ra':f2(capM)+' mm','≥ 0.5 mm',capM>=0.5);
+    add('Chốt nấm','Khe giữa thân chốt và lỗ xoay shutter',f2(G.pvHole-G.pvR)+' mm','≥ 0.25 mm (chặn dung môi leo)',G.pvHole-G.pvR>=0.25);
+    const zc=G.cap[0]-G.shZ[1];
+    add('Chiều dày','Khe giữa mũ chốt và mặt shutter',f2(zc)+' mm','0.05 – 0.2 mm (giấy kê)',zc>=0.05&&zc<=0.2);
+    add('Chiều dày','Đáy thân chốt cao hơn mặt trên L4 (chừa hốc nhỏ dung môi)',f2(G.stem[0]-G.zL.L4[1])+' mm','> 0',G.stem[0]>G.zL.L4[1]);
+    add('Chiều dày','Thân chốt dài bằng tấm 3 mm',f2(G.stem[1]-G.stem[0])+' mm','= 3.00 mm',Math.abs(G.stem[1]-G.stem[0]-3)<1e-9);
+  }
+  const stack=G.zL.L2[1]-G.zL.L4[0];
+  add('Chiều dày','Trụ dài bằng L2 + L3 + L4',`${f2(G.pinLen)} / ${f2(stack)} mm`,'bằng nhau',Math.abs(G.pinLen-stack)<1e-9);
+  add('Chiều dày','Các lớp nối liền, tổng dày',f2(G.zL.L1[1]-G.zL.L4[0])+' mm','4.00 mm, không hở',G.zL.L4[1]===G.zL.L3[0]&&G.zL.L3[1]===G.zL.L2[0]&&G.zL.L2[1]===G.zL.L1[0]&&G.zL.L1[1]===4);
+  add('Hình vẽ','Bo góc hợp lệ (bán kính không lớn hơn cạnh)',ROUND_WARN.length?ROUND_WARN.join('; '):'0 lỗi','0 lỗi',ROUND_WARN.length===0);
+  /* tables vs geometry */
+  const d=V[v], row=(k)=>d.feat.find(r=>r[0]===k), bom=(k)=>d.bom.find(r=>r[1].startsWith(k));
+  const eq=(a,b)=>a.length===b.length&&a.every((x,i)=>Math.abs(x-b[i])<0.051);
+  const w1=row('W1'); add('Bảng khớp hình','Tọa độ W1',w1[2]+' / '+w1[3],`${G.W1[0]}–${G.W1[2]} / ${G.W1[1]}–${G.W1[3]}`,eq([...T.nums(w1[2]),...T.nums(w1[3])],[G.W1[0],G.W1[2],G.W1[1],G.W1[3]]));
+  const wt=row('WT'); add('Bảng khớp hình','Tọa độ WT',wt[2]+' / '+wt[3],`${G.WT[0]}–${G.WT[2]} / ${G.WT[1]}–${G.WT[3]}`,eq([...T.nums(wt[2]),...T.nums(wt[3])],[G.WT[0],G.WT[2],G.WT[1],G.WT[3]]));
+  const kr=row('K'); add('Bảng khớp hình','Tọa độ lỗ khoen K',kr[2]+', '+kr[3],`${G.K[0]}, ${G.K[1]}`,eq([...T.nums(kr[2]),...T.nums(kr[3])],G.K));
+  if(A){const n=row('N'); add('Bảng khớp hình','Tọa độ tâm xoay N',n[2]+', '+n[3],`${PV[0]}, ${PV[1]}`,eq([...T.nums(n[2]),...T.nums(n[3])],PV));}
+  const b1=T.bbox(L1), bL1=bom('L1'); add('Bảng khớp hình','Kích thước L1 trong BOM',bL1[3],`${f2(b1[2]-b1[0])} × ${f2(b1[3]-b1[1])}`,eq(T.nums(bL1[3]).slice(0,2),[b1[2]-b1[0],b1[3]-b1[1]]));
+  const bs=T.bbox(SH), bS=bom('Shutter'); add('Bảng khớp hình','Kích thước shutter trong BOM',bS[3],`${f2(bs[2]-bs[0])} × ${f2(bs[3]-bs[1])}`,eq(T.nums(bS[3]).slice(0,2),[bs[2]-bs[0],bs[3]-bs[1]]));
+  const bp=bom('Trụ'); add('Bảng khớp hình','Số trụ trong BOM',bp[5],String(G.pins.length),+bp[5]===G.pins.length);
+  return (TEST_CACHE[v]=rows);
+}
+function showTests(v){
+  const rows=runTests(v), ok=rows.filter(r=>r.pass).length;
+  const el=document.getElementById('tests');
+  el.innerHTML=rows.map(r=>`<tr><td>${r.grp}</td><td>${r.name}</td><td class="n">${r.val}</td><td class="n">${r.rule}</td><td style="color:${r.pass?'var(--accent)':'var(--warn)'};font-weight:600">${r.pass?'Đạt':'Không đạt'}</td></tr>`).join('');
+  const nan=document.getElementById('drawing').innerHTML.includes('NaN');
+  document.getElementById('testSummary').textContent=`${ok}/${rows.length} đạt${nan?' · bản vẽ có lỗi NaN':''}`;
+}
+window.__geomTests=v=>runTests(v);
+window.__geom={T,roundPoly,arc,PV,OUT,L1,SHUT,SHUT_C,G};
+
 /* ================= tables + variant switching ================= */
 function fill(v){
   const d=V[v];
@@ -629,9 +745,13 @@ function fill(v){
   document.querySelectorAll('[data-var]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.var===v));
   build2D(v);
   if(view3D) view3D.setVariant(v);
+  showTests(v);
 }
 function current(){const h=(location.hash||'').replace('#','');return V[h]?h:'a';}
-document.querySelectorAll('[data-var]').forEach(b=>b.addEventListener('click',()=>{location.hash=b.dataset.var;}));
+document.querySelectorAll('[data-var]').forEach(b=>b.addEventListener('click',()=>{
+  const v=b.dataset.var; fill(v);
+  try{ if(location.hash!=='#'+v) history.replaceState(null,'','#'+v); }catch(e){}
+}));
 window.addEventListener('hashchange',()=>fill(current()));
 try{view3D=build3D();}catch(err){console.error(err);}
 fill(current());
