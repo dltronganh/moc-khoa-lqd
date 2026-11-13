@@ -69,11 +69,12 @@ a{color:var(--accent)}
 
 <div class="wrap">
 <header>
-  <span class="eyebrow">Bản vẽ LQD-FD-001 · Rev H · 13.11.2026</span>
+  <span class="eyebrow">Bản vẽ LQD-FD-001 · Rev I · 13.11.2026</span>
   <h1>Móc khóa đĩa mềm LQĐ</h1>
   <p class="lede">Bộ lắp ráp 30 × 30 × 4 mm, toàn bộ mica cắt xuyên ở một tiệm CO2, ghép bằng 3 trụ mica ẩn và hàn dung môi. Lõi mica trong được bọc trong một khung cùng màu nên nhìn từ cạnh không thấy lớp trong. Đơn vị: mm. Các số đang làm tròn, sẽ chốt sau khi cắt thử.</p>
-  <p class="rev"><b>Rev H</b><span>Chỉ giữ shutter cố định. Thêm chi tiết đĩa mềm: rãnh shutter, khe cửa sổ trên shutter, ô chống ghi, lỗ HD vuông (xỏ khoen), rãnh hai cạnh, mũi tên, vòng hub và viền shutter khắc ở mặt sau. Lớp L3 tách thành lõi trong + khung màu. Nhãn trong rộng hơn 25%. Còn 3 trụ. Logo khắc đổi sang LQDOJ.</span></p>
+  <p class="rev"><b>Rev I</b><span>Lõi mica trong lắp sau, không cần keo: thân (có khung) làm sẵn và hàn trước; khung L3 có rãnh hở ở mép trên và 2 lò xo có ngạnh. Lõi khắc xong đẩy vào từ mép trên tới khi nghe "tách". Dời 3 trụ ra xa lò xo.</span></p>
   <details class="hist"><summary>Lịch sử sửa đổi trước</summary>
+  <p class="rev"><b>Rev H</b><span>Chỉ giữ shutter cố định. Thêm chi tiết đĩa mềm: rãnh shutter, khe cửa sổ trên shutter, ô chống ghi, lỗ HD vuông (xỏ khoen), rãnh hai cạnh, mũi tên, vòng hub và viền shutter khắc ở mặt sau. Lớp L3 tách thành lõi trong + khung màu. Nhãn trong rộng hơn 25%. Còn 3 trụ. Logo khắc đổi sang LQDOJ.</span></p>
   <p class="rev"><b>Rev G</b><span>Thêm bộ kiểm tra hình học tự động; sửa thành mica P7 (0.8 → 1.1 mm) và trụ P6 bị lộ.</span></p>
   <p class="rev"><b>Rev D–F</b><span>Thử phương án nắp xoay; bỏ ở Rev H vì không còn giống đĩa mềm.</span></p>
   <p class="rev"><b>Rev A–C</b><span>Vỏ in 3D, shutter kim loại, ghép vít; bỏ vì máy in 3D không sẵn và chi phí.</span></p>
@@ -83,13 +84,15 @@ a{color:var(--accent)}
 <section class="sheet" aria-labelledby="t3d">
   <div class="sheet-head"><h2 id="t3d">Mô hình lắp ráp 3D</h2><span class="code">Kéo để xoay · cuộn để phóng to</span></div>
   <div class="toolbar">
-    <label class="range" for="explode">Tách lớp <input id="explode" type="range" min="0" max="1" step="0.01" value="0.6"></label>
+    <label class="range" for="coreIn">Lắp lõi <input id="coreIn" type="range" min="0" max="1" step="0.01" value="0.6"></label>
+    <label class="range" for="explode">Tách lớp <input id="explode" type="range" min="0" max="1" step="0.01" value="0"></label>
     <button class="btn" id="btnCut" aria-pressed="false">Mặt cắt A–A</button>
     <div class="seg" role="group" aria-label="Hướng nhìn">
       <button data-view="iso" aria-pressed="true">Phối cảnh</button>
       <button data-view="front" aria-pressed="false">Trước</button>
       <button data-view="back" aria-pressed="false">Sau</button>
       <button data-view="side" aria-pressed="false">Cạnh</button>
+      <button data-view="top" aria-pressed="false">Trên</button>
     </div>
   </div>
   <div id="viewer"><svg id="balloons" aria-hidden="true"></svg></div>
@@ -190,10 +193,32 @@ const L1P=roundPoly([[0,0],[30,0],[30,NOTCH_Y[0]],[30-NOTCH_D,NOTCH_Y[0]],[30-NO
   [0,30],[0,NOTCH_Y[1]],[NOTCH_D,NOTCH_Y[1]],[NOTCH_D,NOTCH_Y[0]],[0,NOTCH_Y[0]]],
   [1,1,0.2,0.2,0.2,0.2,0.6,0.6,0.4,0.5,0.5,0.4,1,0.2,0.2,0.2,0.2]);
 const SHUT=rrect([7,18.7,23,30,0.5]);
-/* L3 is split: a clear core (engraved) and a coloured frame that hides the core edge from the side */
-const CORE=roundPoly([[5.3,2.5],[24.7,2.5],[24.7,17],[22.5,17],[22.5,28],[10.5,28],[10.5,17],[5.3,17]],[0.8,0.8,0.8,0.5,0.8,0.8,0.5,0.8]);
-const CORE_GAP=0.1;
-const CORE_H=roundPoly([[5.2,2.4],[24.8,2.4],[24.8,17.1],[22.6,17.1],[22.6,28.1],[10.4,28.1],[10.4,17.1],[5.2,17.1]],[0.9,0.9,0.9,0.4,0.9,0.9,0.4,0.9]);
+/* L3 is split: a coloured frame (part of the pre-assembled body) and a clear engraved core that slides in later.
+   The frame has a channel open to the top edge; two cut-through spring arms with barbs lock the core (no glue). */
+const CH={x0:5.2,x1:24.8,y0:2.4};                       // core channel in the L3 frame, open to the top edge
+const LK={yRoot:12.5,yTop:18.5,yRel:19.0,beamW:0.6,relW:0.5,barbY:[17.6,18.4],barbD:0.3}; // lock springs
+function framePts(withBarbs){
+  const L=CH.x0, R=CH.x1, b=LK;
+  const rb=withBarbs?[[R,b.barbY[1]],[R-b.barbD,b.barbY[0]],[R,b.barbY[0]]]:[];   // right barb: slope on top, flat face below
+  const lb=withBarbs?[[L,b.barbY[0]],[L+b.barbD,b.barbY[0]],[L,b.barbY[1]]]:[];
+  return [[0,0],[30,0],[30,NOTCH_Y[0]],[30-NOTCH_D,NOTCH_Y[0]],[30-NOTCH_D,NOTCH_Y[1]],[30,NOTCH_Y[1]],[30,28],[28,30],
+    [R,30],[R,b.yRel],[R+b.beamW+b.relW,b.yRel],[R+b.beamW+b.relW,b.yRoot],[R+b.beamW,b.yRoot],[R+b.beamW,b.yTop],[R,b.yTop],
+    ...rb,[R,CH.y0],[L,CH.y0],
+    ...lb,[L,b.yTop],[L-b.beamW,b.yTop],[L-b.beamW,b.yRoot],[L-b.beamW-b.relW,b.yRoot],[L-b.beamW-b.relW,b.yRel],[L,b.yRel],[L,30],
+    [0,30],[0,NOTCH_Y[1]],[NOTCH_D,NOTCH_Y[1]],[NOTCH_D,NOTCH_Y[0]],[0,NOTCH_Y[0]]];
+}
+const FRAME_R={'0,0':1,'30,0':1,[`30,${NOTCH_Y[0]}`]:0.2,[`${30-NOTCH_D},${NOTCH_Y[0]}`]:0.2,[`${30-NOTCH_D},${NOTCH_Y[1]}`]:0.2,[`30,${NOTCH_Y[1]}`]:0.2,'30,28':0.6,'28,30':0.6,
+  '0,30':1,[`0,${NOTCH_Y[1]}`]:0.2,[`${NOTCH_D},${NOTCH_Y[1]}`]:0.2,[`${NOTCH_D},${NOTCH_Y[0]}`]:0.2,[`0,${NOTCH_Y[0]}`]:0.2,
+  [`${CH.x1},30`]:0.3,[`${CH.x0},30`]:0.3,[`${CH.x1},${CH.y0}`]:0.5,[`${CH.x0},${CH.y0}`]:0.5};
+const framePoly=wb=>{const p=framePts(wb);return roundPoly(p,p.map(q=>FRAME_R[`${q[0]},${q[1]}`]||0));};
+const FRAME=framePoly(true), FRAME_NB=framePoly(false);
+/* spring-arm zones (arm + relief slot) used by the tests */
+const LKZ=[[CH.x0-LK.beamW-LK.relW,LK.yRoot,CH.x0,LK.yRel],[CH.x1,LK.yRoot,CH.x1+LK.beamW+LK.relW,LK.yRel]];   // arm + relief slot (barbs are checked separately)
+/* clear core: rectangle with a lock notch on each side edge */
+const CORE_NOTCH={y:[17.5,18.6],d:0.4};
+const CORE_PTS=[[5.3,2.5],[24.7,2.5],[24.7,CORE_NOTCH.y[0]],[24.7-CORE_NOTCH.d,CORE_NOTCH.y[0]],[24.7-CORE_NOTCH.d,CORE_NOTCH.y[1]],[24.7,CORE_NOTCH.y[1]],
+  [24.7,28],[5.3,28],[5.3,CORE_NOTCH.y[1]],[5.3+CORE_NOTCH.d,CORE_NOTCH.y[1]],[5.3+CORE_NOTCH.d,CORE_NOTCH.y[0]],[5.3,CORE_NOTCH.y[0]]];
+const CORE=roundPoly(CORE_PTS,[0.8,0.8,0,0,0,0,0.5,0.5,0,0,0,0]);
 const G={
   W1:[5.8,3,24.2,16.5,1.2],           // clear label window (L1, L2)
   WT:[11,19.5,22,27.5,0.6],           // account window (L4, read from the back)
@@ -205,7 +230,8 @@ const G={
   TKZ:[11.6,20.1,21.4,26.9],          // engraving zone of the account (L3 core, face B, not mirrored)
   ARROW:[[1.9,6],[3.3,6],[2.6,7.4]],  // engraved arrow on L1
   HUB:{c:[15,10.5],r:5.5,ri:2.2},     // engraved hub ring on L4 (back face)
-  pins:[[2.6,10],[27.4,10],[26.5,24.5]], pR:1.5, pinLen:3,
+  MARK:[6.2,22,10,27],                // engraved "↑ / SAU" orientation mark on the core, hidden once inserted
+  pins:[[2.6,7],[27.4,7],[27.4,24.5]], pR:1.5, pinLen:3,
   zL:{L4:[0,1],L3:[1,2],L2:[2,3],L1:[3,4]}, cutX:18
 };
 
@@ -215,8 +241,8 @@ const D={
   bom:[
     ['1','L1 mặt trước','Mica màu (xanh navy)','30 × 30 × 1','Cắt: nhãn W1, rãnh shutter, ô chống ghi WP, lỗ HD. Khắc nhẹ mũi tên','1'],
     ['2','L2','Mica màu, cùng tấm L1','30 × 30 × 1','Cắt: nhãn W1, nửa ô WP, lỗ HD, 3 lỗ trụ','1'],
-    ['3','L3 lõi trong','Mica đúc (cast) trong suốt','19.4 × 25.5 × 1','Cắt + khắc mặt B: logo lật gương, tài khoản không lật (CSV)','1'],
-    ['4','L3 khung','Mica màu, cùng tấm L1','30 × 30 × 1','Cắt: ô lõi (rộng hơn lõi 0.1), lỗ HD, 3 lỗ trụ','1'],
+    ['3','L3 lõi trong','Mica đúc (cast) trong suốt','19.4 × 25.5 × 1','Cắt: 2 khía khóa ở hai cạnh. Khắc mặt B: logo lật gương, tài khoản không lật (CSV), dấu chiều lắp','1'],
+    ['4','L3 khung','Mica màu, cùng tấm L1','30 × 30 × 1','Cắt: rãnh lắp lõi hở mép trên, 2 lò xo khóa có ngạnh, lỗ HD, 3 lỗ trụ','1'],
     ['5','L4 mặt sau','Mica màu, cùng tấm L1','30 × 30 × 1','Cắt: cửa sổ WT, lỗ HD, 3 lỗ trụ. Khắc nhẹ vòng hub và viền shutter','1'],
     ['6','Shutter','Mica gương bạc','16 × 11.3 × 1','Cắt: khe cửa sổ 4 × 7.5','1'],
     ['7','Trụ','Mica màu','Ø3.0* × 3','Cắt từ tấm 3 mm. *Cỡ chốt theo test','3'],
@@ -231,23 +257,26 @@ const D={
     ['WP','Ô chống ghi','1.3 – 3.9','1.3 – 3.9','2.6 × 2.6 (L2: nửa trái)','L1, L2'],
     ['HD','Lỗ HD vuông, xỏ khoen','26.1 – 28.7','1.3 – 3.9','2.6 × 2.6, R0.4','L1–L4'],
     ['N','Rãnh hai cạnh','0 – 0.8 / 29.2 – 30','20.5 – 22.0','0.8 × 1.5','L1–L4'],
+    ['CH','Rãnh lắp lõi, hở mép trên','5.2 – 24.8','2.4 – 30','19.6 × 27.6','L3 khung'],
+    ['LK','Lò xo khóa có ngạnh (2 bên)','4.1 – 5.5 / 24.5 – 25.9','12.5 – 19.0','thanh 0.6 × 6, ngạnh 0.3','L3 khung'],
     ['P1–P3','Trụ','xem hình','xem hình','Lỗ Ø3.0','L2, L3 khung, L4']],
   steps:[
-    'Đặt đồ gá <b>10</b>. Thả L1 <b>1</b> vào ô, <b>mặt trước úp xuống</b>. Đặt shutter <b>6</b> vào rãnh, mặt gương úp xuống.',
-    'Thả L2 <b>2</b>. Thả khung L3 <b>4</b>, rồi đặt lõi trong <b>3</b> vào ô giữa khung (mặt khắc B hướng lên).',
-    'Thả L4 <b>5</b>. Góc vát chỉ cho đặt đúng một chiều.',
-    'Cắm 3 trụ <b>7</b>, kẹp lại, nhỏ 1 giọt vào mép mỗi trụ ở mặt sau.',
-    'Lật mặt trước lên, nhỏ 2 giọt nhỏ vào khe giữa mép dưới shutter và rãnh. Không để dung môi chảy lên mặt gương.',
-    'Để khô 1 giờ. Xỏ khoen <b>9</b> qua lỗ HD.'],
+    '<b>Giai đoạn 1 · làm sẵn thân (có hàn):</b> đặt đồ gá <b>10</b>, thả L1 <b>1</b> mặt trước úp xuống, đặt shutter <b>6</b> vào rãnh, mặt gương úp xuống.',
+    'Thả L2 <b>2</b>, khung L3 <b>4</b>, L4 <b>5</b>. Góc vát chỉ cho đặt đúng một chiều. <b>Chưa có lõi.</b>',
+    'Cắm 3 trụ <b>7</b>, kẹp lại, nhỏ 1 giọt nhỏ vào mép mỗi trụ ở mặt sau. Lật lên, nhỏ 2 giọt nhỏ vào khe dưới shutter. Để khô 1 giờ, xỏ khoen <b>9</b>.',
+    '<b>Giai đoạn 2 · lắp lõi (không keo):</b> khắc lõi <b>3</b> xong, cầm lõi với dấu "↑ SAU" hướng về mặt sau và mũi tên chỉ xuống.',
+    'Đưa lõi vào khe ở mép trên của móc khóa, đẩy thẳng xuống tới khi nghe "tách" ở cả hai bên. Lõi bị khóa, không rút ra được nữa.'],
   laser:[
     '<b>Tấm màu 1 mm:</b> L1, L2, khung L3, L4. <b>Tấm trong 1 mm:</b> lõi L3. <b>Tấm gương 1 mm:</b> shutter. <b>Tấm màu 3 mm:</b> trụ, đồ gá.',
     'Quy ước nét: <b>đỏ = cắt xuyên</b>, <b>xanh = khắc</b>. Mở file đúng tỉ lệ 100%.',
-    'Lõi L3 khắc ở mặt B: logo lật gương (đọc từ trước), tài khoản không lật (đọc từ sau). Logo: mỗi mảng màu một góc quét. Tài khoản: Variable Text đọc từ CSV.',
+    'Lõi L3 khắc ở mặt B: logo lật gương (đọc từ trước), tài khoản không lật (đọc từ sau), dấu chiều lắp "↑ SAU" ở góc trên trái (bị che sau khi lắp). Logo: mỗi mảng màu một góc quét. Tài khoản: Variable Text đọc từ CSV. Lõi có thể khắc bất cứ lúc nào sau khi thân đã làm xong.',
     'Khắc nhẹ (công suất thấp) trên L1 và L4: mũi tên, vòng hub, viền shutter.',
     'Giữ màng bảo vệ khi cắt, nhất là tấm gương và tấm trong. Bóc màng ngay trước khi lắp.'],
   checks:[
     ['w','Độ dày thật của tấm 1 mm và 3 mm, độ rộng đường cắt, cỡ trụ vừa tay. Dùng file test trụ: <a href="https://dltronganh.github.io/moc-khoa-lqd/test-tru-mica-1mm.svg">1 mm</a>, <a href="https://dltronganh.github.io/moc-khoa-lqd/test-tru-mica-3mm.svg">3 mm</a>.'],
-    ['w','Lõi trong vừa khít ô khung: khe thiết kế 0.1 mm mỗi cạnh. Nếu lõi lỏng hoặc không vào được, chỉnh theo độ rộng đường cắt đo được.'],
+    ['w','Quan trọng nhất: lõi trong (tấm trong 1 mm) phải <b>không dày hơn</b> khung L3 (tấm màu 1 mm), vì lõi trượt kẹp giữa L2 và L4. Đo cả hai tấm bằng thước kẹp. Nếu tấm trong dày hơn quá 0.05 mm, lõi sẽ kẹt.'],
+    ['w','Lò xo khóa: cắt thử một khung và một lõi, đẩy vào xem có tiếng "tách" và không rút ra được. Nếu quá cứng, giảm ngạnh từ 0.3 xuống 0.2; nếu lò xo gãy, tăng bề rộng thanh lên 0.7.'],
+    ['w','Khi hàn thân ở giai đoạn 1, dung môi không được chảy vào vùng lò xo, nếu không lò xo bị dính chết. Các trụ đã đặt cách lò xo ≥ 3 mm; vẫn dùng giọt nhỏ.'],
     ['w','Cần file vector gốc của logo LQDOJ trước khi khắc thật.'],
     ['','Khung L3 che kín cạnh lõi nên ánh sáng không vào được từ cạnh. Logo vẫn thấy rõ nhờ ánh sáng đi qua nhãn phía trước rồi tán xạ ở vết khắc, nền mặt sau tối.'],
     ['','Hàn shutter: thử trên miếng gương thừa để biết lượng dung môi không lem lên mặt.'],
@@ -263,7 +292,7 @@ function build3D(){
   el.insertBefore(renderer.domElement, el.firstChild);
   const scene=new THREE.Scene();
   const camera=new THREE.PerspectiveCamera(30,1,0.5,1000);
-  const ISO=[58,40,88]; camera.position.set(...ISO);
+  const ISO=[66,52,104]; camera.position.set(...ISO);
   const controls=new THREE.OrbitControls(camera,renderer.domElement); controls.enableDamping=true;
   const setBg=()=>{scene.background=new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--viewer').trim()||'#c9d2db');};
   setBg(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setBg);
@@ -295,12 +324,13 @@ function build3D(){
   P.L1=new THREE.Group(); P.L1.add(extr(s,...Z.L1,M.navy)); P.L1.add(loop(G.ARROW,Z.L1[1]+0.02));
   s=shape(OUTN); s.holes.push(path(rrect(G.W1)),path(rrect(G.WPH)),path(rrect(G.HD)),...pinH());
   P.L2=new THREE.Group(); P.L2.add(extr(s,...Z.L2,M.navy2));
-  s=shape(OUTN); s.holes.push(path(CORE_H),path(rrect(G.HD)),...pinH());
+  s=shape(FRAME); s.holes.push(path(rrect(G.HD)),...pinH());
   P.L3F=new THREE.Group(); P.L3F.add(extr(s,...Z.L3,M.navy));
   P.L3=new THREE.Group(); const core=extr(shape(CORE),...Z.L3,M.mica,M.edgeMica); core.children[0].renderOrder=2; P.L3.add(core);
   const plane=(tex,zone,flip)=>{const w=zone[2]-zone[0],h=zone[3]-zone[1];const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tex,transparent:true,depthWrite:false,side:DS}));m.position.set((zone[0]+zone[2])/2,(zone[1]+zone[3])/2,Z.L3[0]+0.03);if(flip)m.rotation.y=Math.PI;m.renderOrder=3;return m;};
   P.L3.add(plane(logoTexture(),G.LOGO,false));
   P.L3.add(plane(accTexture(),G.TKZ,true));
+  P.L3.add(plane(markTexture(),G.MARK,true));
   s=shape(OUTN); s.holes.push(path(rrect(G.WT)),path(rrect(G.HD)),...pinH());
   P.L4=new THREE.Group(); P.L4.add(extr(s,...Z.L4,M.navy));
   P.L4.add(loop(circlePts(G.HUB.c,G.HUB.r),-0.02)); P.L4.add(loop(circlePts(G.HUB.c,G.HUB.ri),-0.02));
@@ -321,12 +351,14 @@ function build3D(){
   const anchors=[[1,P.L1,[0.5,9,4]],[2,P.L2,[0,14,2.5]],[3,P.L3,[24.7,9,1.5]],[4,P.L3F,[30,9,1.5]],[5,P.L4,[10,0,0.5]],[6,P.SH,[23,26,4]],[7,P.PIN,[2.6,10,0]],[9,P.L4,ringC.clone().addScaledVector(dv,R).toArray()]]
     .map(a=>({n:a[0],obj:a[1],p:new THREE.Vector3(...a[2])}));
 
-  const state={e:0.6,eT:0.6};
+  const CORE_OUT=28;   // core start position: lifted fully above the top edge
+  const state={e:0,eT:0,c:0.6,cT:0.6};
   const exp=document.getElementById('explode'); exp.addEventListener('input',()=>{state.eT=+exp.value;});
+  const cin=document.getElementById('coreIn'); cin.addEventListener('input',()=>{state.cT=+cin.value;});
   const cutPlane=new THREE.Plane(new THREE.Vector3(-1,0,0),G.cutX-15);
   const bC=document.getElementById('btnCut');
   bC.addEventListener('click',()=>{const on=bC.getAttribute('aria-pressed')!=='true';bC.setAttribute('aria-pressed',on);renderer.clippingPlanes=on?[cutPlane]:[];});
-  const VIEWS={iso:ISO,front:[0,0,110],back:[0,0,-110],side:[110,0,0.01]};
+  const VIEWS={iso:ISO,front:[0,0,120],back:[0,0,-120],side:[120,0,0.01],top:[0,90,22]};
   document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{
     document.querySelectorAll('[data-view]').forEach(x=>x.setAttribute('aria-pressed',x===b));
     camera.position.set(...VIEWS[b.dataset.view]); camera.up.set(0,1,0); controls.target.set(0,0,0); controls.update();
@@ -350,8 +382,9 @@ function build3D(){
   new ResizeObserver(resize).observe(el); resize();
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   (function tick(){
-    state.e+=(state.eT-state.e)*(reduce?1:0.12);
+    state.e+=(state.eT-state.e)*(reduce?1:0.12); state.c+=(state.cT-state.c)*(reduce?1:0.12);
     for(const k in P) P[k].position.z=(OFF[k]||0)*state.e;
+    P.L3.position.y=(1-state.c)*CORE_OUT;
     controls.update(); renderer.render(scene,camera); drawBalloons(el.clientWidth,el.clientHeight);
     requestAnimationFrame(tick);
   })();
@@ -389,6 +422,15 @@ function accTexture(){
   x.fillText('lqd-tin-023',245,115);x.fillText('K7qM-2x9',245,225);
   const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t;
 }
+/* orientation mark on the core (face B): arrow = insert direction, "SAU" = this face goes to the back */
+function markTexture(){
+  const c=document.createElement('canvas');c.width=190;c.height=250;const x=c.getContext('2d');
+  x.strokeStyle='#ffffff';x.fillStyle='#ffffff';x.lineWidth=10;x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=2;
+  x.beginPath();x.moveTo(95,20);x.lineTo(95,150);x.stroke();
+  x.beginPath();x.moveTo(55,110);x.lineTo(95,160);x.lineTo(135,110);x.stroke();
+  x.font='700 54px "JetBrains Mono", Consolas, monospace';x.textAlign='center';x.textBaseline='middle';x.fillText('SAU',95,212);
+  const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t;
+}
 
 /* ================= 2D drawing ================= */
 function build2D(){
@@ -415,6 +457,7 @@ function build2D(){
   poly(F,SHUT,'v','fill:var(--tint-al)'); rp(F,G.SLOT,'v','fill:var(--tint-dark)');
   rp(F,G.W1,'v','fill:var(--tint-mica)');
   poly(F,CORE,'h');
+  LKZ.forEach(z=>poly(F,rect(...z),'zn'));
   rp(F,G.WP,'v','fill:var(--tint-dark)'); rp(F,G.WPH,'t','fill:var(--ink);opacity:.35');
   rp(F,G.HD,'v','fill:var(--sheet)');
   poly(F,G.ARROW,'eg2');
@@ -442,10 +485,10 @@ function build2D(){
   poly(B,rect(G.HUB.c[0]-0.8,G.HUB.c[1]-0.8,G.HUB.c[0]+0.8,G.HUB.c[1]+0.8),'eg2'); poly(B,rect(G.HUB.c[0]+2.6,G.HUB.c[1]-3.6,G.HUB.c[0]+3.6,G.HUB.c[1]-2.2),'eg2');
   rp(B,G.WT,'v','fill:var(--tint-mica)');
   rp(B,G.HD,'v','fill:var(--sheet)');
-  G.pins.forEach((p,i)=>{circle(B,...p,G.pR,'v',S,'fill:var(--tint-navy)');cross(B,...p,20);const a=B(...p);tag(a[0],a[1]+24,'P'+(i+1));});
+  G.pins.forEach((p,i)=>{circle(B,...p,G.pR,'v',S,'fill:var(--tint-navy)');cross(B,...p,20);const a=B(...p);tag(a[0],a[1]+(p[1]<15?-24:24),'P'+(i+1));});
   tag(B(16.5,23.5)[0],B(16.5,23.5)[1],'WT'); tag(B(27.4,2.6)[0]+2,B(27.4,2.6)[1]-22,'HD');
   tag(B(G.HUB.c[0],G.HUB.c[1]-G.HUB.r)[0],B(0,G.HUB.c[1]-G.HUB.r)[1]+14,'hub');
-  txt(480,432,'Nét xanh: khắc nhẹ trên L4 (vòng hub, viền shutter).','tx');
+  txt(480,432,'Nét xanh: khắc nhẹ trên L4 (hub, viền shutter).','tx');
   txt(480,450,'Đọc tài khoản qua cửa sổ WT.','tx');
 
   /* section A-A 20:1 at x = cutX */
@@ -453,7 +496,7 @@ function build2D(){
   const R=(y0,y1,z0,z1,fill,cls='v')=>{const a=H(y0,z1),b=H(y1,z0);out.push(`<rect x="${a[0]}" y="${a[1]}" width="${b[0]-a[0]}" height="${b[1]-a[1]}" class="${cls}" style="fill:${fill}"/>`);};
   const pA='url(#pA)', pB='url(#pB)', pM='url(#pM)';
   R(0,G.WT[1],0,1,pA); R(G.WT[3],30,0,1,pA);
-  R(0,2.4,1,2,pB); R(2.5,28,1,2,pM); R(28.1,30,1,2,pB);
+  R(0,CH.y0,1,2,pB); R(2.5,28,1,2,pM);   /* y 28–30 of L3 is the open insertion slot */
   R(0,G.W1[1],2,3,pA); R(G.W1[3],30,2,3,pA);
   R(0,G.W1[1],3,4,pB); R(G.W1[3],TRACK[1],3,4,pB);
   R(18.7,G.SLOT[1],3,4,'var(--tint-al)'); R(G.SLOT[3],30,3,4,'var(--tint-al)');
@@ -470,7 +513,8 @@ function build2D(){
   balloon(H(24,4)[0],468,'6',H(24,3.6)[0],H(24,3.6)[1]);
   leader([H(14,1.5)[0],H(14,1.5)[1]],[H(14,1.5)[0]-30,604],'3 · lõi trong','end');
   leader([H(24,1.02)[0],H(24,1.02)[1]],[H(24,1.02)[0]+20,624],'khắc tài khoản, mặt B');
-  leader([H(2.45,1.9)[0],H(2.45,1.9)[1]],[H(2.45,1.9)[0]+30,622],'khe 0.1 lõi–khung');
+  leader([H(2.45,1.9)[0],H(2.45,1.9)[1]],[H(2.45,1.9)[0]+30,622],'khe 0.1 lõi–rãnh');
+  leader([H(29,1.5)[0],H(29,1.5)[1]],[H(29,1.5)[0]+16,642],'khe lắp lõi');
   leader([H(9,1.02)[0],H(9,1.02)[1]],[H(9,1.02)[0]+60,640],'khắc logo, mặt B');
   txt(120,666,`MẶT CẮT A–A   20:1   (x = ${G.cutX})`,'tt');
 
@@ -480,7 +524,7 @@ function build2D(){
   const pinsH=Mp=>G.pins.forEach(p=>circle(Mp,...p,G.pR,'v',LS,'fill:var(--sheet)'));
   layer(40,'L1 · MẶT TRƯỚC','màu 1 mm · khắc mũi tên',Mp=>{poly(Mp,L1P,'v','fill:var(--tint-navy)');rp(Mp,G.W1,'v','fill:var(--sheet)');rp(Mp,G.WP,'v','fill:var(--sheet)');rp(Mp,G.HD,'v','fill:var(--sheet)');poly(Mp,G.ARROW,'eg2');});
   layer(235,'L2','màu 1 mm',Mp=>{poly(Mp,OUTN,'v','fill:var(--tint-navy)');rp(Mp,G.W1,'v','fill:var(--sheet)');rp(Mp,G.WPH,'v','fill:var(--sheet)');rp(Mp,G.HD,'v','fill:var(--sheet)');pinsH(Mp);});
-  layer(430,'L3 · KHUNG + LÕI','khung màu + lõi trong',Mp=>{poly(Mp,OUTN,'v','fill:var(--tint-navy)');poly(Mp,CORE_H,'v','fill:var(--sheet)');poly(Mp,CORE,'v','fill:var(--tint-mica)');rp(Mp,G.HD,'v','fill:var(--sheet)');pinsH(Mp);
+  layer(430,'L3 · KHUNG + LÕI','khung có rãnh + lõi trượt',Mp=>{poly(Mp,FRAME,'v','fill:var(--tint-navy)');poly(Mp,CORE,'v','fill:var(--tint-mica)');rp(Mp,G.HD,'v','fill:var(--sheet)');pinsH(Mp);
     out.push(`<rect x="${Mp(G.LOGO[0],0)[0]}" y="${Mp(0,G.LOGO[3])[1]}" width="${(G.LOGO[2]-G.LOGO[0])*LS}" height="${(G.LOGO[3]-G.LOGO[1])*LS}" class="zn"/>`);
     out.push(`<rect x="${Mp(G.TKZ[0],0)[0]}" y="${Mp(0,G.TKZ[3])[1]}" width="${(G.TKZ[2]-G.TKZ[0])*LS}" height="${(G.TKZ[3]-G.TKZ[1])*LS}" class="zn"/>`);
     txt(Mp(15,9.75)[0],Mp(15,9.75)[1]+3,'LOGO','tz','middle');txt(Mp(16.5,23.5)[0],Mp(16.5,23.5)[1]+3,'TK','tz','middle');});
@@ -518,7 +562,7 @@ function build2D(){
   tb(540,900,180,36,'TÊN','MÓC KHÓA ĐĨA MỀM LQĐ');
   tb(720,900,90,36,'SỐ BẢN VẼ','LQD-FD-001');
   tb(540,936,90,32,'VẬT LIỆU','Mica (PMMA)');
-  tb(630,936,70,32,'PHIÊN BẢN','Rev H');
+  tb(630,936,70,32,'PHIÊN BẢN','Rev I');
   tb(700,936,110,32,'NGÀY','13.11.2026');
   tb(540,968,270,32,'CHIẾU','Góc 1 (E) · đơn vị mm');
 
@@ -585,7 +629,7 @@ function runTests(){
   const layers={
     'L1':{o:L1P,h:[['W1',rrect(G.W1)],['WP',rrect(G.WP)],['HD',rrect(G.HD)]]},
     'L2':{o:OUTN,h:[['W1',rrect(G.W1)],['WP½',rrect(G.WPH)],['HD',rrect(G.HD)],...pinH]},
-    'L3 khung':{o:OUTN,h:[['ô lõi',CORE_H],['HD',rrect(G.HD)],...pinH]},
+    'L3 khung':{o:FRAME,h:[['HD',rrect(G.HD)],...pinH]},
     'L4':{o:OUTN,h:[['WT',rrect(G.WT)],['HD',rrect(G.HD)],...pinH]},
     'Shutter':{o:SHUT,h:[['khe SL',rrect(G.SLOT)]]}
   };
@@ -598,13 +642,35 @@ function runTests(){
   /* L1 must also keep a solid strip between the label and the shutter track */
   const strip=T.gap(rrect(G.W1),rect(TRACK[0],TRACK[1],TRACK[2],30));
   add('Thành mica','L1: dải giữa nhãn W1 và rãnh shutter',f2(strip)+' mm','≥ 1.0 mm',strip>=1);
-  /* L3: core hidden from the side, fits the frame with the design gap */
+  /* L3: frame with an insertion channel + two barbed spring arms; the clear core slides in later */
+  const shiftY=(poly,dy)=>poly.map(p=>[p[0],p[1]+dy]);
   const coreSide=T.margin(CORE,OUTN);
-  add('Khung L3','Lõi trong cách mép ngoài (khung che cạnh lõi)',f2(coreSide)+' mm','≥ 2.0 mm',coreSide>=2);
-  const fit=T.margin(CORE,CORE_H);
-  add('Khung L3','Khe giữa lõi và ô khung',f2(fit)+' mm',`${CORE_GAP.toFixed(2)} ± 0.02 mm`,Math.abs(fit-CORE_GAP)<=0.02);
-  const pinCore=Math.min(...G.pins.map(p=>T.gap(T.circle(p,G.pR),CORE_H)));
-  add('Khung L3','Trụ nằm trong khung, không chạm lõi',f2(pinCore)+' mm','≥ 1.0 mm',pinCore>=1);
+  add('Khung L3','Lõi cách mép ngoài khi đã lắp (khung che cạnh lõi)',f2(coreSide)+' mm','≥ 2.0 mm',coreSide>=2);
+  const side=T.gap(CORE,FRAME_NB);
+  add('Lắp lõi','Khe hai bên giữa lõi và rãnh',f2(side)+' mm','0.08 – 0.15 mm',side>=0.08&&side<=0.15);
+  const mouth=(CH.x1-CH.x0)-(T.bbox(CORE)[2]-T.bbox(CORE)[0]);
+  add('Lắp lõi','Miệng rãnh ở mép trên rộng hơn lõi',f2(mouth)+' mm','≥ 0.15 mm',mouth>=0.15);
+  let travel={d:Infinity,at:0};
+  for(let dy=0;dy<=28;dy+=0.25){const g=T.gap(shiftY(CORE,dy),FRAME_NB);if(g<travel.d)travel={d:g,at:dy};}
+  add('Lắp lõi','Đường trượt vào (0–28 mm): không chạm khung, trừ ngạnh',travel.d<0?`chạm ở ${travel.at} mm`:`khe nhỏ nhất ${f2(travel.d)} mm`,'≥ 0.08 mm',travel.d>=0.08);
+  const ovL=(CH.x0+LK.barbD)-T.bbox(CORE)[0], ovR=T.bbox(CORE)[2]-(CH.x1-LK.barbD);
+  add('Lắp lõi','Ngạnh lấn vào đường đi của lõi (độ khóa)',`${f2(ovL)} / ${f2(ovR)} mm`,'0.15 – 0.30 mm mỗi bên',[ovL,ovR].every(v=>v>=0.15&&v<=0.3));
+  /* barbs only (the core is meant to rest on the channel bottom, so whole-core contact there is intended) */
+  const BARBS=[[[CH.x1,LK.barbY[1]],[CH.x1-LK.barbD,LK.barbY[0]],[CH.x1,LK.barbY[0]]],[[CH.x0,LK.barbY[0]],[CH.x0+LK.barbD,LK.barbY[0]],[CH.x0,LK.barbY[1]]]];
+  const lock=[0,-(T.bbox(CORE)[1]-CH.y0)].map(dy=>({dy,g:Math.min(...BARBS.map(b=>T.gap(shiftY(CORE,dy),b))),play:(LK.barbY[0])-(CORE_NOTCH.y[0]+dy)}));
+  add('Lắp lõi','Khi đã vào: ngạnh nằm trong khía, không chạm',lock.map(l=>f2(l.g)).join(' / ')+' mm','≥ 0.05 mm (vị trí danh định / chạm đáy)',lock.every(l=>l.g>=0.05));
+  add('Lắp lõi','Độ rơ khi kéo ngược trước khi ngạnh giữ lại',lock.map(l=>f2(l.play)).join(' / ')+' mm','0.05 – 0.30 mm',lock.every(l=>l.play>=0.05&&l.play<=0.3));
+  const Lb=LK.yTop-LK.yRoot, strain=3*Math.max(ovL,ovR)*LK.beamW/(2*Lb*Lb)*100;
+  add('Lắp lõi','Biến dạng lò xo khi lõi đi qua (3·δ·t / 2L²)',f2(strain)+' %','≤ 1.0 % (mica giòn)',strain<=1.0);
+  const pinLk=Math.min(...G.pins.flatMap(p=>LKZ.map(z=>T.gap(T.circle(p,G.pR),rect(...z)))));
+  add('Lắp lõi','Trụ cách vùng lò xo (dung môi không làm dính lò xo)',f2(pinLk)+' mm','≥ 3.0 mm',pinLk>=3);
+  /* L3 shows from the front only where BOTH L1 and L2 are cut (W1, WP half, HD); from the back only through L4 cuts (WT, HD) */
+  const seeL3=[rrect(G.W1),rrect(G.WPH),rrect(G.HD),rrect(G.WT)];
+  const lkShapes=[...LKZ.map(z=>rect(...z)),...BARBS];
+  const lkHide=Math.min(...lkShapes.flatMap(s=>seeL3.map(h=>T.gap(s,h))));
+  add('Lắp lõi','Lò xo bị che kín cả mặt trước lẫn mặt sau',lkHide<0?'lộ ra':f2(lkHide)+' mm','≥ 0.3 mm tới chỗ nhìn xuyên được',lkHide>=0.3);
+  const mk=Math.min(T.margin(rect(...G.MARK),CORE),T.gap(rect(...G.MARK),rrect(G.W1)),T.gap(rect(...G.MARK),rrect(G.WT)));
+  add('Lắp lõi','Dấu chiều lắp trên lõi bị che sau khi lắp',mk<0?'lộ ra':f2(mk)+' mm','≥ 0.2 mm',mk>=0.2);
   const w1c=T.margin(rrect(G.W1),CORE);
   add('Khung L3','Nhãn W1 nằm trọn trên lõi trong (không thấy mối nối)',w1c<0?'lòi ra':f2(w1c)+' mm','≥ 0.4 mm',w1c>=0.4);
   const wtc=T.margin(rrect(G.WT),CORE);
@@ -641,11 +707,24 @@ function runTests(){
   /* tables vs geometry */
   const row=k=>D.feat.find(r=>r[0]===k), bom=k=>D.bom.find(r=>r[1].startsWith(k));
   const eq=(a,b)=>a.length===b.length&&a.every((x,i)=>Math.abs(x-b[i])<0.051);
-  [['W1',G.W1],['WT',G.WT],['SL',G.SLOT],['WP',G.WP],['HD',G.HD]].forEach(([k,a])=>{const r=row(k);add('Bảng khớp hình',`Tọa độ ${k}`,r[2]+' / '+r[3],`${a[0]}–${a[2]} / ${a[1]}–${a[3]}`,eq([...T.nums(r[2]),...T.nums(r[3])],[a[0],a[2],a[1],a[3]]));});
+  [['W1',G.W1],['WT',G.WT],['SL',G.SLOT],['WP',G.WP],['HD',G.HD],['CH',[CH.x0,CH.y0,CH.x1,30]]].forEach(([k,a])=>{const r=row(k);add('Bảng khớp hình',`Tọa độ ${k}`,r[2]+' / '+r[3],`${a[0]}–${a[2]} / ${a[1]}–${a[3]}`,eq([...T.nums(r[2]),...T.nums(r[3])],[a[0],a[2],a[1],a[3]]));});
   const tr=row('TR'); add('Bảng khớp hình','Tọa độ rãnh shutter TR',tr[2]+' / '+tr[3],`${TRACK[0]}–${TRACK[2]} / ${TRACK[1]}–30`,eq([...T.nums(tr[2]),...T.nums(tr[3])],[TRACK[0],TRACK[2],TRACK[1],30]));
   const bc=T.bbox(CORE), bC=bom('L3 lõi'); add('Bảng khớp hình','Kích thước lõi trong trong BOM',bC[3],`${f2(bc[2]-bc[0])} × ${f2(bc[3]-bc[1])}`,eq(T.nums(bC[3]).slice(0,2),[bc[2]-bc[0],bc[3]-bc[1]]));
   const bs=T.bbox(SHUT), bS=bom('Shutter'); add('Bảng khớp hình','Kích thước shutter trong BOM',bS[3],`${f2(bs[2]-bs[0])} × ${f2(bs[3]-bs[1])}`,eq(T.nums(bS[3]).slice(0,2),[bs[2]-bs[0],bs[3]-bs[1]]));
   const bp=bom('Trụ'); add('Bảng khớp hình','Số trụ trong BOM',bp[5],String(G.pins.length),+bp[5]===G.pins.length);
+  /* cut polygons must be simple (a self-crossing outline gives a wrong laser file and a broken 3D mesh) */
+  const selfX=P=>{const n=P.length,o=(p,q,r)=>Math.sign((q[0]-p[0])*(r[1]-p[1])-(q[1]-p[1])*(r[0]-p[0]));let k=0;for(let i=0;i<n;i++)for(let j=i+2;j<n;j++){if(i===0&&j===n-1)continue;const a=P[i],b=P[(i+1)%n],c=P[j],d=P[(j+1)%n];if(o(a,b,c)*o(a,b,d)<0&&o(c,d,a)*o(c,d,b)<0)k++;}return k;};
+  const sx=[['L1',L1P],['khung L3',FRAME],['lõi',CORE],['viền',OUTN],['shutter',SHUT]].map(([n,p])=>[n,selfX(p)]).filter(x=>x[1]);
+  add('Hình vẽ','Đường cắt không tự cắt chéo',sx.length?sx.map(x=>x[0]).join(', '):'0 lỗi','0 lỗi',sx.length===0);
+  /* drawing legibility: no two labels overlap, none leaves the sheet */
+  const svg=document.querySelector('#drawing svg');
+  if(svg){
+    const bx=[...svg.querySelectorAll('text')].map(t=>{const b=t.getBBox();return {t:t.textContent,x0:b.x,y0:b.y,x1:b.x+b.width,y1:b.y+b.height};}).filter(b=>b.x1>b.x0);
+    const ov=[];for(let i=0;i<bx.length;i++)for(let j=i+1;j<bx.length;j++){const a=bx[i],b=bx[j];if(Math.min(a.x1,b.x1)-Math.max(a.x0,b.x0)>1&&Math.min(a.y1,b.y1)-Math.max(a.y0,b.y0)>1)ov.push(`${a.t} × ${b.t}`);}
+    add('Hình vẽ','Chữ trên bản vẽ không đè lên nhau',ov.length?ov.join('; '):'0 chỗ','0 chỗ',ov.length===0);
+    const vb=svg.viewBox.baseVal, outT=bx.filter(b=>b.x0<0||b.y0<0||b.x1>vb.width||b.y1>vb.height).map(b=>b.t);
+    add('Hình vẽ','Chữ nằm trong khung bản vẽ',outT.length?outT.join('; '):'0 chỗ','0 chỗ',outT.length===0);
+  }
   return (TEST_ROWS=rows);
 }
 function showTests(){
@@ -655,7 +734,7 @@ function showTests(){
   document.getElementById('testSummary').textContent=`${ok}/${rows.length} đạt${nan?' · bản vẽ có lỗi NaN':''}`;
 }
 window.__geomTests=()=>runTests();
-window.__geom={T,roundPoly,OUTN,L1P,SHUT,CORE,CORE_H,G,LQDOJ};
+window.__geom={T,roundPoly,OUTN,L1P,SHUT,CORE,FRAME,FRAME_NB,LKZ,CH,LK,CORE_NOTCH,G,LQDOJ};
 
 /* ================= page fill ================= */
 document.getElementById('legend').innerHTML=D.legend.map(l=>`<li><span class="ball">${l[0]}</span><span class="sw" style="background:${l[1]}"></span>${l[2]}</li>`).join('');
