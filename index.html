@@ -75,9 +75,10 @@ a{color:var(--accent)}
 
 <div class="wrap">
 <header>
-  <span class="eyebrow">Bản vẽ LQD-FD-001 · Rev E · 13.11.2026</span>
+  <span class="eyebrow">Bản vẽ LQD-FD-001 · Rev F · 13.11.2026</span>
   <h1>Móc khóa đĩa mềm LQĐ</h1>
   <p class="lede">Bộ lắp ráp 30 × 30 × 4 mm, toàn bộ mica cắt xuyên ở một tiệm CO2, ghép bằng trụ mica ẩn và hàn dung môi. Rev D có hai phương án shutter để so sánh. Đơn vị: mm. Các số đang làm tròn, sẽ chốt sau khi cắt thử.</p>
+  <p class="rev"><b>Rev F</b><span>L1 chỉ còn nửa dưới; shutter phủ hết dải trên từ mép trái tới mép phải. Chỉ góc dưới trái của shutter bo R5.65 quanh tâm xoay. Rev E vẫn kẹt: góc vuông của shutter quét vào phần L1 trên trái, chỉ mở được khoảng 35°. Giờ shutter mở 90° thì dựng đứng và tự dừng.</span></p>
   <p class="rev"><b>Rev E</b><span>Hốc shutter ở L1 mở cả mép phải: ở Rev D, cột mica bên phải chặn góc dưới của shutter khi xoay nên phương án A không mở được. Shutter giờ dài 28.3, chạy hết mép phải.</span></p>
   <p class="rev"><b>Rev D</b><span>Shutter đưa ra mặt ngoài, nằm trong hốc của L1, chạm mép trên giống đĩa mềm thật. Bỏ rãnh trượt, ngạnh và khắc bậc. Thêm trụ P6, P7 để giữ phần trên. Hai phương án: A nắp xoay, C cố định.</span></p>
 </header>
@@ -189,18 +190,18 @@ function roundPoly(pts,r,seg=6){
   return out;
 }
 const arc=(cx,cy,r,a0,a1,n)=>{const o=[];for(let k=0;k<=n;k++){const a=(a0+(a1-a0)*k/n)*Math.PI/180;o.push([cx+r*Math.cos(a),cy+r*Math.sin(a)]);}return o;};
-const PV=[7.35,24.35];                      // pivot of swing shutter = centre of recess round end
+/* Rev F: L1 is only the lower half (y <= 18.5). The shutter covers the whole top band edge to edge.
+   Only its lower-left quadrant is rounded (R5.65 about the pivot), so nothing below the pivot ever dips under y=18.7;
+   the square upper-left corner swings down-left and lands on the L1 top edge at ~90 deg, which is the open stop. */
+const PV=[5.65,24.35];
 const OUT=roundPoly([[0,0],[30,0],[30,28],[28,30],[0,30]],[1,1,0.6,0.6,1]);
-const recArc=arc(PV[0],PV[1],5.85,270,105,24); // recess round end, R5.85, meets top edge at x=5.84
-/* Rev E: recess open to the top AND right edge, so the swing shutter's lower-right corner can leave freely */
-const L1=roundPoly([[0,0],[30,0],[30,18.5],...recArc,[0,30]],
-  [1,1,0.4,...new Array(recArc.length).fill(0),1]);
-const shArc=arc(PV[0],PV[1],5.65,90,270,24);
-const SHUT=roundPoly([[30,18.7],[30,28],[28,30],...shArc],[0.5,0.6,0.6,...new Array(shArc.length).fill(0)]);
-const REC=[[30,18.5],...recArc];
+const L1=roundPoly([[0,0],[30,0],[30,18.5],[0,18.5]],[1,1,0.4,0.4]);
+const shArc=arc(PV[0],PV[1],5.65,180,270,16);
+const SHUT=roundPoly([[30,18.7],[30,28],[28,30],[0,30],...shArc],[0.4,0.6,0.6,1,...new Array(shArc.length).fill(0)]);
+const REC=[[0,18.5],[30,18.5]];
 const G={
   W1:[6,6,24,17,1.2], WT:[13.5,19.5,25,28.5,0.6], SLOT:[17,20.5,21,27.5,0.6],
-  pins:[[3.5,3.5],[15,3.2],[26.5,8.5],[27.5,15.5],[3.5,12],[3,27.2],[27.7,24]],
+  pins:[[3.5,3.5],[15,3.2],[26.5,8.5],[27.5,15.5],[3.5,12],[2.5,20.5],[27.7,24]],
   K:[27,3], kR:1.6, pR:1.5, pvR:1.5, pvHole:1.8, capR:2.75,
   zL:{L4:[0,1],L3:[1,2],L2:[2,3],L1:[3,4]}, cutX:20
 };
@@ -210,11 +211,11 @@ const V={
   a:{name:'A · Nắp xoay',
     legend:[[1,'#26365e','L1 mặt trước, mica màu 1 mm'],[2,'#26365e','L2, mica màu 1 mm, có cửa sổ tài khoản'],[3,'#cfe8f7','L3 lõi khắc, mica đúc trong 1 mm'],[4,'#26365e','L4 mặt sau, mica màu 1 mm'],[5,'#e2e5ea','Shutter xoay, mica gương bạc 1 mm'],[6,'#3f5ea6','Trụ Ø3 × 3 (×7)'],[7,'#e2e5ea','Chốt nấm: thân Ø3 × 3 + mũ gương Ø5.5'],[10,'#b9bec4','Khoen móc khóa Ø20']],
     bom:[
-      ['1','L1 mặt trước','Mica màu (xanh navy / đen)','30 × 30 × 1','Cắt. Hốc shutter hở mép trên và mép phải, đầu tròn R5.85','1'],
+      ['1','L1 mặt trước','Mica màu (xanh navy / đen)','30 × 18.5 × 1','Cắt. Chỉ nửa dưới, cao 18.5; dải trên là shutter','1'],
       ['2','L2','Mica màu, cùng tấm L1','30 × 30 × 1','Cắt. Cửa sổ WT, lỗ chốt Ø3.0, 7 lỗ trụ','1'],
       ['3','L3 lõi khắc','Mica đúc (cast) trong suốt','30 × 30 × 1','Cắt + khắc mặt B, lật gương: logo và tài khoản (CSV)','1'],
       ['4','L4 mặt sau','Mica màu, cùng tấm L1','30 × 30 × 1','Cắt. Lỗ chốt thành hốc nhỏ dung môi','1'],
-      ['5','Shutter xoay','Mica gương bạc','28.3 × 11.3 × 1','Cắt. Lỗ xoay Ø3.6 (rộng hơn thân chốt để dung môi không leo)','1'],
+      ['5','Shutter xoay','Mica gương bạc','30 × 11.3 × 1','Cắt. Lỗ xoay Ø3.6 (rộng hơn thân chốt để dung môi không leo)','1'],
       ['6','Trụ','Mica màu','Ø3.0* × 3','Cắt từ tấm 3 mm. *Cỡ chốt theo test','7'],
       ['7','Chốt nấm · thân','Mica màu','Ø3.0 × 3','Cắt từ tấm 3 mm, cùng lượt với trụ','1'],
       ['8','Chốt nấm · mũ','Mica gương bạc','Ø5.5 × 1','Cắt cùng tấm với shutter','1'],
@@ -223,9 +224,9 @@ const V={
       ['11','Đồ gá + tấm lót','Mica 3 mm bất kỳ','50 × 50 × 3','Đồ gá có ô xếp lớp; tấm lót có lỗ Ø7 chừa mũ chốt','—']],
     feat:[
       ['W1','Cửa sổ logo, xuyên sáng','6.0 – 24.0','6.0 – 17.0','18 × 11, R1.2','L1, L2, L4'],
-      ['R','Hốc shutter, hở mép trên và mép phải','1.5 – 30','18.5 – 30','Đầu tròn R5.85 tâm N','L1'],
+      ['R','Vùng shutter (L1 không có nửa trên)','0 – 30','18.5 – 30','Shutter phủ hết dải trên','L1'],
       ['WT','Cửa sổ nhìn tài khoản (dưới shutter)','13.5 – 25.0','19.5 – 28.5','11.5 × 9, R0.6','L2'],
-      ['N','Tâm xoay / chốt nấm','7.35','24.35','Lỗ Ø3.0 (L2–L4), Ø3.6 (shutter)','L2, L3, L4, 5'],
+      ['N','Tâm xoay / chốt nấm','5.65','24.35','Lỗ Ø3.0 (L2–L4), Ø3.6 (shutter)','L2, L3, L4, 5'],
       ['P1–P7','Trụ','xem hình','xem hình','Lỗ Ø3.0','L2, L3, L4'],
       ['K','Lỗ khoen','27.0','3.0','Ø3.2','L1–L4']],
     steps:[
@@ -245,24 +246,24 @@ const V={
       ['w','Ma sát xoay: shutter phải xoay nhẹ nhưng đứng yên khi lắc. Nếu lỏng, dùng giấy kê mỏng hơn hoặc bỏ giấy kê. Nếu kẹt, dùng giấy dày hơn.'],
       ['','Dung môi ở hốc chốt có leo lên tới shutter không. Lỗ shutter Ø3.6 rộng hơn thân Ø3.0 để cắt đường mao dẫn. Nếu vẫn dính, chỉ chấm dung môi bằng đầu tăm.'],
       ['','Độ chắc của chốt nấm: kéo thử mũ chốt bằng móng tay sau 24 giờ.'],
-      ['','Góc xoay: shutter mở được khoảng 150° rồi chạm phần L1 bên trái. Khi đóng, mép dưới shutter tựa vào mép hốc nên không xoay quá.'],
+      ['','Góc xoay: shutter dựng đứng ở khoảng 90° thì góc trên trái chạm mép trên L1 và dừng. Khi đóng, mép dưới shutter tựa lên mép trên L1. Xoay thử cả hành trình trên mica thật.'],
       ['','Hiệu ứng lấp lánh của các góc quét khắc logo dưới nắng.']]
   },
   c:{name:'C · Shutter cố định',
     legend:[[1,'#26365e','L1 mặt trước, mica màu 1 mm'],[2,'#26365e','L2, mica màu 1 mm'],[3,'#cfe8f7','L3 lõi khắc, mica đúc trong 1 mm'],[4,'#26365e','L4 mặt sau, có cửa sổ tài khoản'],[5,'#e2e5ea','Shutter cố định, mica gương bạc 1 mm'],[6,'#3f5ea6','Trụ Ø3 × 3 (×7)'],[8,'#b9bec4','Khoen móc khóa Ø20']],
     bom:[
-      ['1','L1 mặt trước','Mica màu (xanh navy / đen)','30 × 30 × 1','Cắt. Hốc shutter hở mép trên và mép phải, đầu tròn R5.85','1'],
+      ['1','L1 mặt trước','Mica màu (xanh navy / đen)','30 × 18.5 × 1','Cắt. Chỉ nửa dưới, cao 18.5; dải trên là shutter','1'],
       ['2','L2','Mica màu, cùng tấm L1','30 × 30 × 1','Cắt. 7 lỗ trụ','1'],
       ['3','L3 lõi khắc','Mica đúc (cast) trong suốt','30 × 30 × 1','Cắt + khắc mặt B: logo lật gương; tài khoản không lật (đọc từ mặt sau)','1'],
       ['4','L4 mặt sau','Mica màu, cùng tấm L1','30 × 30 × 1','Cắt. Cửa sổ WT để đọc tài khoản','1'],
-      ['5','Shutter cố định','Mica gương bạc','28.3 × 11.3 × 1','Cắt. Khe trang trí 4 × 7 giống đĩa mềm thật','1'],
+      ['5','Shutter cố định','Mica gương bạc','30 × 11.3 × 1','Cắt. Khe trang trí 4 × 7 giống đĩa mềm thật','1'],
       ['6','Trụ','Mica màu','Ø3.0* × 3','Cắt từ tấm 3 mm. *Cỡ chốt theo test','7'],
       ['7','Dung môi hàn mica','Loại lỏng như nước','~9 giọt','Chai kim nhỏ giọt','—'],
       ['8','Khoen móc khóa','Thép không gỉ','Ø20, dây 1.2','Mua sẵn','1'],
       ['9','Đồ gá lắp ráp','Mica 3 mm bất kỳ','50 × 50 × 3','Cắt. Dùng chung cả lô','—']],
     feat:[
       ['W1','Cửa sổ logo, xuyên sáng','6.0 – 24.0','6.0 – 17.0','18 × 11, R1.2','L1, L2, L4'],
-      ['R','Hốc shutter, hở mép trên và mép phải','1.5 – 30','18.5 – 30','Đầu tròn R5.85','L1'],
+      ['R','Vùng shutter (L1 không có nửa trên)','0 – 30','18.5 – 30','Shutter phủ hết dải trên','L1'],
       ['WT','Cửa sổ đọc tài khoản ở mặt sau','13.5 – 25.0','19.5 – 28.5','11.5 × 9, R0.6','L4'],
       ['SL','Khe trang trí trên shutter','17.0 – 21.0','20.5 – 27.5','4 × 7, R0.6','5'],
       ['P1–P7','Trụ','xem hình','xem hình','Lỗ Ø3.0','L2, L3, L4'],
@@ -529,11 +530,11 @@ function build2D(v){
   layer(625,'L4 · MẶT SAU',A?'màu 1 mm · cắt':'màu 1 mm · cắt · có WT',Mp=>{poly(Mp,OUT,'v','fill:var(--tint-navy)');rrect(Mp,W,'v','fill:var(--sheet)',LS);circle(Mp,...G.K,G.kR,'v',LS,'fill:var(--sheet)');pinsH(Mp);if(A)circle(Mp,...PV,G.pvR,'v',LS,'fill:var(--sheet)');else rrect(Mp,G.WT,'v','fill:var(--sheet)',LS);});
 
   /* shutter 5:1 */
-  const Sh=(x,y)=>[40+(x-1.7)*5,900+(30-y)*5];
+  const Sh=(x,y)=>[40+x*5,900+(30-y)*5];
   poly(Sh,SHUT,'v','fill:var(--tint-al)');
   if(A){ circle(Sh,...PV,G.pvHole,'v',5,'fill:var(--sheet)'); cross(Sh,...PV,14); leader(Sh(PV[0]+1.3,PV[1]+1.3),[Sh(PV[0],30)[0]+20,888],'Ø3.6'); }
   else rrect(Sh,G.SLOT,'v','fill:var(--sheet)',5);
-  dimH(Sh(1.7,0)[0],Sh(30,0)[0],982,Sh(1.7,18.7)[1]+4,Sh(30,18.7)[1]+4,'28.3');
+  dimH(Sh(0,0)[0],Sh(30,0)[0],982,Sh(0,18.7)[1]+4,Sh(30,18.7)[1]+4,'30');
   txt(40,1040,A?'5 · SHUTTER XOAY   5:1':'5 · SHUTTER CỐ ĐỊNH   5:1','tt'); txt(40,1056,'gương 1 mm · cao 11.3 · R5.65','tx');
 
   if(A){
@@ -542,7 +543,7 @@ function build2D(v){
     out.push(`<rect x="200" y="${Y(1)}" width="50" height="10" style="fill:url(#pA)" class="v"/><rect x="280" y="${Y(1)}" width="50" height="10" style="fill:url(#pA)" class="v"/>`);
     out.push(`<rect x="200" y="${Y(2)}" width="50" height="10" style="fill:url(#pM)" class="v"/><rect x="280" y="${Y(2)}" width="50" height="10" style="fill:url(#pM)" class="v"/>`);
     out.push(`<rect x="200" y="${Y(3)}" width="50" height="10" style="fill:url(#pB)" class="v"/><rect x="280" y="${Y(3)}" width="50" height="10" style="fill:url(#pB)" class="v"/>`);
-    out.push(`<rect x="200" y="${Y(4)}" width="6" height="10" style="fill:url(#pA)" class="v"/>`);
+
     out.push(`<rect x="208.5" y="${Y(4)}" width="38.5" height="10" style="fill:var(--tint-al)" class="v"/><rect x="283" y="${Y(4)}" width="47" height="10" style="fill:var(--tint-al)" class="v"/>`);
     out.push(`<rect x="250" y="${Y(4.1)}" width="30" height="30" style="fill:var(--tint-navy)" class="v"/>`);
     out.push(`<rect x="237.5" y="${Y(5.1)}" width="55" height="10" rx="2" style="fill:var(--tint-al)" class="v"/>`);
@@ -572,7 +573,7 @@ function build2D(v){
   tb(540,900,180,36,'TÊN','MÓC KHÓA ĐĨA MỀM LQĐ');
   tb(720,900,90,36,'SỐ BẢN VẼ','LQD-FD-001');
   tb(540,936,90,32,'PHƯƠNG ÁN',A?'A · xoay':'C · cố định');
-  tb(630,936,70,32,'PHIÊN BẢN','Rev E');
+  tb(630,936,70,32,'PHIÊN BẢN','Rev F');
   tb(700,936,110,32,'NGÀY','13.11.2026');
   tb(540,968,130,32,'VẬT LIỆU','Mica (PMMA)');
   tb(670,968,140,32,'CHIẾU','Góc 1 (E)');
