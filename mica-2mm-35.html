@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}</style>
+<title>Móc khóa LQĐ 2mm 35</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one drafting sheet per section, 3D viewer on top, drawing + tables + self-tests below, single column */
+:root{
+  --paper:#eef1f4; --sheet:#ffffff; --ink:#17202a; --muted:#5a6773; --rule:#cfd6dd;
+  --accent:#1d4fd6; --accent-soft:#e3eafc; --viewer:#c9d2db; --tint-mica:#d8ecfa; --tint-al:#dfe2e7; --tint-navy:#c9d3ea; --tint-dark:#9aa8c8; --warn:#c77700;
+  --f-display:"Be Vietnam Pro",system-ui,sans-serif; --f-body:"Be Vietnam Pro",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0d1217; --sheet:#141b22; --ink:#dde5ec; --muted:#93a1ad; --rule:#2a3540;
+  --accent:#86a8ff; --accent-soft:#1d2a47; --viewer:#1c252f; --tint-mica:#1d3446; --tint-al:#3a4048; --tint-navy:#25314d; --tint-dark:#3b4a6e; --warn:#f0a73a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0d1217; --sheet:#141b22; --ink:#dde5ec; --muted:#93a1ad; --rule:#2a3540;
+  --accent:#86a8ff; --accent-soft:#1d2a47; --viewer:#1c252f; --tint-mica:#1d3446; --tint-al:#3a4048; --tint-navy:#25314d; --tint-dark:#3b4a6e; --warn:#f0a73a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 56px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+header{display:flex;flex-direction:column;gap:6px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,4vw,36px);line-height:1.15;margin:0;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:700;font-size:20px;margin:0;text-wrap:balance}
+.lede{color:var(--muted);max-width:70ch;margin:0}
+.sheet{background:var(--sheet);border:1px solid var(--rule);border-radius:6px;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sheet-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding-bottom:10px}
+.code{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+#viewer{position:relative;height:480px;border-radius:4px;overflow:hidden;background:var(--viewer);touch-action:none}
+#viewer canvas{display:block}
+#balloons{position:absolute;inset:0;pointer-events:none;width:100%;height:100%}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.seg{display:flex;border:1px solid var(--rule);border-radius:5px;overflow:hidden}
+.seg button,.btn{font:500 13px var(--f-body);background:var(--sheet);color:var(--ink);border:0;padding:7px 12px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--rule)}
+.btn{border:1px solid var(--rule);border-radius:5px}
+.seg button[aria-pressed="true"],.btn[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+button:focus-visible,input:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.range{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.range input{width:140px;accent-color:var(--accent)}
+.legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px 18px;margin:0;padding:0;list-style:none;font-size:13.5px}
+.legend li{display:flex;gap:10px;align-items:center;min-width:0}
+.ball{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);font:600 12px var(--f-mono);display:grid;place-items:center}
+.sw{flex:none;width:14px;height:14px;border-radius:3px;border:1px solid var(--rule)}
+.scroll{overflow-x:auto;min-width:0}
+.drawing{min-width:760px;width:100%;height:auto;display:block}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:640px}
+th,td{border:1px solid var(--rule);padding:7px 9px;text-align:left;vertical-align:top}
+th{font-weight:500;background:var(--paper);font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px}
+ol.steps,ul.notes{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.warn{border-left:3px solid var(--warn);border-radius:0;padding:4px 0 4px 12px;list-style:none;margin-left:-22px}
+.hint{font-size:12.5px;color:var(--muted);margin:0}
+a{color:var(--accent)}
+.rev{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;font-size:13.5px;margin:0}
+.rev b{font-family:var(--f-mono);font-weight:600;color:var(--accent)}
+.hist summary{cursor:pointer;font-size:13px;color:var(--muted)}
+.hist .rev{margin-top:6px}
+@media (max-width:640px){#viewer{height:360px}.sheet{padding:14px}}
+</style>
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Bản vẽ LQD-FD-003 · Mica 2 mm · cạnh 35 mm · 14.11.2026</span>
+  <h1>Móc khóa đĩa mềm LQĐ · mica 2 mm · 35 mm</h1>
+  <p class="lede">Bản chính cho tiệm chỉ có mica từ 2 mm. 35 × 35 × 6 mm, 3 lớp mica 2 mm. Cạnh tăng từ 30 lên 35 mm để độ dày 6 mm trông cân đối hơn. So sánh: <a href="mica-2mm.html">bản 2 mm · 30 mm</a>, <a href="index.html">bản 1 mm (Rev K)</a>. Đơn vị: mm.</p>
+  <p class="rev"><b>Cạnh 35 mm</b><span>Phần nhìn thấy được phóng to 35/30 = 1.17 lần: viền, nhãn, cửa sổ, shutter, logo, vị trí trụ. Phần phụ thuộc vật liệu <b>giữ nguyên</b> như bản 30 mm: tấm 2 mm, trụ Ø3, khe hở 0.05–0.1, ngạnh khóa 0.3, khía 0.4, lò xo 0.8 × 6 mm. Vẫn giữ: shutter khảm, khe shutter khắc, lõi lắp xong phẳng mép trên.</span></p>
+</header>
+
+<section class="sheet" aria-labelledby="tcmp">
+  <div class="sheet-head"><h2 id="tcmp">So sánh ba phương án</h2><span class="code">Có hợp lý không?</span></div>
+  <div class="scroll"><table>
+    <thead><tr id="cmpHead"></tr></thead>
+    <tbody id="cmp"></tbody>
+  </table></div>
+</section>
+
+<section class="sheet" aria-labelledby="t3d">
+  <div class="sheet-head"><h2 id="t3d">Mô hình lắp ráp 3D</h2><span class="code">Kéo để xoay · cuộn để phóng to</span></div>
+  <div class="toolbar">
+    <label class="range" for="coreIn">Lắp lõi <input id="coreIn" type="range" min="0" max="1" step="0.01" value="0.6"></label>
+    <label class="range" for="explode">Tách lớp <input id="explode" type="range" min="0" max="1" step="0.01" value="0"></label>
+    <button class="btn" id="btnCut" aria-pressed="false">Mặt cắt A–A</button>
+    <div class="seg" role="group" aria-label="Hướng nhìn">
+      <button data-view="iso" aria-pressed="true">Phối cảnh</button>
+      <button data-view="front" aria-pressed="false">Trước</button>
+      <button data-view="back" aria-pressed="false">Sau</button>
+      <button data-view="side" aria-pressed="false">Cạnh</button>
+      <button data-view="top" aria-pressed="false">Trên</button>
+    </div>
+  </div>
+  <div id="viewer"><svg id="balloons" aria-hidden="true"></svg></div>
+  <ul class="legend" id="legend"></ul>
+  <p class="hint">Trụ tô màu sáng hơn để dễ thấy, thực tế cùng màu với lớp. Logo LQDOJ đã chuyển sang vector bằng cách dò biên từ ảnh gốc; hình trên lõi dùng đúng hình học của file khắc.</p>
+</section>
+
+<section class="sheet" aria-labelledby="t2d">
+  <div class="sheet-head"><h2 id="t2d">Bản vẽ kỹ thuật</h2><span class="code">Chiếu góc thứ nhất (E) · Dung sai chung ISO 2768-m</span></div>
+  <div class="scroll"><div id="drawing"></div></div>
+</section>
+
+<section class="sheet" aria-labelledby="tbom">
+  <div class="sheet-head"><h2 id="tbom">Bảng vật tư (BOM)</h2><span class="code">Cho 1 bộ · đặt dư 10–15 %</span></div>
+  <div class="scroll"><table>
+    <thead><tr><th>Số</th><th>Chi tiết</th><th>Vật liệu</th><th>Quy cách</th><th>Gia công</th><th>SL</th></tr></thead>
+    <tbody id="bom"></tbody>
+  </table></div>
+</section>
+
+<section class="sheet" aria-labelledby="tfeat">
+  <div class="sheet-head"><h2 id="tfeat">Bảng vị trí đặc điểm</h2><span class="code">Gốc tọa độ: góc dưới trái, nhìn từ mặt trước</span></div>
+  <div class="scroll"><table>
+    <thead><tr><th>Ký hiệu</th><th>Đặc điểm</th><th>X</th><th>Y</th><th>Kích thước</th><th>Có trên</th></tr></thead>
+    <tbody id="feat"></tbody>
+  </table></div>
+</section>
+
+<div class="grid2">
+  <section class="sheet" aria-labelledby="tasm">
+    <div class="sheet-head"><h2 id="tasm">Trình tự lắp (≈ 45 giây/bộ)</h2></div>
+    <ol class="steps" id="steps"></ol>
+  </section>
+  <section class="sheet" aria-labelledby="tlaser">
+    <div class="sheet-head"><h2 id="tlaser">Gửi tiệm laser</h2></div>
+    <ul class="notes" id="laser"></ul>
+  </section>
+</div>
+
+<section class="sheet" aria-labelledby="tweld">
+  <div class="sheet-head"><h2 id="tweld">Hàn dung môi: an toàn</h2></div>
+  <ul class="notes">
+    <li>Làm nơi thoáng gió hoặc gần quạt hút. Đeo găng nitrile và khẩu trang than hoạt tính.</li>
+    <li>Người lớn làm, không giao học sinh. Đậy nắp chai ngay sau mỗi lượt.</li>
+    <li>Dung môi dính lên mặt mica, nhất là mặt gương và lõi trong, sẽ để lại vết mờ không lau được. Dùng chai kim nhỏ, nhỏ đúng điểm.</li>
+  </ul>
+</section>
+
+<section class="sheet" aria-labelledby="ttest">
+  <div class="sheet-head"><h2 id="ttest">Kiểm tra hình học tự động</h2><span class="code" id="testSummary">đang chạy…</span></div>
+  <p class="hint">Trang tự kiểm tra lại toàn bộ kích thước mỗi lần mở: thành mica giữa các lỗ, khung che lõi trong, trụ có bị lộ không, vùng khắc có nằm trong cửa sổ không, chồng lớp theo chiều dày, và các số trong bảng có khớp với hình vẽ không. Bản này kiểm tra thêm: ô khảm shutter, tài khoản không lộ ra mặt trước, trụ ghép từ đĩa 2 mm.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Nhóm</th><th>Kiểm tra</th><th>Giá trị</th><th>Yêu cầu</th><th>Kết quả</th></tr></thead>
+    <tbody id="tests"></tbody>
+  </table></div>
+</section>
+
+<section class="sheet" aria-labelledby="tcheck">
+  <div class="sheet-head"><h2 id="tcheck">Cần xác nhận khi cắt thử</h2></div>
+  <ul class="notes" id="checks"></ul>
+</section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function(){
+/* ================= geometry (mm, origin bottom-left seen from front, z: back=0, front=4) ================= */
+const ROUND_WARN=[];
+function roundPoly(pts,r,seg=6){
+  const out=[],n=pts.length;
+  for(let i=0;i<n;i++){
+    const p0=pts[(i-1+n)%n],p1=pts[i],p2=pts[(i+1)%n],R=r[i]||0;
+    if(!R){out.push(p1);continue;}
+    let v1=[p0[0]-p1[0],p0[1]-p1[1]],v2=[p2[0]-p1[0],p2[1]-p1[1]];
+    const l1=Math.hypot(...v1),l2=Math.hypot(...v2); v1=[v1[0]/l1,v1[1]/l1]; v2=[v2[0]/l2,v2[1]/l2];
+    const th=Math.acos(Math.max(-1,Math.min(1,v1[0]*v2[0]+v1[1]*v2[1])));
+    const d=R/Math.tan(th/2);
+    if(d>Math.min(l1,l2)/2+1e-9) ROUND_WARN.push(`R${R} tại (${p1[0].toFixed(2)}, ${p1[1].toFixed(2)})`);
+    const bis=[v1[0]+v2[0],v1[1]+v2[1]], bl=Math.hypot(...bis), h=R/Math.sin(th/2);
+    const c=[p1[0]+bis[0]/bl*h,p1[1]+bis[1]/bl*h], s=[p1[0]+v1[0]*d,p1[1]+v1[1]*d], e=[p1[0]+v2[0]*d,p1[1]+v2[1]*d];
+    let a0=Math.atan2(s[1]-c[1],s[0]-c[0]),a1=Math.atan2(e[1]-c[1],e[0]-c[0]),da=a1-a0;
+    while(da>Math.PI)da-=2*Math.PI; while(da<-Math.PI)da+=2*Math.PI;
+    for(let k=0;k<=seg;k++){const a=a0+da*k/seg;out.push([c[0]+R*Math.cos(a),c[1]+R*Math.sin(a)]);}
+  }
+  return out;
+}
+const rect=(x0,y0,x1,y1)=>[[x0,y0],[x1,y0],[x1,y1],[x0,y1]];
+const rrect=(a)=>roundPoly(rect(a[0],a[1],a[2],a[3]),[a[4],a[4],a[4],a[4]],8);
+/* ===== size parameter =====
+   SZ = side of the square. Everything the eye sees scales with K = SZ/30 (outline features, windows, shutter, logo, pin positions).
+   Everything that depends on the MATERIAL stays fixed: sheet 2 mm, pin Ø3, clearances 0.05–0.1, barb 0.3, notch 0.4,
+   spring beam 0.8 × 6 mm, relief 0.5, corner radii. With SZ = 30 this block gives exactly the 30 mm design. */
+const SZ=35, K=SZ/30;
+const s4=a=>[a[0]*K,a[1]*K,a[2]*K,a[3]*K];
+const s5=a=>[a[0]*K,a[1]*K,a[2]*K,a[3]*K,a[4]];
+const sp=p=>[p[0]*K,p[1]*K];
+/* outline with the two side notches of a real 3.5" disk */
+const NOTCH_Y=[20.5*K,22*K], NOTCH_D=0.8*K, CHAMF=2*K;
+const OUTN_PTS=[[0,0],[SZ,0],[SZ,NOTCH_Y[0]],[SZ-NOTCH_D,NOTCH_Y[0]],[SZ-NOTCH_D,NOTCH_Y[1]],[SZ,NOTCH_Y[1]],[SZ,SZ-CHAMF],[SZ-CHAMF,SZ],
+                [0,SZ],[0,NOTCH_Y[1]],[NOTCH_D,NOTCH_Y[1]],[NOTCH_D,NOTCH_Y[0]],[0,NOTCH_Y[0]]];
+const OUTN=roundPoly(OUTN_PTS,[1,1,0.2,0.2,0.2,0.2,0.6,0.6,1,0.2,0.2,0.2,0.2]);
+/* 2 mm variant: the shutter is INLAID in the front layer F (same 2 mm), flush with the front face and the top edge.
+   Pocket = shutter outline grown by INLAY on the three closed sides; top corners stay sharp so the seam is tight at the edge. */
+const INLAY=0.05;              // nominal clearance per side between shutter and pocket (capillary solvent weld) — fixed
+const SH_BOX=s4([7,18.7,23,30]), SH_R=0.5;
+const TRACK=[SH_BOX[0]-INLAY,SH_BOX[1]-INLAY,SH_BOX[2]+INLAY];   // shutter pocket in F: x0, y0, x1 (open to the top edge)
+const L1P=roundPoly([[0,0],[SZ,0],[SZ,NOTCH_Y[0]],[SZ-NOTCH_D,NOTCH_Y[0]],[SZ-NOTCH_D,NOTCH_Y[1]],[SZ,NOTCH_Y[1]],[SZ,SZ-CHAMF],[SZ-CHAMF,SZ],
+  [TRACK[2],SZ],[TRACK[2],TRACK[1]],[TRACK[0],TRACK[1]],[TRACK[0],SZ],
+  [0,SZ],[0,NOTCH_Y[1]],[NOTCH_D,NOTCH_Y[1]],[NOTCH_D,NOTCH_Y[0]],[0,NOTCH_Y[0]]],
+  [1,1,0.2,0.2,0.2,0.2,0.6,0.6,0,SH_R+INLAY,SH_R+INLAY,0,1,0.2,0.2,0.2,0.2]);
+const SHUT=roundPoly(rect(...SH_BOX),[SH_R,SH_R,0,0],8);
+/* clear core (scaled) and the channel around it (fixed 0.1 clearance) */
+const CX0=5.3*K, CX1=24.7*K, CY0=2.5*K, CLR=0.1;
+const CH={x0:CX0-CLR,x1:CX1+CLR,y0:CY0-CLR};               // core channel in the M frame, open to the top edge
+/* lock: placed at the scaled height, but every lock dimension is fixed (relative to the notch bottom LY) */
+const LY=17.5*K;
+const LK={yRoot:LY+1-6,yTop:LY+1,yRel:LY+1.5,beamW:0.8,relW:0.5,barbY:[LY+0.1,LY+0.9],barbD:0.3}; // beam 0.8 × 6 (2 mm sheet)
+function framePts(withBarbs){
+  const L=CH.x0, R=CH.x1, b=LK;
+  const rb=withBarbs?[[R,b.barbY[1]],[R-b.barbD,b.barbY[0]],[R,b.barbY[0]]]:[];   // right barb: slope on top, flat face below
+  const lb=withBarbs?[[L,b.barbY[0]],[L+b.barbD,b.barbY[0]],[L,b.barbY[1]]]:[];
+  return [[0,0],[SZ,0],[SZ,NOTCH_Y[0]],[SZ-NOTCH_D,NOTCH_Y[0]],[SZ-NOTCH_D,NOTCH_Y[1]],[SZ,NOTCH_Y[1]],[SZ,SZ-CHAMF],[SZ-CHAMF,SZ],
+    [R,SZ],[R,b.yRel],[R+b.beamW+b.relW,b.yRel],[R+b.beamW+b.relW,b.yRoot],[R+b.beamW,b.yRoot],[R+b.beamW,b.yTop],[R,b.yTop],
+    ...rb,[R,CH.y0],[L,CH.y0],
+    ...lb,[L,b.yTop],[L-b.beamW,b.yTop],[L-b.beamW,b.yRoot],[L-b.beamW-b.relW,b.yRoot],[L-b.beamW-b.relW,b.yRel],[L,b.yRel],[L,SZ],
+    [0,SZ],[0,NOTCH_Y[1]],[NOTCH_D,NOTCH_Y[1]],[NOTCH_D,NOTCH_Y[0]],[0,NOTCH_Y[0]]];
+}
+const FRAME_R={'0,0':1,[`${SZ},0`]:1,[`${SZ},${NOTCH_Y[0]}`]:0.2,[`${SZ-NOTCH_D},${NOTCH_Y[0]}`]:0.2,[`${SZ-NOTCH_D},${NOTCH_Y[1]}`]:0.2,[`${SZ},${NOTCH_Y[1]}`]:0.2,[`${SZ},${SZ-CHAMF}`]:0.6,[`${SZ-CHAMF},${SZ}`]:0.6,
+  [`0,${SZ}`]:1,[`0,${NOTCH_Y[1]}`]:0.2,[`${NOTCH_D},${NOTCH_Y[1]}`]:0.2,[`${NOTCH_D},${NOTCH_Y[0]}`]:0.2,[`0,${NOTCH_Y[0]}`]:0.2,
+  [`${CH.x1},${SZ}`]:0.3,[`${CH.x0},${SZ}`]:0.3,[`${CH.x1},${CH.y0}`]:0.5,[`${CH.x0},${CH.y0}`]:0.5};
+const framePoly=wb=>{const p=framePts(wb);return roundPoly(p,p.map(q=>FRAME_R[`${q[0]},${q[1]}`]||0));};
+const FRAME=framePoly(true), FRAME_NB=framePoly(false);
+/* spring-arm zones (arm + relief slot) used by the tests */
+const LKZ=[[CH.x0-LK.beamW-LK.relW,LK.yRoot,CH.x0,LK.yRel],[CH.x1,LK.yRoot,CH.x1+LK.beamW+LK.relW,LK.yRel]];   // arm + relief slot (barbs are checked separately)
+/* clear core: rectangle with a lock notch on each side edge; top edge flush with the keychain top once inserted */
+const CORE_NOTCH={y:[LY,LY+1.1],d:0.4};
+const CORE_PTS=[[CX0,CY0],[CX1,CY0],[CX1,CORE_NOTCH.y[0]],[CX1-CORE_NOTCH.d,CORE_NOTCH.y[0]],[CX1-CORE_NOTCH.d,CORE_NOTCH.y[1]],[CX1,CORE_NOTCH.y[1]],
+  [CX1,SZ],[CX0,SZ],[CX0,CORE_NOTCH.y[1]],[CX0+CORE_NOTCH.d,CORE_NOTCH.y[1]],[CX0+CORE_NOTCH.d,CORE_NOTCH.y[0]],[CX0,CORE_NOTCH.y[0]]];
+const CORE=roundPoly(CORE_PTS,[0.8,0.8,0,0,0,0,0.2,0.2,0,0,0,0]);
+const G={
+  W1:s5([5.8,3,24.2,16.5,1.2]),           // clear label window (F)
+  WT:s5([11,19.5,22,27.5,0.6]),           // account window (B, read from the back)
+  SLOT:s5([15.5,20.5,19.5,28,0.6]),       // window slot on the shutter: ENGRAVED (fill), not cut — a through-slot would show the account
+  WP:s5([1.3,1.3,3.9,3.9,0.4]),           // write-protect square (F); left half also cut in the M frame
+  WPH:s5([1.3,1.3,2.6,3.9,0.3]),
+  HD:s5([26.1,1.3,28.7,3.9,0.4]),         // HD square through all layers, carries the key ring
+  LOGO:s4([6.5,3.55,23.5,15.95]),         // engraving zone of the logo (core, face B, mirrored)
+  TKZ:s4([11.6,20.1,21.4,26.9]),          // engraving zone of the account (core, face B, not mirrored)
+  ARROW:[[1.9,6],[3.3,6],[2.6,7.4]].map(sp),  // engraved arrow on F
+  HUB:{c:sp([15,10.5]),r:5.5*K,ri:2.2*K}, // engraved hub ring on B (back face)
+  MARK:s4([6.2,22,10,27]),                // engraved "↓ SAU" orientation mark on the core, hidden once inserted
+  pins:[[2.6,7],[27.4,7],[27.4,24.5]].map(sp), pR:1.5, pinLen:4, pinDisc:2,
+  /* 3 layers of 2 mm. Keys kept from the 1 mm page: L4 = back B, L3 = frame M + core, L1 = front F (+ inlaid shutter) */
+  zL:{L4:[0,2],L3:[2,4],L1:[4,6]}, TH:6, cutX:18*K
+};
+
+/* ================= document data ================= */
+/* every number in the tables is computed from the geometry above (tests re-check them) */
+const nf=v=>String(+(+v).toFixed(2)), rg=(a,b)=>`${nf(a)} – ${nf(b)}`, sz=(a,b)=>`${nf(a)} × ${nf(b)}`;
+const coreW=CX1-CX0, coreH=SZ-CY0, shW=SH_BOX[2]-SH_BOX[0], shH=SH_BOX[3]-SH_BOX[1];
+const gram=s=>Math.round(s*s*6*1.19e-3*0.92);
+const setsPerSheet=s=>Math.floor(Math.floor(592/(s+2))*Math.floor(392/(s+2))/3);
+const D={
+  legend:[[1,'#26365e','F mặt trước, mica màu 2 mm'],[2,'#2c3e6b','M khung, mica màu 2 mm'],[3,'#cfe8f7','Lõi trong, mica đúc trong 2 mm'],[4,'#26365e','B mặt sau, mica màu 2 mm'],[5,'#9aa0a8','Shutter khảm, mica xám 2 mm'],[6,'#3f5ea6','Trụ Ø3 × 4 = 2 đĩa 2 mm (×3)'],[8,'#b9bec4','Khoen móc khóa Ø20']],
+  bom:[
+    ['1','F mặt trước','Mica màu (xanh dương)',`${sz(SZ,SZ)} × 2`,'Cắt: nhãn W1, ô khảm shutter hở mép trên, ô chống ghi WP, lỗ HD. Khắc nhẹ mũi tên','1'],
+    ['2','M khung','Mica màu, cùng tấm F',`${sz(SZ,SZ)} × 2`,'Cắt: rãnh lắp lõi hở mép trên, 2 lò xo khóa có ngạnh, nửa ô WP, lỗ HD, 3 lỗ trụ','1'],
+    ['3','Lõi trong','Mica đúc (cast) trong suốt',`${sz(coreW,coreH)} × 2`,'Cắt: 2 khía khóa ở hai cạnh. Khắc mặt B: logo lật gương, tài khoản không lật (CSV), dấu chiều lắp','1'],
+    ['4','B mặt sau','Mica màu, cùng tấm F',`${sz(SZ,SZ)} × 2`,'Cắt: cửa sổ WT, lỗ HD, 3 lỗ trụ. Khắc nhẹ vòng hub và viền shutter','1'],
+    ['5','Shutter','Mica xám',`${sz(shW,shH)} × 2`,`Cắt viền. Khắc phủ khe cửa sổ ${sz(G.SLOT[2]-G.SLOT[0],G.SLOT[3]-G.SLOT[1])} (không cắt xuyên)`,'1'],
+    ['6','Trụ','Mica màu, cùng tấm F','Ø3.0* × 2','Cắt. 2 đĩa chồng thành 1 trụ cao 4. *Cỡ theo test',String(G.pins.length*G.pinLen/G.pinDisc)],
+    ['7','Dung môi hàn mica','Loại lỏng như nước','~6 giọt','Chai kim nhỏ giọt','—'],
+    ['8','Khoen móc khóa','Thép không gỉ','Ø20, dây 1.2','Mua sẵn','1'],
+    ['9','Đồ gá lắp ráp','Mica 2 mm bất kỳ',`${sz(SZ+20,SZ+20)} × 2`,'Cắt. Dùng chung cả lô','—']],
+  feat:[
+    ['W1','Nhãn trong suốt (khắc logo)',rg(G.W1[0],G.W1[2]),rg(G.W1[1],G.W1[3]),`${sz(G.W1[2]-G.W1[0],G.W1[3]-G.W1[1])}, R${G.W1[4]}`,'F'],
+    ['TR','Ô khảm shutter, hở mép trên',rg(TRACK[0],TRACK[2]),rg(TRACK[1],SZ),`${sz(TRACK[2]-TRACK[0],SZ-TRACK[1])}, R${SH_R+INLAY}`,'F'],
+    ['SL','Khe cửa sổ khắc trên shutter',rg(G.SLOT[0],G.SLOT[2]),rg(G.SLOT[1],G.SLOT[3]),`${sz(G.SLOT[2]-G.SLOT[0],G.SLOT[3]-G.SLOT[1])}, R${G.SLOT[4]}, khắc`,'5'],
+    ['WT','Cửa sổ đọc tài khoản (mặt sau)',rg(G.WT[0],G.WT[2]),rg(G.WT[1],G.WT[3]),`${sz(G.WT[2]-G.WT[0],G.WT[3]-G.WT[1])}, R${G.WT[4]}`,'B'],
+    ['WP','Ô chống ghi',rg(G.WP[0],G.WP[2]),rg(G.WP[1],G.WP[3]),`${sz(G.WP[2]-G.WP[0],G.WP[3]-G.WP[1])} (M: nửa trái)`,'F, M'],
+    ['HD','Lỗ HD vuông, xỏ khoen',rg(G.HD[0],G.HD[2]),rg(G.HD[1],G.HD[3]),`${sz(G.HD[2]-G.HD[0],G.HD[3]-G.HD[1])}, R${G.HD[4]}`,'F, M, B'],
+    ['N','Rãnh hai cạnh',`${rg(0,NOTCH_D)} / ${rg(SZ-NOTCH_D,SZ)}`,rg(NOTCH_Y[0],NOTCH_Y[1]),sz(NOTCH_D,NOTCH_Y[1]-NOTCH_Y[0]),'F, M, B'],
+    ['CH','Rãnh lắp lõi, hở mép trên',rg(CH.x0,CH.x1),rg(CH.y0,SZ),sz(CH.x1-CH.x0,SZ-CH.y0),'M khung'],
+    ['LK','Lò xo khóa có ngạnh (2 bên)',`${rg(CH.x0-LK.beamW-LK.relW,CH.x0+LK.barbD)} / ${rg(CH.x1-LK.barbD,CH.x1+LK.beamW+LK.relW)}`,rg(LK.yRoot,LK.yRel),`thanh ${LK.beamW} × ${nf(LK.yTop-LK.yRoot)}, ngạnh ${LK.barbD}`,'M khung'],
+    ['P1–P3','Trụ','xem hình','xem hình','Lỗ Ø3.0','M, B']],
+  steps:[
+    '<b>Giai đoạn 1 · khảm shutter:</b> đặt F <b>1</b> úp mặt trước xuống tấm phẳng, ấn shutter <b>5</b> vào ô khảm (mặt khắc úp xuống). Nhỏ dung môi dọc 3 mép tiếp giáp <b>từ mặt sau của F</b>, để mao dẫn tự chạy vào khe. Chờ 15 phút.',
+    '<b>Giai đoạn 2 · làm sẵn thân:</b> trong đồ gá <b>9</b>: F (vẫn úp) → khung M <b>2</b> → B <b>4</b> mặt khắc ra ngoài. Góc vát chỉ cho đặt đúng một chiều. <b>Chưa có lõi.</b>',
+    'Thả 2 đĩa trụ <b>6</b> vào mỗi lỗ, kẹp lại, nhỏ 1 giọt nhỏ vào mép mỗi trụ ở mặt sau. Để khô 1 giờ, xỏ khoen <b>8</b>.',
+    '<b>Giai đoạn 3 · lắp lõi (không keo):</b> khắc lõi <b>3</b> xong, cầm lõi với dấu "↓ SAU" hướng về mặt sau và mũi tên chỉ xuống.',
+    'Đưa lõi vào khe ở mép trên của móc khóa, đẩy thẳng xuống tới khi nghe "tách" ở cả hai bên. Lõi bị khóa, mép trên của lõi nằm phẳng với mép móc khóa.'],
+  laser:[
+    '<b>Tấm màu 2 mm:</b> F, khung M, B, trụ, đồ gá. <b>Tấm trong 2 mm:</b> lõi. <b>Tấm xám 2 mm:</b> shutter. Chỉ cần mica 2 mm.',
+    'Quy ước nét: <b>đỏ = cắt xuyên</b>, <b>xanh = khắc</b>. Mở file đúng tỉ lệ 100%. <b>Bắt buộc bù kerf</b>: ngạnh khóa lõi và ô khảm shutter đều tính theo kích thước thật.',
+    'Shutter: cắt viền, <b>khắc phủ</b> khe cửa sổ ở mặt trước (sâu 0.2–0.4 mm). Có thể tô đen khe bằng bút sơn.',
+    `Lõi khắc ở mặt B: logo lật gương (đọc từ trước), tài khoản không lật (đọc từ sau), dấu chiều lắp "↓ SAU" ở góc trên trái (bị che sau khi lắp). Logo ${sz(G.LOGO[2]-G.LOGO[0],G.LOGO[3]-G.LOGO[1])} mm, cùng hình với bản 30 mm, phóng to ${nf(K)} lần.`,
+    '<b>Nét khắc trắng:</b> khắc lõi khi <b>chưa bóc màng bảo vệ</b>, phun sơn acrylic trắng, để khô 15–30 phút rồi bóc màng.',
+    'Khắc nhẹ (công suất thấp) trên F và B: mũi tên, vòng hub, viền shutter.',
+    'Giữ màng bảo vệ khi cắt, nhất là tấm trong. Bóc màng ngay trước khi lắp.'],
+  checks:[
+    ['w','Độ dày thật của tấm 2 mm (mica đùn thường lệch ±0.1–0.2 mm). Quan trọng nhất: lõi trong phải <b>không dày hơn</b> khung M, vì lõi trượt kẹp giữa F và B. Đo cả hai bằng thước kẹp; nên lấy tấm trong và tấm màu cùng một hãng.'],
+    ['w','Ô khảm shutter: cắt thử F + shutter. Shutter phải ấn vào được bằng tay và không rơi ra khi lật. Lỏng quá thì dung môi không bắc cầu được; chật quá thì không vào.'],
+    ['w','Lò xo khóa trên tấm 2 mm: thanh 0.8 mm cứng gấp khoảng 5 lần bản 1 mm. Cắt thử khung + lõi, đẩy vào xem có "tách" và không rút ra được. Nếu thanh bị cháy cạnh hay cong, tăng lên 1.0 mm.'],
+    ['w','Khi hàn shutter, dung môi không được chảy xuống khung M (lúc đó F chưa ghép nên không chạm). Khi hàn trụ, dung môi không được chạm lò xo. Trụ cách lò xo ≥ 3 mm.'],
+    ['',`Cỡ ${sz(SZ,SZ)} × 6 mm, nặng khoảng ${gram(SZ)} g. Thử cầm một miếng mica cùng cỡ để xem có vừa tay không.`],
+    ['','Độ rõ của chữ tài khoản khi đọc qua cửa sổ B sâu 2 mm, và của logo khi nhìn qua nhãn sâu 2 mm.']],
+  cmpHead:['Tiêu chí','1 mm · 30 mm (Rev K)','2 mm · 30 mm',`2 mm · ${nf(SZ)} mm (trang này)`,'Đánh giá'],
+  cmp:[
+    ['Kích thước','30 × 30 × 4','30 × 30 × 6',`${sz(SZ,SZ)} × 6`,`Dày / cạnh: 13% · 20% · ${Math.round(600/SZ)}%. Cạnh ${nf(SZ)} mm làm độ dày đỡ nổi hơn.`],
+    ['Khối lượng','≈ 4 g',`≈ ${gram(30)} g`,`≈ ${gram(SZ)} g`,'Vẫn nhẹ cho móc khóa.'],
+    ['Vùng khắc logo','17 × 12.4','17 × 12.4',sz(G.LOGO[2]-G.LOGO[0],G.LOGO[3]-G.LOGO[1]),`Logo to hơn ${Math.round((K-1)*100)}%, nét mảnh nhất ${nf(0.16*K)} mm.`],
+    ['Vùng chữ tài khoản','9.8 × 6.8','9.8 × 6.8',sz(G.TKZ[2]-G.TKZ[0],G.TKZ[3]-G.TKZ[1]),'Chữ tài khoản to hơn, dễ đọc hơn.'],
+    ['Số bộ thân trên tấm 600 × 400','54','72',String(setsPerSheet(SZ)),'Tốn mica hơn bản 30 mm.'],
+    ['Shutter','Trong rãnh, hàn mặt','Khảm, hàn theo mép','Khảm, hàn theo mép','Như bản 2 mm · 30.'],
+    ['Khe cửa sổ trên shutter','Cắt xuyên','Khắc','Khắc','Cắt xuyên sẽ lộ tài khoản.'],
+    ['Khe hở, ngạnh, lò xo, trụ','—','0.05–0.1 · 0.3 · 0.8 × 6 · Ø3','Giống hệt bản 2 mm · 30','Không phóng to: phụ thuộc vật liệu, không phụ thuộc cỡ.']]
+};
+
+/* ================= 3D ================= */
+function build3D(){
+  if(!window.THREE){document.getElementById('viewer').insertAdjacentHTML('beforeend','<p style="padding:20px">Không tải được thư viện 3D.</p>');return null;}
+  const el=document.getElementById('viewer');
+  const renderer=new THREE.WebGLRenderer({antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.localClippingEnabled=true;
+  el.insertBefore(renderer.domElement, el.firstChild);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(30,1,0.5,1000);
+  const ISO=[66,52,104]; camera.position.set(...ISO);
+  const controls=new THREE.OrbitControls(camera,renderer.domElement); controls.enableDamping=true;
+  const setBg=()=>{scene.background=new THREE.Color(getComputedStyle(document.documentElement).getPropertyValue('--viewer').trim()||'#c9d2db');};
+  setBg(); matchMedia('(prefers-color-scheme: dark)').addEventListener('change',setBg);
+  new MutationObserver(setBg).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  scene.add(new THREE.HemisphereLight(0xffffff,0x445566,0.9));
+  const d1=new THREE.DirectionalLight(0xffffff,0.9); d1.position.set(30,40,60); scene.add(d1);
+  const d2=new THREE.DirectionalLight(0xffffff,0.45); d2.position.set(-40,-20,-50); scene.add(d2);
+  const DS=THREE.DoubleSide;
+  const M={navy:new THREE.MeshStandardMaterial({color:0x26365e,roughness:0.25,side:DS}),
+    navy2:new THREE.MeshStandardMaterial({color:0x2c3e6b,roughness:0.25,side:DS}),
+    pin:new THREE.MeshStandardMaterial({color:0x3f5ea6,roughness:0.3,side:DS}),
+    mica:new THREE.MeshStandardMaterial({color:0xd7eefb,roughness:0.05,transparent:true,opacity:0.1,depthWrite:false,side:DS}),
+    mirror:new THREE.MeshStandardMaterial({color:0x8d939b,roughness:0.3,metalness:0.1,side:DS}),
+    steel:new THREE.MeshStandardMaterial({color:0xb4bac1,roughness:0.35,metalness:0.3,side:DS}),
+    edge:new THREE.LineBasicMaterial({color:0x0a1020,transparent:true,opacity:0.55}),
+    edgeMica:new THREE.LineBasicMaterial({color:0x5aa7d8,transparent:true,opacity:0.9}),
+    engr:new THREE.LineBasicMaterial({color:0x9fb1db})};
+  const shape=pts=>{const s=new THREE.Shape();s.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)s.lineTo(pts[i][0],pts[i][1]);s.closePath();return s;};
+  const path=pts=>{const p=new THREE.Path();p.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)p.lineTo(pts[i][0],pts[i][1]);p.closePath();return p;};
+  const circ=(x,y,r)=>{const p=new THREE.Path();p.absarc(x,y,r,0,Math.PI*2,true);return p;};
+  function extr(s,z0,z1,mat,edge){const g=new THREE.ExtrudeGeometry(s,{depth:z1-z0,bevelEnabled:false,curveSegments:20});const grp=new THREE.Group();grp.add(new THREE.Mesh(g,mat));grp.add(new THREE.LineSegments(new THREE.EdgesGeometry(g,25),edge||M.edge));grp.position.z=z0;return grp;}
+  function cyl(r,z0,z1,x,y,mat){const g=new THREE.Group();const c=new THREE.Mesh(new THREE.CylinderGeometry(r,r,z1-z0,32),mat);c.rotation.x=Math.PI/2;c.position.set(x,y,(z0+z1)/2);g.add(c);const e=new THREE.LineSegments(new THREE.EdgesGeometry(c.geometry,25),M.edge);e.rotation.copy(c.rotation);e.position.copy(c.position);g.add(e);return g;}
+  const loop=(pts,z)=>new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts.map(p=>new THREE.Vector3(p[0],p[1],z))),M.engr);
+  const circlePts=(c,r,n=64)=>Array.from({length:n},(_,k)=>[c[0]+r*Math.cos(2*Math.PI*k/n),c[1]+r*Math.sin(2*Math.PI*k/n)]);
+  const Z=G.zL, root=new THREE.Group(); root.position.set(-SZ/2,-SZ/2,-G.TH/2); scene.add(root); const P={};
+  const pinH=()=>G.pins.map(p=>circ(p[0],p[1],G.pR));
+
+  let s=shape(L1P); s.holes.push(path(rrect(G.W1)),path(rrect(G.WP)),path(rrect(G.HD)));
+  P.L1=new THREE.Group(); P.L1.add(extr(s,...Z.L1,M.navy)); P.L1.add(loop(G.ARROW,Z.L1[1]+0.02));
+  s=shape(FRAME); s.holes.push(path(rrect(G.WPH)),path(rrect(G.HD)),...pinH());
+  P.L3F=new THREE.Group(); P.L3F.add(extr(s,...Z.L3,M.navy));
+  P.L3=new THREE.Group(); const core=extr(shape(CORE),...Z.L3,M.mica,M.edgeMica); core.children[0].renderOrder=2; P.L3.add(core);
+  const plane=(tex,zone,flip)=>{const w=zone[2]-zone[0],h=zone[3]-zone[1];const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tex,transparent:true,depthWrite:false,side:DS}));m.position.set((zone[0]+zone[2])/2,(zone[1]+zone[3])/2,Z.L3[0]+0.03);if(flip)m.rotation.y=Math.PI;m.renderOrder=3;return m;};
+  P.L3.add(plane(logoTexture(),G.LOGO,false));
+  P.L3.add(plane(accTexture(),G.TKZ,true));
+  P.L3.add(plane(markTexture(),G.MARK,true));
+  s=shape(OUTN); s.holes.push(path(rrect(G.WT)),path(rrect(G.HD)),...pinH());
+  P.L4=new THREE.Group(); P.L4.add(extr(s,...Z.L4,M.navy));
+  P.L4.add(loop(circlePts(G.HUB.c,G.HUB.r),-0.02)); P.L4.add(loop(circlePts(G.HUB.c,G.HUB.ri),-0.02));
+  P.L4.add(loop(rect(G.HUB.c[0]-0.8,G.HUB.c[1]-0.8,G.HUB.c[0]+0.8,G.HUB.c[1]+0.8),-0.02));
+  P.L4.add(loop(rect(G.HUB.c[0]+2.6,G.HUB.c[1]-3.6,G.HUB.c[0]+3.6,G.HUB.c[1]-2.2),-0.02));
+  P.L4.add(loop(SHUT,-0.02));
+  /* key ring through the HD square */
+  const hc=[(G.HD[0]+G.HD[2])/2,(G.HD[1]+G.HD[3])/2];
+  const K3=new THREE.Vector3(hc[0],hc[1],G.TH/2), dv=new THREE.Vector3(1,-1,0).normalize(), up=new THREE.Vector3(0,0,1), R=9;
+  const torus=new THREE.Mesh(new THREE.TorusGeometry(R,0.6,14,90),M.steel);
+  torus.setRotationFromMatrix(new THREE.Matrix4().makeBasis(dv,up,new THREE.Vector3().crossVectors(dv,up)));
+  const ringC=K3.clone().addScaledVector(dv,R); torus.position.copy(ringC); P.L4.add(torus);
+  /* inlaid shutter: solid gray, the window slot is an engraved pocket on its front face (drawn as a darker inset) */
+  P.SH=new THREE.Group(); P.SH.add(extr(shape(SHUT),...Z.L1,M.mirror));
+  const slotM=new THREE.Mesh(new THREE.ShapeGeometry(shape(rrect(G.SLOT))),new THREE.MeshStandardMaterial({color:0x4c535c,roughness:0.9,side:DS}));
+  slotM.position.z=Z.L1[1]+0.02; P.SH.add(slotM); P.SH.add(loop(rrect(G.SLOT),Z.L1[1]+0.03));
+  /* each pin = two 2 mm discs stacked */
+  P.PIN=new THREE.Group(); G.pins.forEach(p=>{for(let z=0;z<G.pinLen-1e-9;z+=G.pinDisc)P.PIN.add(cyl(G.pR-0.04,z,z+G.pinDisc,p[0],p[1],M.pin));});
+  for(const k in P) root.add(P[k]);
+  const OFF={L4:0,L3F:6,L3:6,L1:12,SH:18,PIN:-9};
+  const anchors=[[1,P.L1,[0.5,9*K,6]],[2,P.L3F,[SZ,9*K,3]],[3,P.L3,[CX1,9*K,3]],[4,P.L4,[10*K,0,1]],[5,P.SH,[SH_BOX[2],26*K,6]],[6,P.PIN,[G.pins[0][0],G.pins[0][1]+3,0]],[8,P.L4,ringC.clone().addScaledVector(dv,R).toArray()]]
+    .map(a=>({n:a[0],obj:a[1],p:new THREE.Vector3(...a[2])}));
+
+  const CORE_OUT=SZ;   // core start position: lifted fully above the top edge
+  const state={e:0,eT:0,c:0.6,cT:0.6};
+  const exp=document.getElementById('explode'); exp.addEventListener('input',()=>{state.eT=+exp.value;});
+  const cin=document.getElementById('coreIn'); cin.addEventListener('input',()=>{state.cT=+cin.value;});
+  const cutPlane=new THREE.Plane(new THREE.Vector3(-1,0,0),G.cutX-SZ/2);
+  const bC=document.getElementById('btnCut');
+  bC.addEventListener('click',()=>{const on=bC.getAttribute('aria-pressed')!=='true';bC.setAttribute('aria-pressed',on);renderer.clippingPlanes=on?[cutPlane]:[];});
+  const VIEWS={iso:ISO,front:[0,0,120],back:[0,0,-120],side:[120,0,0.01],top:[0,90,22]};
+  document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-view]').forEach(x=>x.setAttribute('aria-pressed',x===b));
+    camera.position.set(...VIEWS[b.dataset.view]); camera.up.set(0,1,0); controls.target.set(0,0,0); controls.update();
+  }));
+  const bsvg=document.getElementById('balloons');
+  function drawBalloons(w,h){
+    if(!w||!h){bsvg.innerHTML='';return;}
+    const cs=getComputedStyle(document.documentElement);
+    const ink=cs.getPropertyValue('--accent').trim()||'#1d4fd6', bg=cs.getPropertyValue('--sheet').trim()||'#fff';
+    let out='';
+    anchors.forEach(a=>{
+      const v=a.obj.localToWorld(a.p.clone()).project(camera); if(v.z>1)return;
+      const x=(v.x+1)/2*w, y=(1-v.y)/2*h;
+      let dx=x-w/2, dy=y-h/2; const L=Math.hypot(dx,dy)||1; dx/=L; dy/=L;
+      const bx=Math.min(w-16,Math.max(16,x+dx*52)), by=Math.min(h-16,Math.max(16,y+dy*52));
+      out+=`<line x1="${x}" y1="${y}" x2="${bx}" y2="${by}" stroke="${ink}" stroke-width="1"/><circle cx="${x}" cy="${y}" r="2.2" fill="${ink}"/><circle cx="${bx}" cy="${by}" r="12" fill="${bg}" stroke="${ink}" stroke-width="1.5"/><text x="${bx}" y="${by+4}" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" font-weight="600" fill="${ink}">${a.n}</text>`;
+    });
+    bsvg.innerHTML=out;
+  }
+  function resize(){const w=el.clientWidth,h=el.clientHeight;if(!w||!h)return;renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();bsvg.setAttribute('viewBox',`0 0 ${w} ${h}`);}
+  new ResizeObserver(resize).observe(el); resize();
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  (function tick(){
+    state.e+=(state.eT-state.e)*(reduce?1:0.12); state.c+=(state.cT-state.c)*(reduce?1:0.12);
+    for(const k in P) P[k].position.z=(OFF[k]||0)*state.e;
+    P.L3.position.y=(1-state.c)*CORE_OUT;
+    controls.update(); renderer.render(scene,camera); drawBalloons(el.clientWidth,el.clientHeight);
+    requestAnimationFrame(tick);
+  })();
+  return true;
+}
+
+/* ================= engraving textures ================= */
+/* LQDOJ logo, vectorised by edge tracing from the supplied raster — same geometry as logo-lqdoj/khac-logo-lqdoj-doc-thuan.svg.
+   Units: mm inside the 17 × 12.4 engraving zone, y pointing down, reading direction as seen from the front. */
+const LOGO_ENG0={w:17,h:12.4,minStroke:0.16,layers:[
+  {key:'vong',name:'vòng cam',deg:45,fill:false,d:'M8.343 0.043 L8.536 0.043 L8.513 0.063 L8.504 0.087 L8.527 0.123 L8.53 0.14 L8.53 1.2 L8.549 1.261 L8.546 1.276 L8.431 1.281 L8.4 1.29 L8.211 1.291 L8.189 1.299 L8.141 1.301 L8.119 1.309 L8.061 1.311 L8.039 1.319 L8.011 1.321 L7.929 1.349 L7.791 1.371 L7.667 1.417 L7.543 1.453 L7.357 1.547 L7.323 1.553 L7.283 1.573 L7.237 1.607 L7.183 1.623 L7.103 1.663 L6.993 1.733 L6.967 1.757 L6.783 1.883 L6.732 1.933 L6.707 1.948 L6.487 2.167 L6.473 2.192 L6.378 2.288 L6.303 2.393 L6.277 2.447 L6.232 2.502 L6.183 2.543 L6.033 2.833 L6.029 2.859 L6.017 2.887 L5.973 2.953 L5.947 3.027 L5.923 3.073 L5.919 3.119 L5.883 3.203 L5.869 3.279 L5.831 3.381 L5.829 3.429 L5.821 3.451 L5.819 3.479 L5.791 3.561 L5.789 3.619 L5.781 3.641 L5.779 3.699 L5.771 3.721 L5.769 3.779 L5.76 3.81 L5.761 4.199 L5.769 4.221 L5.771 4.309 L5.779 4.331 L5.781 4.439 L5.803 4.517 L5.829 4.581 L5.831 4.669 L5.883 4.837 L5.909 4.901 L5.913 4.927 L5.929 4.961 L5.931 4.989 L5.943 5.027 L5.987 5.103 L6.003 5.147 L6.027 5.183 L6.123 5.387 L6.163 5.457 L6.303 5.657 L6.393 5.758 L6.497 5.893 L6.543 5.928 L6.556 5.947 L6.544 5.973 L6.543 5.992 L6.497 6.018 L5.777 6.737 L5.713 6.836 L5.537 6.662 L5.522 6.638 L5.447 6.563 L5.243 6.297 L5.207 6.233 L5.093 6.067 L4.997 5.873 L4.943 5.797 L4.753 5.337 L4.749 5.291 L4.681 5.109 L4.669 5.041 L4.641 4.939 L4.639 4.911 L4.611 4.849 L4.609 4.761 L4.591 4.709 L4.579 4.561 L4.551 4.439 L4.549 4.251 L4.521 4.179 L4.521 3.861 L4.549 3.749 L4.55 3.63 L4.559 3.599 L4.561 3.511 L4.589 3.419 L4.591 3.341 L4.599 3.319 L4.631 3.141 L4.681 2.941 L4.793 2.603 L4.827 2.537 L4.883 2.373 L4.947 2.257 L4.973 2.183 L5.007 2.147 L5.173 1.853 L5.237 1.777 L5.283 1.693 L5.327 1.647 L5.367 1.577 L5.473 1.472 L5.558 1.357 L5.777 1.127 L5.963 0.983 L6.004 0.934 L6.117 0.857 L6.168 0.807 L6.207 0.787 L6.253 0.743 L6.607 0.537 L6.683 0.483 L6.747 0.467 L6.787 0.447 L6.833 0.413 L6.897 0.397 L7.047 0.337 L7.127 0.297 L7.143 0.283 L7.209 0.279 L7.293 0.243 L7.391 0.211 L7.681 0.141 L7.709 0.139 L7.731 0.131 L7.789 0.129 L7.811 0.121 L7.869 0.119 L7.961 0.091 L8.069 0.079 L8.091 0.071 L8.21 0.07 L8.24 0.061 L8.269 0.069 Z M9.094 1.343 L11.06 1.34 L11.123 1.367 L11.167 1.413 L11.17 1.43 L11.167 3.386 L11.143 3.337 L11.131 3.289 L11.129 3.241 L11.121 3.219 L11.117 3.183 L11.043 3.027 L11.027 2.963 L10.993 2.897 L10.977 2.843 L10.863 2.657 L10.817 2.553 L10.742 2.447 L10.693 2.397 L10.643 2.317 L10.598 2.272 L10.582 2.248 L10.477 2.143 L10.463 2.118 L10.352 2.007 L10.328 1.992 L10.293 1.958 L10.217 1.903 L10.182 1.867 L10.027 1.743 L9.903 1.677 L9.847 1.633 L9.747 1.583 L9.427 1.443 L9.209 1.371 L9.129 1.351 L9.101 1.349 Z'},
+  {key:'j',name:'chữ J đỏ sậm',deg:135,fill:false,d:'M8.574 0.044 L12.4 0.04 L12.437 0.053 L12.463 0.077 L12.48 0.12 L12.47 0.16 L12.47 4.13 L12.479 4.161 L12.48 4.24 L12.471 4.271 L12.469 4.349 L12.461 4.371 L12.459 4.449 L12.451 4.471 L12.449 4.559 L12.441 4.581 L12.439 4.629 L12.431 4.651 L12.379 4.929 L12.247 5.377 L12.107 5.717 L11.927 6.057 L11.737 6.347 L11.502 6.643 L11.197 6.947 L11.182 6.973 L11.152 7.003 L11.098 7.037 L10.973 7.152 L10.923 7.183 L10.777 7.297 L10.553 7.433 L10.477 7.487 L10.097 7.677 L9.817 7.787 L9.691 7.821 L9.579 7.859 L9.139 7.959 L9.071 7.961 L9.049 7.969 L8.901 7.981 L8.879 7.989 L8.811 7.991 L8.789 7.999 L8.6 8 L8.56 8.01 L8.43 8.01 L8.39 8 L8.25 8 L8.21 7.99 L8.081 7.989 L8.059 7.981 L8.011 7.979 L7.989 7.971 L7.931 7.969 L7.909 7.961 L7.861 7.959 L7.839 7.951 L7.761 7.939 L7.659 7.911 L7.541 7.889 L7.351 7.839 L7.073 7.747 L6.907 7.673 L6.833 7.647 L6.593 7.527 L6.457 7.443 L6.403 7.417 L6.123 7.227 L6.093 7.197 L5.938 7.082 L5.893 7.037 L5.804 6.966 L5.763 6.917 L5.757 6.883 L5.721 6.83 L5.743 6.783 L5.777 6.737 L6.497 6.018 L6.543 5.994 L6.591 6.019 L6.657 6.023 L6.862 6.188 L6.903 6.227 L7.083 6.347 L7.227 6.423 L7.243 6.437 L7.363 6.497 L7.537 6.563 L7.583 6.587 L7.741 6.639 L7.931 6.689 L8.019 6.701 L8.041 6.709 L8.079 6.711 L8.101 6.719 L8.139 6.721 L8.161 6.729 L8.249 6.731 L8.271 6.739 L8.369 6.741 L8.4 6.75 L8.62 6.75 L8.651 6.741 L8.719 6.739 L8.741 6.731 L8.809 6.729 L8.831 6.721 L8.909 6.719 L9.011 6.691 L9.039 6.689 L9.141 6.661 L9.169 6.659 L9.249 6.639 L9.347 6.607 L9.423 6.573 L9.557 6.527 L9.837 6.387 L10.027 6.267 L10.152 6.173 L10.258 6.077 L10.283 6.063 L10.543 5.803 L10.697 5.598 L10.727 5.567 L10.867 5.347 L11.017 5.037 L11.059 4.929 L11.081 4.841 L11.169 4.549 L11.171 4.511 L11.179 4.489 L11.181 4.451 L11.189 4.429 L11.191 4.391 L11.209 4.309 L11.211 4.231 L11.219 4.209 L11.221 4.131 L11.23 4.1 L11.23 3.89 L11.21 3.8 L11.21 3.7 L11.219 3.669 L11.219 3.621 L11.211 3.599 L11.209 3.571 L11.191 3.529 L11.17 3.43 L11.167 1.413 L11.117 1.363 L11.06 1.34 L9.06 1.34 L9.001 1.329 L8.929 1.301 L8.81 1.3 L8.771 1.309 L8.749 1.301 L8.68 1.3 L8.65 1.309 L8.623 1.297 L8.578 1.264 L8.554 1.266 L8.53 1.2 L8.53 0.14 L8.533 0.124 L8.547 0.126 L8.567 0.117 L8.586 0.087 L8.573 0.057 Z'},
+  {key:'v',name:'chữ V xanh lá',deg:0,fill:false,d:'M9.943 2.553 L9.979 2.551 L10.007 2.563 L10.357 2.763 L10.406 2.793 L10.402 2.803 L8.499 3.909 L8.481 3.909 L8.453 3.897 L8.173 3.737 L8.107 3.693 L7.913 3.587 L7.847 3.543 L7.653 3.437 L7.397 3.283 L6.753 2.917 L6.687 2.873 L6.633 2.847 L6.601 2.82 L6.607 2.808 L6.643 2.783 L7.003 2.573 L7.049 2.571 L7.527 2.843 L7.593 2.887 L7.717 2.953 L7.783 2.997 L7.977 3.103 L8.043 3.147 L8.237 3.253 L8.373 3.337 L8.473 3.387 L8.489 3.389 L8.557 3.357 L8.623 3.313 L8.747 3.247 L8.813 3.203 L8.937 3.137 L9.003 3.093 L9.127 3.027 L9.193 2.983 L9.317 2.917 L9.383 2.873 Z'},
+  {key:'vang',name:'mảng vàng',deg:60,fill:false,d:'M7.013 3.383 L7.11 3.38 L7.141 3.389 L7.189 3.391 L7.279 3.421 L7.289 3.431 L7.287 3.917 L7.277 3.927 L7.231 3.931 L7.123 3.973 L7.048 4.037 L6.993 4.143 L6.97 4.24 L6.971 4.409 L6.989 4.461 L7.033 4.637 L7.153 4.867 L7.267 5.013 L7.279 5.041 L7.28 5.49 L7.272 5.506 L7.247 5.492 L7.117 5.362 L7.103 5.338 L7.037 5.272 L6.943 5.147 L6.823 4.957 L6.673 4.637 L6.611 4.439 L6.571 4.259 L6.569 4.191 L6.56 4.16 L6.56 4.05 L6.57 4.01 L6.571 3.851 L6.579 3.829 L6.581 3.801 L6.633 3.643 L6.673 3.573 L6.732 3.513 L6.753 3.483 L6.873 3.413 L6.941 3.391 L6.999 3.389 Z M7.704 3.684 L7.717 3.683 L7.753 3.708 L7.883 3.837 L7.897 3.862 L7.987 3.963 L8.093 4.127 L8.117 4.153 L8.157 4.223 L8.297 4.513 L8.349 4.661 L8.409 4.901 L8.421 5.069 L8.429 5.091 L8.429 5.189 L8.421 5.211 L8.419 5.319 L8.381 5.441 L8.367 5.507 L8.307 5.617 L8.203 5.723 L8.107 5.777 L8.029 5.799 L7.821 5.799 L7.741 5.779 L7.704 5.766 L7.701 5.759 L7.7 5.63 L7.71 5.59 L7.711 5.261 L7.721 5.251 L7.759 5.249 L7.807 5.237 L7.867 5.207 L7.933 5.143 L7.977 5.077 L8.02 4.92 L8.01 4.88 L8.009 4.731 L7.947 4.533 L7.857 4.353 L7.757 4.213 L7.701 4.149 Z'},
+  {key:'duong',name:'mảng xanh dương',deg:120,fill:false,d:'M9.813 3.383 L10.029 3.381 L10.063 3.397 L10.127 3.413 L10.232 3.478 L10.322 3.567 L10.377 3.673 L10.419 3.811 L10.42 4.11 L10.429 4.141 L10.43 4.17 L10.421 4.201 L10.419 4.279 L10.411 4.301 L10.409 4.329 L10.367 4.477 L10.334 4.543 L10.339 4.569 L10.187 4.917 L10.067 5.107 L10.013 5.163 L9.973 5.242 L9.938 5.268 L9.848 5.357 L9.832 5.383 L9.74 5.469 L9.734 5.466 L9.73 5.45 L9.731 5.021 L9.763 4.963 L9.887 4.807 L9.917 4.757 L9.933 4.703 L9.977 4.627 L10.03 4.42 L10.029 4.171 L9.997 4.093 L9.973 4.067 L9.947 4.013 L9.897 3.963 L9.827 3.923 L9.741 3.919 L9.727 3.913 L9.721 3.899 L9.721 3.441 L9.734 3.414 Z M9.263 3.673 L9.286 3.674 L9.29 3.69 L9.289 4.099 L9.266 4.146 L9.223 4.163 L9.197 4.187 L9.078 4.247 L9.018 4.308 L8.993 4.353 L8.981 4.4 L8.99 4.43 L8.99 4.79 L9 4.83 L8.981 4.881 L8.98 4.92 L8.99 4.96 L8.991 5.289 L9.027 5.362 L9.061 5.379 L9.099 5.379 L9.267 5.297 L9.283 5.284 L9.289 5.291 L9.29 5.5 L9.3 5.54 L9.29 5.58 L9.289 5.739 L9.237 5.797 L9.097 5.877 L8.953 5.943 L8.907 5.987 L8.777 6.057 L8.703 6.083 L8.668 6.107 L8.627 6.147 L8.593 6.156 L8.589 6.111 L8.58 6.08 L8.58 5.31 L8.59 5.27 L8.59 4.48 L8.58 4.44 L8.581 4.081 L8.617 4.037 L8.673 4.003 L8.727 3.977 L8.793 3.933 L8.957 3.857 L9.003 3.813 L9.127 3.757 L9.183 3.713 Z'},
+  {key:'chu',name:'chữ Le Quy Don Online Judge',deg:0,fill:true,d:'M6.359 8.548 L6.397 8.545 L6.428 8.555 L6.499 8.556 L6.521 8.565 L6.603 8.577 L6.745 8.631 L6.838 8.693 L6.926 8.77 L6.942 8.796 L6.978 8.832 L7.014 8.879 L7.096 9.034 L7.12 9.104 L7.14 9.187 L7.141 9.227 L7.151 9.249 L7.152 9.33 L7.161 9.362 L7.161 9.444 L7.152 9.476 L7.151 9.547 L7.141 9.569 L7.14 9.609 L7.131 9.631 L7.13 9.661 L7.086 9.793 L7.034 9.896 L6.978 9.974 L6.948 10.006 L6.945 10.022 L6.952 10.036 L7.014 10.098 L7.04 10.114 L7.087 10.16 L7.123 10.186 L7.13 10.209 L7.123 10.222 L7.045 10.3 L7.034 10.32 L7.014 10.34 L6.979 10.34 L6.833 10.207 L6.768 10.158 L6.72 10.171 L6.672 10.196 L6.603 10.219 L6.52 10.24 L6.439 10.241 L6.407 10.251 L6.346 10.25 L6.324 10.241 L6.242 10.24 L6.118 10.209 L6.059 10.185 L5.997 10.154 L5.935 10.113 L5.836 10.026 L5.82 10 L5.78 9.958 L5.738 9.896 L5.666 9.751 L5.662 9.724 L5.622 9.599 L5.621 9.548 L5.612 9.526 L5.611 9.279 L5.621 9.247 L5.622 9.207 L5.631 9.185 L5.632 9.156 L5.676 9.024 L5.718 8.941 L5.79 8.827 L5.841 8.775 L5.853 8.756 L5.872 8.744 L5.919 8.698 L5.986 8.652 L6.09 8.6 L6.16 8.577 L6.189 8.575 L6.253 8.556 L6.344 8.555 Z M2.514 8.59 L2.758 8.587 L2.771 8.594 L2.778 8.608 L2.779 9.858 L2.789 9.899 L2.782 9.948 L2.793 9.958 L2.81 9.961 L3.585 9.962 L3.603 9.975 L3.606 9.992 L3.606 10.178 L3.603 10.196 L3.592 10.206 L2.531 10.209 L2.514 10.206 L2.503 10.196 L2.5 8.617 L2.503 8.6 Z M10.545 8.59 L11.244 8.586 L11.276 8.596 L11.337 8.597 L11.359 8.606 L11.388 8.608 L11.499 8.641 L11.582 8.683 L11.65 8.729 L11.722 8.801 L11.758 8.848 L11.83 8.972 L11.884 9.135 L11.886 9.165 L11.895 9.187 L11.896 9.237 L11.906 9.269 L11.905 9.537 L11.896 9.559 L11.895 9.619 L11.874 9.702 L11.83 9.824 L11.789 9.906 L11.737 9.979 L11.634 10.082 L11.572 10.123 L11.51 10.154 L11.357 10.198 L11.307 10.199 L11.285 10.209 L10.562 10.209 L10.545 10.206 L10.534 10.196 L10.521 10.157 L10.521 8.638 L10.524 8.621 Z M6.315 8.783 L6.293 8.793 L6.263 8.794 L6.214 8.807 L6.1 8.869 L6.043 8.925 L5.976 9.024 L5.935 9.117 L5.901 9.249 L5.9 9.289 L5.89 9.32 L5.891 9.495 L5.9 9.517 L5.901 9.557 L5.922 9.64 L5.955 9.73 L5.986 9.793 L6.028 9.855 L6.105 9.933 L6.141 9.958 L6.203 9.989 L6.231 9.993 L6.284 10.012 L6.468 10.012 L6.538 9.989 L6.548 9.979 L6.548 9.964 L6.441 9.866 L6.415 9.85 L6.408 9.837 L6.425 9.803 L6.461 9.767 L6.477 9.741 L6.524 9.696 L6.559 9.696 L6.694 9.819 L6.728 9.836 L6.745 9.834 L6.761 9.819 L6.797 9.761 L6.851 9.619 L6.861 9.578 L6.862 9.538 L6.871 9.516 L6.871 9.28 L6.862 9.258 L6.861 9.228 L6.84 9.145 L6.786 9.013 L6.74 8.946 L6.668 8.873 L6.631 8.848 L6.548 8.807 L6.51 8.794 L6.47 8.793 L6.438 8.783 Z M10.831 8.825 L10.813 8.838 L10.81 8.855 L10.81 9.951 L10.814 9.968 L10.831 9.971 L11.223 9.971 L11.355 9.937 L11.437 9.896 L11.526 9.809 L11.572 9.73 L11.605 9.64 L11.607 9.6 L11.616 9.578 L11.617 9.538 L11.626 9.516 L11.627 9.3 L11.617 9.268 L11.616 9.218 L11.607 9.196 L11.595 9.125 L11.551 9.024 L11.526 8.987 L11.448 8.91 L11.396 8.879 L11.306 8.845 L11.203 8.824 Z M4.25 9.003 L4.298 9.001 L4.32 9.01 L4.38 9.011 L4.422 9.021 L4.492 9.044 L4.554 9.075 L4.621 9.121 L4.694 9.194 L4.76 9.293 L4.791 9.355 L4.815 9.424 L4.825 9.466 L4.826 9.506 L4.835 9.528 L4.835 9.661 L4.828 9.674 L4.804 9.692 L3.999 9.692 L3.981 9.696 L3.971 9.706 L3.968 9.754 L3.979 9.795 L4.002 9.865 L4.033 9.917 L4.116 9.999 L4.157 10.02 L4.194 10.024 L4.216 10.033 L4.36 10.033 L4.43 10.01 L4.466 9.984 L4.528 9.922 L4.554 9.886 L4.56 9.861 L4.589 9.838 L4.774 9.837 L4.791 9.84 L4.802 9.851 L4.804 9.888 L4.76 9.989 L4.704 10.067 L4.652 10.119 L4.585 10.165 L4.523 10.196 L4.453 10.219 L4.382 10.23 L4.36 10.24 L4.206 10.24 L4.184 10.23 L4.134 10.229 L4.092 10.219 L4.054 10.206 L3.95 10.154 L3.903 10.119 L3.862 10.077 L3.826 10.03 L3.754 9.896 L3.71 9.723 L3.71 9.538 L3.719 9.516 L3.72 9.486 L3.741 9.404 L3.754 9.365 L3.795 9.282 L3.868 9.179 L3.919 9.127 L3.961 9.096 L4.033 9.055 L4.123 9.021 L4.153 9.02 L4.175 9.011 L4.236 9.01 Z M12.643 9.003 L12.671 9 L12.702 9.01 L12.784 9.011 L12.905 9.044 L12.988 9.086 L13.025 9.111 L13.061 9.147 L13.087 9.163 L13.098 9.183 L13.138 9.225 L13.163 9.261 L13.215 9.365 L13.249 9.497 L13.25 9.568 L13.259 9.59 L13.259 9.64 L13.249 9.672 L13.249 9.754 L13.228 9.836 L13.205 9.906 L13.174 9.968 L13.128 10.036 L13.045 10.119 L12.998 10.154 L12.895 10.206 L12.804 10.229 L12.764 10.23 L12.742 10.24 L12.588 10.24 L12.556 10.23 L12.516 10.229 L12.405 10.196 L12.343 10.165 L12.306 10.139 L12.27 10.103 L12.244 10.088 L12.233 10.068 L12.193 10.026 L12.167 9.989 L12.116 9.886 L12.082 9.774 L12.081 9.724 L12.072 9.702 L12.072 9.548 L12.081 9.526 L12.082 9.476 L12.092 9.435 L12.126 9.334 L12.157 9.272 L12.213 9.194 L12.291 9.117 L12.426 9.044 L12.495 9.021 L12.525 9.02 L12.547 9.011 L12.629 9.01 Z M14.069 9.003 L14.107 9.001 L14.129 9.01 L14.189 9.011 L14.231 9.021 L14.269 9.034 L14.352 9.075 L14.441 9.163 L14.466 9.21 L14.5 9.331 L14.5 10.189 L14.496 10.205 L14.273 10.209 L14.255 10.206 L14.245 10.196 L14.242 9.434 L14.232 9.402 L14.231 9.362 L14.218 9.324 L14.187 9.272 L14.145 9.241 L14.104 9.22 L14.055 9.207 L13.973 9.207 L13.924 9.22 L13.836 9.266 L13.795 9.307 L13.759 9.365 L13.736 9.435 L13.734 9.475 L13.725 9.506 L13.722 10.196 L13.711 10.206 L13.694 10.209 L13.48 10.206 L13.47 10.196 L13.466 10.178 L13.466 9.062 L13.47 9.045 L13.508 9.031 L13.673 9.031 L13.704 9.041 L13.714 9.052 L13.715 9.175 L13.722 9.189 L13.733 9.192 L13.753 9.163 L13.815 9.101 L13.883 9.055 L13.963 9.021 L14.005 9.011 L14.055 9.01 Z M7.402 9.034 L7.605 9.032 L7.633 9.045 L7.636 9.052 L7.638 9.816 L7.647 9.838 L7.648 9.867 L7.671 9.937 L7.696 9.974 L7.723 9.999 L7.764 10.02 L7.813 10.033 L7.936 10.033 L7.985 10.02 L8.063 9.974 L8.089 9.948 L8.13 9.875 L8.143 9.826 L8.144 9.776 L8.154 9.744 L8.154 9.062 L8.158 9.045 L8.185 9.032 L8.36 9.031 L8.378 9.034 L8.404 9.049 L8.412 9.072 L8.412 10.178 L8.404 10.201 L8.381 10.209 L8.167 10.206 L8.154 10.188 L8.153 10.086 L8.143 10.076 L8.13 10.083 L8.047 10.165 L8.016 10.185 L7.923 10.227 L7.886 10.23 L7.864 10.24 L7.731 10.24 L7.709 10.23 L7.669 10.229 L7.599 10.206 L7.537 10.175 L7.469 10.108 L7.423 10.03 L7.4 9.96 L7.39 9.919 L7.388 9.858 L7.379 9.827 L7.379 9.062 L7.382 9.045 Z M8.581 9.034 L8.804 9.032 L8.843 9.055 L8.922 9.286 L8.936 9.313 L8.994 9.493 L9.008 9.52 L9.067 9.699 L9.081 9.727 L9.129 9.875 L9.146 9.887 L9.163 9.865 L9.191 9.778 L9.205 9.751 L9.209 9.724 L9.236 9.658 L9.253 9.592 L9.267 9.565 L9.439 9.055 L9.47 9.034 L9.487 9.031 L9.683 9.032 L9.696 9.039 L9.703 9.052 L9.67 9.162 L9.625 9.272 L9.598 9.358 L9.552 9.468 L9.525 9.555 L9.48 9.665 L9.453 9.751 L9.408 9.861 L9.308 10.144 L9.294 10.171 L9.246 10.309 L9.211 10.378 L9.205 10.402 L9.138 10.532 L9.05 10.619 L8.988 10.65 L8.949 10.663 L8.919 10.665 L8.888 10.674 L8.754 10.674 L8.732 10.665 L8.682 10.663 L8.668 10.656 L8.661 10.643 L8.663 10.46 L8.674 10.45 L8.691 10.447 L8.711 10.448 L8.733 10.457 L8.835 10.457 L8.88 10.439 L8.932 10.387 L8.946 10.361 L8.98 10.271 L8.99 10.229 L8.991 10.189 L8.874 9.871 L8.777 9.627 L8.76 9.572 L8.725 9.493 L8.709 9.437 L8.674 9.358 L8.657 9.303 L8.56 9.059 L8.561 9.045 Z M4.237 9.207 L4.157 9.23 L4.116 9.251 L4.079 9.276 L4.037 9.318 L4.012 9.355 L3.979 9.435 L3.968 9.486 L3.975 9.509 L3.999 9.517 L4.536 9.517 L4.559 9.509 L4.567 9.495 L4.567 9.475 L4.554 9.417 L4.512 9.334 L4.435 9.256 L4.368 9.22 L4.318 9.207 Z M12.62 9.207 L12.598 9.216 L12.56 9.22 L12.498 9.251 L12.461 9.276 L12.43 9.307 L12.405 9.344 L12.364 9.427 L12.34 9.497 L12.339 9.537 L12.329 9.568 L12.33 9.681 L12.339 9.703 L12.34 9.743 L12.351 9.785 L12.384 9.865 L12.42 9.922 L12.482 9.984 L12.519 10.01 L12.599 10.033 L12.732 10.033 L12.781 10.02 L12.853 9.979 L12.901 9.933 L12.926 9.896 L12.967 9.813 L12.971 9.786 L12.99 9.733 L12.99 9.517 L12.957 9.406 L12.936 9.365 L12.911 9.328 L12.849 9.266 L12.812 9.241 L12.753 9.218 L12.711 9.207 Z M4.116 10.978 L4.206 10.974 L4.237 10.984 L4.288 10.985 L4.358 11.009 L4.44 11.05 L4.477 11.075 L4.591 11.189 L4.626 11.246 L4.647 11.288 L4.67 11.357 L4.682 11.428 L4.691 11.45 L4.691 11.645 L4.682 11.667 L4.67 11.739 L4.626 11.85 L4.58 11.917 L4.471 12.025 L4.43 12.056 L4.389 12.077 L4.288 12.111 L4.051 12.111 L3.951 12.077 L3.934 12.063 L3.878 12.036 L3.759 11.917 L3.734 11.881 L3.682 11.767 L3.659 11.687 L3.657 11.647 L3.648 11.625 L3.648 11.46 L3.657 11.428 L3.659 11.399 L3.692 11.298 L3.754 11.184 L3.852 11.085 L3.899 11.05 L3.982 11.009 L4.062 10.985 L4.102 10.984 Z M5.873 11.009 L5.962 11.006 L5.976 11.013 L6.004 11.047 L6.004 12.049 L6.001 12.067 L5.973 12.09 L5.881 12.09 L5.867 12.083 L5.839 12.049 L5.849 12.008 L5.849 11.098 L5.839 11.057 L5.842 11.04 Z M6.3 10.995 L6.402 10.992 L6.447 11.031 L6.45 11.157 L6.411 11.202 L6.309 11.205 L6.264 11.166 L6.261 11.04 Z M9.377 11.009 L9.487 11.006 L9.5 11.013 L9.518 11.037 L9.518 11.894 L9.495 11.953 L9.464 12.005 L9.418 12.052 L9.381 12.077 L9.301 12.111 L9.095 12.111 L9.026 12.087 L8.995 12.067 L8.922 11.994 L8.878 11.904 L8.877 11.874 L8.868 11.852 L8.868 11.75 L8.875 11.737 L8.909 11.709 L9.001 11.709 L9.015 11.716 L9.042 11.75 L9.044 11.811 L9.053 11.833 L9.057 11.881 L9.082 11.928 L9.119 11.953 L9.168 11.966 L9.218 11.966 L9.24 11.957 L9.277 11.953 L9.319 11.922 L9.343 11.843 L9.343 11.057 L9.346 11.04 Z M11.31 11.009 L11.399 11.006 L11.412 11.013 L11.44 11.047 L11.438 12.067 L11.409 12.09 L11.318 12.09 L11.289 12.067 L11.285 12.029 L11.278 12.022 L11.221 12.077 L11.12 12.111 L10.997 12.111 L10.907 12.087 L10.849 12.052 L10.766 11.969 L10.741 11.932 L10.71 11.87 L10.686 11.78 L10.687 11.595 L10.71 11.515 L10.752 11.432 L10.859 11.323 L10.945 11.285 L10.975 11.284 L11.007 11.274 L11.089 11.275 L11.13 11.285 L11.2 11.308 L11.283 11.373 L11.286 11.037 Z M4.165 11.13 L4.143 11.139 L4.093 11.14 L4.051 11.151 L3.982 11.184 L3.934 11.22 L3.899 11.267 L3.858 11.35 L3.834 11.43 L3.833 11.47 L3.823 11.501 L3.823 11.605 L3.833 11.636 L3.834 11.666 L3.858 11.746 L3.899 11.829 L3.945 11.886 L4.013 11.932 L4.082 11.956 L4.112 11.957 L4.134 11.966 L4.195 11.967 L4.298 11.945 L4.347 11.922 L4.394 11.886 L4.425 11.855 L4.451 11.819 L4.482 11.757 L4.505 11.676 L4.506 11.636 L4.516 11.605 L4.516 11.481 L4.506 11.449 L4.505 11.419 L4.482 11.339 L4.451 11.277 L4.415 11.23 L4.358 11.184 L4.296 11.153 L4.246 11.14 L4.217 11.139 L4.195 11.13 Z M5.243 11.277 L5.352 11.275 L5.432 11.298 L5.459 11.313 L5.542 11.395 L5.557 11.422 L5.58 11.522 L5.58 12.039 L5.577 12.056 L5.546 12.087 L5.447 12.09 L5.418 12.067 L5.414 11.512 L5.391 11.463 L5.381 11.453 L5.321 11.43 L5.27 11.419 L5.181 11.443 L5.123 11.478 L5.098 11.525 L5.075 11.595 L5.071 12.056 L5.04 12.087 L5.022 12.091 L4.951 12.09 L4.912 12.056 L4.912 11.329 L4.951 11.295 L5.029 11.298 L5.06 11.329 L5.064 11.377 L5.071 11.384 L5.139 11.319 L5.201 11.288 Z M7.041 11.277 L7.151 11.275 L7.221 11.298 L7.247 11.313 L7.334 11.401 L7.358 11.461 L7.359 11.49 L7.369 11.522 L7.365 12.056 L7.334 12.087 L7.317 12.091 L7.245 12.09 L7.206 12.056 L7.203 11.523 L7.19 11.484 L7.169 11.453 L7.12 11.43 L7.09 11.428 L7.059 11.419 L6.969 11.443 L6.922 11.468 L6.907 11.484 L6.886 11.525 L6.863 11.595 L6.859 12.056 L6.82 12.09 L6.721 12.087 L6.7 12.067 L6.697 12.049 L6.7 11.329 L6.739 11.295 L6.81 11.295 L6.849 11.329 L6.852 11.366 L6.859 11.374 L6.907 11.329 L6.989 11.288 Z M7.899 11.277 L8.009 11.275 L8.109 11.308 L8.167 11.344 L8.229 11.406 L8.254 11.443 L8.296 11.525 L8.319 11.616 L8.319 11.707 L8.312 11.721 L8.277 11.749 L7.772 11.749 L7.755 11.753 L7.752 11.78 L7.762 11.821 L7.8 11.897 L7.837 11.932 L7.878 11.953 L7.916 11.957 L7.938 11.966 L7.998 11.966 L8.02 11.957 L8.05 11.956 L8.078 11.943 L8.126 11.897 L8.147 11.846 L8.175 11.822 L8.277 11.822 L8.306 11.846 L8.308 11.863 L8.275 11.943 L8.25 11.979 L8.177 12.052 L8.109 12.087 L8.029 12.111 L7.896 12.111 L7.785 12.077 L7.744 12.046 L7.666 11.969 L7.641 11.932 L7.62 11.891 L7.597 11.821 L7.595 11.791 L7.586 11.77 L7.586 11.605 L7.609 11.525 L7.651 11.443 L7.765 11.329 L7.827 11.298 Z M11.971 11.277 L12.081 11.275 L12.151 11.298 L12.177 11.313 L12.239 11.374 L12.246 11.366 L12.25 11.319 L12.279 11.295 L12.36 11.295 L12.374 11.302 L12.401 11.336 L12.392 11.367 L12.392 12.122 L12.381 12.173 L12.347 12.253 L12.25 12.352 L12.203 12.377 L12.122 12.4 L11.938 12.4 L11.858 12.377 L11.816 12.356 L11.723 12.263 L11.69 12.184 L11.723 12.145 L11.812 12.143 L11.857 12.181 L11.879 12.221 L11.909 12.242 L11.989 12.266 L12.081 12.266 L12.13 12.253 L12.167 12.228 L12.198 12.197 L12.213 12.17 L12.236 12.1 L12.237 12.05 L12.247 12.018 L12.244 12.002 L12.239 12.001 L12.172 12.067 L12.071 12.1 L11.958 12.1 L11.878 12.077 L11.831 12.052 L11.738 11.959 L11.679 11.842 L11.669 11.801 L11.668 11.76 L11.659 11.739 L11.659 11.647 L11.692 11.515 L11.734 11.432 L11.837 11.329 L11.899 11.298 Z M12.932 11.277 L13.042 11.275 L13.091 11.288 L13.18 11.333 L13.288 11.443 L13.319 11.505 L13.342 11.574 L13.343 11.604 L13.352 11.626 L13.35 11.715 L13.311 11.749 L12.805 11.749 L12.788 11.753 L12.785 11.79 L12.796 11.832 L12.823 11.886 L12.881 11.943 L12.971 11.966 L13.022 11.966 L13.044 11.957 L13.084 11.956 L13.112 11.943 L13.149 11.907 L13.181 11.846 L13.212 11.815 L13.24 11.821 L13.29 11.822 L13.325 11.85 L13.332 11.864 L13.332 11.883 L13.308 11.943 L13.283 11.979 L13.221 12.041 L13.184 12.067 L13.143 12.087 L13.073 12.111 L12.93 12.111 L12.908 12.102 L12.87 12.098 L12.788 12.056 L12.684 11.953 L12.643 11.87 L12.62 11.79 L12.619 11.74 L12.609 11.708 L12.609 11.657 L12.619 11.635 L12.62 11.585 L12.633 11.546 L12.684 11.443 L12.798 11.329 L12.86 11.298 Z M6.307 11.298 L6.396 11.295 L6.41 11.302 L6.438 11.337 L6.438 12.039 L6.431 12.062 L6.396 12.09 L6.305 12.09 L6.291 12.083 L6.274 12.059 L6.273 11.346 L6.276 11.329 Z M9.832 11.298 L9.921 11.295 L9.96 11.329 L9.964 11.863 L9.987 11.922 L10.002 11.938 L10.028 11.953 L10.087 11.967 L10.128 11.966 L10.15 11.957 L10.179 11.956 L10.228 11.932 L10.27 11.891 L10.29 11.85 L10.304 11.791 L10.307 11.329 L10.338 11.298 L10.356 11.295 L10.427 11.295 L10.466 11.329 L10.469 12.039 L10.466 12.056 L10.435 12.087 L10.338 12.087 L10.318 12.067 L10.314 12.019 L10.307 12.012 L10.249 12.067 L10.187 12.098 L10.138 12.111 L10.015 12.111 L9.935 12.087 L9.898 12.062 L9.863 12.025 L9.821 11.953 L9.797 11.863 L9.797 11.346 L9.801 11.329 Z M7.938 11.419 L7.858 11.443 L7.831 11.457 L7.796 11.494 L7.765 11.556 L7.755 11.602 L8.123 11.605 L8.14 11.601 L8.143 11.564 L8.13 11.525 L8.095 11.478 L8.037 11.443 L7.957 11.419 Z M11.059 11.419 L11.037 11.428 L11.007 11.43 L10.948 11.453 L10.928 11.464 L10.896 11.505 L10.863 11.595 L10.861 11.625 L10.852 11.647 L10.852 11.739 L10.876 11.829 L10.911 11.897 L10.948 11.932 L10.989 11.953 L11.027 11.957 L11.049 11.966 L11.079 11.967 L11.179 11.943 L11.241 11.881 L11.265 11.832 L11.276 11.76 L11.285 11.739 L11.286 11.656 L11.276 11.625 L11.275 11.595 L11.252 11.525 L11.226 11.489 L11.2 11.463 L11.159 11.443 L11.078 11.419 Z M12.031 11.419 L11.951 11.443 L11.909 11.463 L11.893 11.478 L11.847 11.567 L11.834 11.625 L11.834 11.749 L11.843 11.771 L11.845 11.801 L11.878 11.881 L11.93 11.932 L11.958 11.945 L12.009 11.956 L12.06 11.956 L12.102 11.945 L12.157 11.917 L12.203 11.85 L12.226 11.79 L12.227 11.76 L12.237 11.729 L12.236 11.616 L12.213 11.536 L12.192 11.494 L12.157 11.457 L12.13 11.443 L12.091 11.43 L12.062 11.428 Z M12.971 11.419 L12.891 11.443 L12.865 11.457 L12.819 11.505 L12.796 11.554 L12.788 11.601 L12.805 11.605 L13.157 11.605 L13.173 11.601 L13.177 11.584 L13.174 11.556 L13.128 11.478 L13.071 11.443 L13.032 11.43 L13.002 11.428 Z'},
+]};
+/* scaled with the keychain: same artwork, K times larger (thinnest stroke grows with it) */
+const LOGO_ENG={w:LOGO_ENG0.w*K,h:LOGO_ENG0.h*K,minStroke:LOGO_ENG0.minStroke*K,layers:LOGO_ENG0.layers.map(L=>({...L,d:K===1?L.d:L.d.replace(/-?\d*\.?\d+/g,v=>String(+(+v*K).toFixed(4)))}))};
+function logoTexture(){
+  const PX=80, W=Math.round(LOGO_ENG.w*PX), H=Math.round(LOGO_ENG.h*PX);
+  const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  x.scale(PX,PX); x.fillStyle='#ffffff'; x.strokeStyle='#ffffff'; x.lineWidth=0.055;
+  LOGO_ENG.layers.forEach(L=>{
+    const p=new Path2D(L.d);
+    if(L.fill){x.fill(p,'evenodd');return;}
+    x.save();x.clip(p,'evenodd');x.beginPath();const a=L.deg*Math.PI/180,cx=LOGO_ENG.w/2,cy=LOGO_ENG.h/2,R=20;
+    for(let d=-R;d<=R;d+=0.11){const px=cx+Math.cos(a+Math.PI/2)*d,py=cy+Math.sin(a+Math.PI/2)*d;x.moveTo(px-Math.cos(a)*R,py-Math.sin(a)*R);x.lineTo(px+Math.cos(a)*R,py+Math.sin(a)*R);}
+    x.stroke();x.restore();
+  });
+  const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t;
+}
+function accTexture(){
+  const c=document.createElement('canvas');c.width=490;c.height=340;const x=c.getContext('2d');
+  x.fillStyle='#ffffff';x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=2;
+  x.font='600 54px "JetBrains Mono", Consolas, monospace';x.textAlign='center';x.textBaseline='middle';
+  x.fillText('lqd-tin-023',245,115);x.fillText('K7qM-2x9',245,225);
+  const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t;
+}
+/* orientation mark on the core (face B): arrow = insert direction, "SAU" = this face goes to the back */
+function markTexture(){
+  const c=document.createElement('canvas');c.width=190;c.height=250;const x=c.getContext('2d');
+  x.strokeStyle='#ffffff';x.fillStyle='#ffffff';x.lineWidth=10;x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=2;
+  x.beginPath();x.moveTo(95,20);x.lineTo(95,150);x.stroke();
+  x.beginPath();x.moveTo(55,110);x.lineTo(95,160);x.lineTo(135,110);x.stroke();
+  x.font='700 54px "JetBrains Mono", Consolas, monospace';x.textAlign='center';x.textBaseline='middle';x.fillText('SAU',95,212);
+  const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t;
+}
+
+/* ================= 2D drawing ================= */
+function build2D(){
+  const out=[];
+  const P=(pts,map)=>pts.map(p=>map(p[0],p[1]).map(q=>+q.toFixed(2)).join(',')).join(' ');
+  const poly=(map,pts,cls,st='')=>out.push(`<polygon points="${P(pts,map)}" class="${cls}" style="${st}"/>`);
+  const line=(a,b,cls)=>out.push(`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" class="${cls}"/>`);
+  const circle=(map,x,y,r,cls,k,st='')=>{const a=map(x,y);out.push(`<circle cx="${a[0]}" cy="${a[1]}" r="${r*k}" class="${cls}" style="${st}"/>`);};
+  const cross=(map,x,y,len)=>{const a=map(x,y);line([a[0]-len,a[1]],[a[0]+len,a[1]],'c');line([a[0],a[1]-len],[a[0],a[1]+len],'c');};
+  const txt=(x,y,t,cls='tx',anchor='start')=>out.push(`<text x="${x}" y="${y}" class="${cls}" text-anchor="${anchor}">${t}</text>`);
+  const dimH=(x1,x2,y,e1,e2,t)=>{line([x1,e1],[x1,y+3],'dm');line([x2,e2],[x2,y+3],'dm');out.push(`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" class="dm" marker-start="url(#ar)" marker-end="url(#ar)"/>`);txt((x1+x2)/2,y-4,t,'td','middle');};
+  const dimV=(x,y1,y2,e1,e2,t,side)=>{line([e1,y1],[x+(side==='r'?3:-3),y1],'dm');line([e2,y2],[x+(side==='r'?3:-3),y2],'dm');out.push(`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" class="dm" marker-start="url(#ar)" marker-end="url(#ar)"/>`);txt(side==='r'?x+5:x-5,(y1+y2)/2+4,t,'td',side==='r'?'start':'end');};
+  const tag=(x,y,t)=>{const w=t.length*7+8;out.push(`<rect x="${x-w/2}" y="${y-9}" width="${w}" height="15" rx="3" class="tagb"/>`);txt(x,y+2.5,t,'tg','middle');};
+  const leader=(a,b,t,anchor='start')=>{out.push(`<polyline points="${a[0]},${a[1]} ${b[0]},${b[1]} ${b[0]+(anchor==='start'?6:-6)},${b[1]}" class="ld" marker-start="url(#dot)"/>`);txt(b[0]+(anchor==='start'?9:-9),b[1]+4,t,'tx',anchor);};
+  const balloon=(bx,by,n,tx,ty)=>{const a=Math.atan2(ty-by,tx-bx);line([bx+Math.cos(a)*10,by+Math.sin(a)*10],[tx,ty],'ld');out.push(`<circle cx="${tx}" cy="${ty}" r="1.8" class="dotf"/><circle cx="${bx}" cy="${by}" r="10" class="bl"/>`);txt(bx,by+4,n,'tb','middle');};
+  const rp=(map,a,cls,st)=>poly(map,rrect(a),cls,st);
+  const circlePts=(c,r,n=48)=>Array.from({length:n},(_,k)=>[c[0]+r*Math.cos(2*Math.PI*k/n),c[1]+r*Math.sin(2*Math.PI*k/n)]);
+
+  /* front view — 10:1 for 30 mm, 8:1 above that so the sheet layout stays the same */
+  const S=SZ<=30?10:8, F=(x,y)=>[70+x*S,80+(SZ-y)*S], FK=(x,y)=>F(x*K,y*K);
+  txt(70,46,`HÌNH CHIẾU ĐỨNG · MẶT TRƯỚC   ${S}:1`,'tt');
+  poly(F,OUTN,'v','fill:var(--tint-dark)');
+  poly(F,L1P,'v','fill:var(--tint-navy)');
+  poly(F,SHUT,'v','fill:var(--tint-al)'); rp(F,G.SLOT,'eg2','fill:var(--tint-dark)');
+  rp(F,G.W1,'v','fill:var(--tint-mica)');
+  poly(F,CORE,'h');
+  LKZ.forEach(z=>poly(F,rect(...z),'zn'));
+  rp(F,G.WP,'v','fill:var(--tint-dark)'); rp(F,G.WPH,'t','fill:var(--ink);opacity:.35');
+  rp(F,G.HD,'v','fill:var(--sheet)');
+  poly(F,G.ARROW,'eg2');
+  G.pins.forEach(p=>{circle(F,...p,G.pR,'h',S);cross(F,...p,20);});
+  const o=F(0,0); out.push(`<circle cx="${o[0]}" cy="${o[1]}" r="4" class="og"/>`); txt(o[0]-6,o[1]+16,'0,0','td','end');
+  const sx=F(G.cutX,0)[0];
+  line([sx,62],[sx,398],'cut');
+  out.push(`<line x1="${sx}" y1="64" x2="${sx-20}" y2="64" class="cutA" marker-end="url(#arB)"/><line x1="${sx}" y1="396" x2="${sx-20}" y2="396" class="cutA" marker-end="url(#arB)"/>`);
+  txt(sx-28,69,'A','ta','end'); txt(sx-28,401,'A','ta','end');
+  tag(FK(15,9.75)[0]-40,FK(15,9.75)[1],'W1'); tag(FK(10,26)[0],FK(10,26)[1],'5'); tag(FK(17.5,24.25)[0],FK(17.5,24.25)[1],'SL');
+  tag(FK(6.25,26)[0],FK(6.25,26)[1]-14,'TR'); tag(FK(2.6,2.6)[0]+2,FK(2.6,2.6)[1]-22,'WP'); tag(FK(27.4,2.6)[0]-2,FK(27.4,2.6)[1]-22,'HD');
+  G.pins.forEach((p,i)=>{const a=F(...p);tag(a[0],a[1]+(p[1]<15*K?-24:24),'P'+(i+1));});
+  const fb=F(0,0)[1]+4;
+  dimH(F(0,0)[0],F(SZ,0)[0],430,fb,fb,nf(SZ));
+  dimV(36,F(0,SZ)[1],F(0,0)[1],66,66,nf(SZ),'l');
+  leader(F(SZ-CHAMF/2,SZ-CHAMF/2),[F(SZ,SZ)[0]+18,62],`${nf(CHAMF)} × 45°, R0.6`);
+  leader(F(SZ-0.3,0.3),[F(SZ,0)[0]+18,406],'R1.0 × 4 góc');
+  const nm=(NOTCH_Y[0]+NOTCH_Y[1])/2;
+  leader(F(SZ-NOTCH_D/2,nm),[F(SZ,nm)[0]+18,F(SZ,nm)[1]],`rãnh ${nf(NOTCH_D)} × ${nf(NOTCH_Y[1]-NOTCH_Y[0])}`);
+  txt(70,456,'Nét đứt: lõi và trụ (ẩn dưới F) · SL: khắc','tx');
+
+  /* back view (mirrored X) */
+  const B=(x,y)=>[480+(SZ-x)*S,80+(SZ-y)*S], BK=(x,y)=>B(x*K,y*K);
+  txt(480,46,`HÌNH CHIẾU TỪ SAU   ${S}:1`,'tt');
+  poly(B,OUTN,'v','fill:var(--tint-navy)');
+  poly(B,SHUT,'eg2'); poly(B,circlePts(G.HUB.c,G.HUB.r),'eg2'); poly(B,circlePts(G.HUB.c,G.HUB.ri),'eg2');
+  poly(B,rect(G.HUB.c[0]-0.8,G.HUB.c[1]-0.8,G.HUB.c[0]+0.8,G.HUB.c[1]+0.8),'eg2'); poly(B,rect(G.HUB.c[0]+2.6,G.HUB.c[1]-3.6,G.HUB.c[0]+3.6,G.HUB.c[1]-2.2),'eg2');
+  rp(B,G.WT,'v','fill:var(--tint-mica)');
+  rp(B,G.HD,'v','fill:var(--sheet)');
+  G.pins.forEach((p,i)=>{circle(B,...p,G.pR,'v',S,'fill:var(--tint-navy)');cross(B,...p,20);const a=B(...p);tag(a[0],a[1]+(p[1]<15*K?-24:24),'P'+(i+1));});
+  tag(BK(16.5,23.5)[0],BK(16.5,23.5)[1],'WT'); tag(BK(27.4,2.6)[0]+2,BK(27.4,2.6)[1]-22,'HD');
+  tag(B(G.HUB.c[0],G.HUB.c[1]-G.HUB.r)[0],B(0,G.HUB.c[1]-G.HUB.r)[1]+14,'hub');
+  txt(480,432,'Nét xanh: khắc nhẹ trên B (hub, viền shutter).','tx');
+  txt(480,450,'Đọc tài khoản qua cửa sổ WT.','tx');
+
+  /* section A-A at x = cutX — 3 layers of 2 mm (B 0–2, M 2–4, F 4–6) */
+  const SS=SZ<=30?20:16, ZT=G.TH, H=(y,z)=>[120+y*SS,500+(ZT-z)*SS], HK=(y,z)=>H(y*K,z);
+  const R=(y0,y1,z0,z1,fill,cls='v')=>{const a=H(y0,z1),b=H(y1,z0);out.push(`<rect x="${a[0]}" y="${a[1]}" width="${b[0]-a[0]}" height="${b[1]-a[1]}" class="${cls}" style="fill:${fill}"/>`);};
+  const pA='url(#pA)', pB='url(#pB)', pM='url(#pM)';
+  const zB=G.zL.L4, zM=G.zL.L3, zF=G.zL.L1;
+  R(0,G.WT[1],...zB,pA); R(G.WT[3],SZ,...zB,pA);                       /* B */
+  R(0,CH.y0,...zM,pB); R(CY0,SZ,...zM,pM);                              /* M frame + core; core reaches the top edge */
+  R(0,G.W1[1],...zF,pA); R(G.W1[3],TRACK[1],...zF,pA);                  /* F */
+  R(SH_BOX[1],SZ,...zF,'var(--tint-al)');                               /* inlaid shutter */
+  R(G.SLOT[1],G.SLOT[3],zF[1]-0.3,zF[1],'var(--tint-dark)','t');        /* engraved slot, ~0.3 deep */
+  for(let y=G.LOGO[1]+0.4;y<=G.LOGO[3];y+=0.7){const a=H(y,zM[0]);line([a[0],a[1]],[a[0]+6,a[1]-4],'eg');}
+  for(let y=G.TKZ[1]+0.3;y<=G.TKZ[3];y+=0.7){const a=H(y,zM[0]);line([a[0],a[1]],[a[0]+6,a[1]-4],'eg');}
+  txt(H(0,0)[0],H(0,0)[1]+18,'← mép dưới','tx'); txt(H(SZ,0)[0],H(SZ,0)[1]+18,'mép trên →','tx','end');
+  txt(HK(9.75,ZT)[0],HK(9.75,ZT)[1]-8,'mặt trước ↑','tx','middle');
+  [zB,zM,zF].forEach(z=>dimV(98,H(0,z[1])[1],H(0,z[0])[1],116,116,'2','l'));
+  dimV(62,H(0,ZT)[1],H(0,0)[1],92,92,ZT.toFixed(1),'l');
+  balloon(HK(1.5,ZT)[0]+14,468,'1',HK(1.5,5)[0],HK(1.5,5)[1]);
+  balloon(232,652,'2',HK(1.2,3)[0],HK(1.2,3)[1]);
+  balloon(770,530,'5',H(SZ-0.4,5)[0],H(SZ-0.4,5)[1]);
+  balloon(770,590,'4',H(SZ-0.4,1)[0],H(SZ-0.4,1)[1]);
+  leader([HK(14,3)[0],HK(14,3)[1]],[HK(14,3)[0]-30,644],'3 · lõi trong','end');
+  leader([HK(24,2.04)[0],HK(24,2.04)[1]],[HK(24,2.04)[0]+20,664],'khắc tài khoản, mặt B');
+  leader([H(CY0-0.05,2.9)[0],H(CY0-0.05,2.9)[1]],[H(CY0-0.05,2.9)[0]+95,666],'khe 0.1 lõi–rãnh');
+  leader([H(SZ-1,3)[0],H(SZ-1,3)[1]],[H(SZ-1,3)[0]+16,682],'lõi sát mép');
+  leader([HK(9,2.04)[0],HK(9,2.04)[1]],[HK(9,2.04)[0]+60,680],'khắc logo, mặt B');
+  txt(120,706,`MẶT CẮT A–A   ${SS}:1   (x = ${nf(G.cutX)})`,'tt');
+
+  /* layer cut drawings */
+  const LS=SZ<=30?4.5:4;
+  const layer=(ox,name,mat,fn)=>{const Mp=(x,y)=>[ox+x*LS,732+(SZ-y)*LS];fn(Mp);txt(ox,886,name,'tt');txt(ox,902,mat,'tx');};
+  const pinsH=Mp=>G.pins.forEach(p=>circle(Mp,...p,G.pR,'v',LS,'fill:var(--sheet)'));
+  layer(40,'1 · F MẶT TRƯỚC','màu 2 mm · ô khảm shutter',Mp=>{poly(Mp,L1P,'v','fill:var(--tint-navy)');rp(Mp,G.W1,'v','fill:var(--sheet)');rp(Mp,G.WP,'v','fill:var(--sheet)');rp(Mp,G.HD,'v','fill:var(--sheet)');poly(Mp,G.ARROW,'eg2');});
+  layer(300,'2+3 · KHUNG M + LÕI','màu 2 mm + trong 2 mm',Mp=>{poly(Mp,FRAME,'v','fill:var(--tint-navy)');poly(Mp,CORE,'v','fill:var(--tint-mica)');rp(Mp,G.WPH,'v','fill:var(--sheet)');rp(Mp,G.HD,'v','fill:var(--sheet)');pinsH(Mp);
+    out.push(`<rect x="${Mp(G.LOGO[0],0)[0]}" y="${Mp(0,G.LOGO[3])[1]}" width="${(G.LOGO[2]-G.LOGO[0])*LS}" height="${(G.LOGO[3]-G.LOGO[1])*LS}" class="zn"/>`);
+    out.push(`<rect x="${Mp(G.TKZ[0],0)[0]}" y="${Mp(0,G.TKZ[3])[1]}" width="${(G.TKZ[2]-G.TKZ[0])*LS}" height="${(G.TKZ[3]-G.TKZ[1])*LS}" class="zn"/>`);
+    txt(Mp(15*K,9.75*K)[0],Mp(15*K,9.75*K)[1]+3,'LOGO','tz','middle');txt(Mp(16.5*K,23.5*K)[0],Mp(16.5*K,23.5*K)[1]+3,'TK','tz','middle');});
+  layer(560,'4 · B MẶT SAU','màu 2 mm · khắc hub',Mp=>{poly(Mp,OUTN,'v','fill:var(--tint-navy)');rp(Mp,G.WT,'v','fill:var(--sheet)');rp(Mp,G.HD,'v','fill:var(--sheet)');pinsH(Mp);poly(Mp,circlePts(G.HUB.c,G.HUB.r),'eg2');poly(Mp,circlePts(G.HUB.c,G.HUB.ri),'eg2');});
+
+  /* shutter 5:1 */
+  const Sh=(x,y)=>[40+(x-SH_BOX[0])*5,940+(SZ-y)*5];
+  poly(Sh,SHUT,'v','fill:var(--tint-al)'); rp(Sh,G.SLOT,'eg2','fill:var(--tint-dark)');
+  dimH(Sh(SH_BOX[0],0)[0],Sh(SH_BOX[2],0)[0],1022,Sh(SH_BOX[0],SH_BOX[1])[1]+4,Sh(SH_BOX[2],SH_BOX[1])[1]+4,nf(shW));
+  dimV(Sh(SH_BOX[2],0)[0]+10,Sh(0,SZ)[1],Sh(0,SH_BOX[1])[1],Sh(SH_BOX[2],SZ)[0]+4,Sh(SH_BOX[2],SH_BOX[1])[0]+4,nf(shH),'r');
+  txt(40,1080,'5 · SHUTTER','tt'); txt(40,1096,'xám · khe khắc · 5:1','tx');
+
+  /* core */
+  const Cx0=SZ<=30?175:190, Cs=SZ<=30?3:2.4, Cm=(x,y)=>[Cx0+(x-CX0)*Cs,940+(SZ-y)*Cs];
+  poly(Cm,CORE,'v','fill:var(--tint-mica)');
+  dimH(Cm(CX0,0)[0],Cm(CX1,0)[0],1036,Cm(CX0,CY0)[1]+4,Cm(CX1,CY0)[1]+4,nf(coreW));
+  dimV(Cm(CX1,0)[0]+12,Cm(0,SZ)[1],Cm(0,CY0)[1],Cm(CX1,SZ)[0]+4,Cm(CX1,CY0)[0]+4,nf(coreH),'r');
+  txt(Cx0,1080,'3 · LÕI TRONG','tt'); txt(Cx0,1096,`trong · ${Cs}:1`,'tx');
+
+  /* pin disc 10:1 — two discs per pin */
+  const pc=[318,980];
+  out.push(`<circle cx="${pc[0]}" cy="${pc[1]}" r="15" class="v" style="fill:var(--tint-navy)"/>`); line([pc[0]-20,pc[1]],[pc[0]+20,pc[1]],'c'); line([pc[0],pc[1]-20],[pc[0],pc[1]+20],'c');
+  out.push(`<rect x="346" y="965" width="30" height="20" class="v" style="fill:var(--tint-navy)"/><rect x="346" y="985" width="30" height="20" class="v" style="fill:var(--tint-navy)"/>`);
+  dimH(303,333,1050,998,998,'Ø3.0*'); dimV(386,965,985,378,378,'2','r');
+  txt(300,1080,'6 · ĐĨA TRỤ ×6','tt'); txt(300,1096,'2 đĩa/trụ · 10:1','tx');
+
+  /* jig */
+  const JS=SZ+20, Js=65/JS, J=(x,y)=>[425+x*Js,946+(JS-y)*Js];
+  poly(J,rect(0,0,JS,JS),'v','fill:url(#pB)');
+  poly(J,OUTN.map(p=>[p[0]+10,p[1]+10]),'v','fill:var(--sheet)');
+  txt(425,1080,'9 · ĐỒ GÁ','tt'); txt(425,1096,'ô = viền + 0.15','tx');
+
+  /* title block */
+  const tb=(x,y,w,h,label,val)=>{out.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" class="tbx"/>`);txt(x+5,y+11,label,'tl');txt(x+5,y+h-7,val,'tv');};
+  tb(540,940,180,36,'TÊN','MÓC KHÓA ĐĨA MỀM LQĐ');
+  tb(720,940,90,36,'SỐ BẢN VẼ',SZ>30?'LQD-FD-003':'LQD-FD-002');
+  tb(540,976,90,32,'VẬT LIỆU','Mica 2 mm');
+  tb(630,976,70,32,'PHIÊN BẢN',`2mm·${nf(SZ)}`);
+  tb(700,976,110,32,'NGÀY','14.11.2026');
+  tb(540,1008,270,32,'CHIẾU','Góc 1 (E) · đơn vị mm');
+
+  document.getElementById('drawing').innerHTML=`<svg class="drawing" viewBox="0 0 820 1110" role="img" aria-label="Bản vẽ kỹ thuật phương án mica 2 mm: hình chiếu đứng, hình chiếu từ sau, mặt cắt A–A, bản vẽ cắt 3 lớp, shutter, lõi trong, đĩa trụ và đồ gá">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1.5L10 5L0 8.5z" style="fill:var(--ink)"/></marker>
+    <marker id="arB" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 1L10 5L0 9z" style="fill:var(--accent)"/></marker>
+    <marker id="dot" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="4" markerHeight="4"><circle cx="3" cy="3" r="2.5" style="fill:var(--ink)"/></marker>
+    <pattern id="pA" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" style="fill:var(--tint-navy)"/><line x1="0" y1="0" x2="0" y2="5" style="stroke:var(--ink);stroke-width:.7"/></pattern>
+    <pattern id="pB" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect width="5" height="5" style="fill:var(--tint-navy)"/><line x1="0" y1="0" x2="0" y2="5" style="stroke:var(--ink);stroke-width:.7"/></pattern>
+    <pattern id="pM" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(60)"><rect width="16" height="16" style="fill:var(--tint-mica)"/><line x1="0" y1="0" x2="0" y2="6" style="stroke:var(--ink);stroke-width:.6"/></pattern>
+  </defs>
+  <style>
+    .v{fill:none;stroke:var(--ink);stroke-width:1.2}
+    .t{fill:none;stroke:var(--ink);stroke-width:.7}
+    .h{fill:none;stroke:var(--ink);stroke-width:.7;stroke-dasharray:5 3}
+    .c{stroke:var(--muted);stroke-width:.5;stroke-dasharray:10 3 2 3}
+    .cut{stroke:var(--accent);stroke-width:1;stroke-dasharray:14 4 3 4}
+    .cutA{stroke:var(--accent);stroke-width:1.6}
+    .dm,.ld{stroke:var(--ink);stroke-width:.6;fill:none}
+    .zn{fill:none;stroke:var(--accent);stroke-width:1;stroke-dasharray:6 3}
+    .eg{stroke:var(--accent);stroke-width:1}
+    .eg2{fill:none;stroke:var(--accent);stroke-width:1}
+    .og{fill:none;stroke:var(--accent);stroke-width:1.2}
+    .dotf{fill:var(--ink)}
+    .bl{fill:var(--sheet);stroke:var(--accent);stroke-width:1.4}
+    .tagb{fill:var(--sheet);stroke:var(--accent);stroke-width:.8}
+    .tbx{fill:none;stroke:var(--ink);stroke-width:1}
+    text{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;fill:var(--ink)}
+    .tt{font-size:12.5px;font-weight:600;letter-spacing:.04em}
+    .tx{font-size:11px;fill:var(--muted)}
+    .td{font-size:11.5px}
+    .tg,.tz{font-size:10.5px;fill:var(--accent);font-weight:600}
+    .ta{font-size:15px;font-weight:600;fill:var(--accent)}
+    .tb{font-size:12px;font-weight:600;fill:var(--accent)}
+    .tl{font-size:8.5px;fill:var(--muted);letter-spacing:.06em}
+    .tv{font-size:12px;font-weight:600}
+  </style>
+  ${out.join('\n')}
+  </svg>`;
+}
+
+/* ================= self-tests (pure geometry, no rendering) ================= */
+const T={
+  densify(poly,step=0.2){const o=[];for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length];const n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/step));for(let k=0;k<n;k++)o.push([a[0]+(b[0]-a[0])*k/n,a[1]+(b[1]-a[1])*k/n]);}return o;},
+  circle(c,r,n=96){const o=[];for(let k=0;k<n;k++){const a=2*Math.PI*k/n;o.push([c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)]);}return o;},
+  inside(p,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if(((a[1]>p[1])!==(b[1]>p[1]))&&(p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0]))c=!c;}return c;},
+  segDist(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],L=dx*dx+dy*dy;let t=L?((p[0]-a[0])*dx+(p[1]-a[1])*dy)/L:0;t=Math.max(0,Math.min(1,t));return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy);},
+  ptPolyDist(p,poly){let m=Infinity;for(let i=0;i<poly.length;i++){const d=T.segDist(p,poly[i],poly[(i+1)%poly.length]);if(d<m)m=d;}return m;},
+  gap(A,B){const a=T.densify(A),b=T.densify(B);let m=Infinity;
+    for(const p of a){if(T.inside(p,B))return -1;const d=T.ptPolyDist(p,B);if(d<m)m=d;}
+    for(const p of b){if(T.inside(p,A))return -1;}return m;},
+  margin(A,B){const a=T.densify(A);let m=Infinity;for(const p of a){const d=T.ptPolyDist(p,B);if(!T.inside(p,B)&&d>1e-6)return -d;if(d<m)m=d;}return m;},
+  bbox(poly){const xs=poly.map(p=>p[0]),ys=poly.map(p=>p[1]);return [Math.min(...xs),Math.min(...ys),Math.max(...xs),Math.max(...ys)];},
+  nums(s){return (String(s).match(/-?\d+(\.\d+)?/g)||[]).map(Number);}
+};
+let TEST_ROWS=null;
+function runTests(){
+  if(TEST_ROWS)return TEST_ROWS;
+  const rows=[], f2=x=>(Math.round(x*100)/100).toFixed(2);
+  const add=(grp,name,val,rule,pass)=>rows.push({grp,name,val,rule,pass:!!pass});
+  const WEB=1.0;
+  const pinH=G.pins.map((p,i)=>['P'+(i+1),T.circle(p,G.pR)]);
+  const layers={
+    'F':{o:L1P,h:[['W1',rrect(G.W1)],['WP',rrect(G.WP)],['HD',rrect(G.HD)]]},
+    'M khung':{o:FRAME,h:[['WP½',rrect(G.WPH)],['HD',rrect(G.HD)],...pinH]},
+    'B':{o:OUTN,h:[['WT',rrect(G.WT)],['HD',rrect(G.HD)],...pinH]}
+  };
+  for(const [ln,L] of Object.entries(layers)){
+    let worst={d:Infinity,what:''};
+    L.h.forEach(([n,poly])=>{const d=T.margin(poly,L.o);if(d<worst.d)worst={d,what:`${n} ↔ mép ngoài`};});
+    for(let i=0;i<L.h.length;i++)for(let j=i+1;j<L.h.length;j++){const d=T.gap(L.h[i][1],L.h[j][1]);if(d<worst.d)worst={d,what:`${L.h[i][0]} ↔ ${L.h[j][0]}`};}
+    add('Thành mica',`${ln}: chỗ mỏng nhất (${worst.what})`,worst.d<0?'chồng lấn':f2(worst.d)+' mm','≥ '+WEB.toFixed(1)+' mm',worst.d>=WEB-1e-6);
+  }
+  /* L1 must also keep a solid strip between the label and the shutter track */
+  const strip=T.gap(rrect(G.W1),rect(TRACK[0],TRACK[1],TRACK[2],SZ));
+  add('Thành mica','F: dải giữa nhãn W1 và ô khảm shutter',f2(strip)+' mm','≥ 1.0 mm',strip>=1);
+  /* F arms beside the inlay pocket (they carry the shutter seam and sit on the M frame) */
+  const arm=Math.min(T.gap(rect(TRACK[0],TRACK[1],TRACK[2],SZ),rect(-1,NOTCH_Y[0],NOTCH_D,NOTCH_Y[1])),T.gap(rect(TRACK[0],TRACK[1],TRACK[2],SZ),rect(SZ-NOTCH_D,NOTCH_Y[0],SZ+1,NOTCH_Y[1])),SZ-CHAMF-TRACK[2]);
+  add('Thành mica','F: tay hai bên ô khảm (chỗ hẹp nhất)',f2(arm)+' mm','≥ 2.0 mm',arm>=2);
+  /* L3: frame with an insertion channel + two barbed spring arms; the clear core slides in later */
+  const shiftY=(poly,dy)=>poly.map(p=>[p[0],p[1]+dy]);
+  const cb=T.bbox(CORE), ob=T.bbox(OUTN), coreSide=Math.min(cb[0]-ob[0],ob[2]-cb[2],cb[1]-ob[1]);
+  add('Khung L3','Lõi cách mép trái / phải / dưới (khung che cạnh lõi)',f2(coreSide)+' mm','≥ 2.0 mm',coreSide>=2);
+  const coreTop=ob[3]-cb[3];
+  add('Khung L3','Mép trên lõi phẳng với mép trên móc khóa (không còn khe trống)',f2(coreTop)+' mm','0.00 mm',Math.abs(coreTop)<1e-9);
+  const side=T.gap(CORE,FRAME_NB);
+  add('Lắp lõi','Khe hai bên giữa lõi và rãnh',f2(side)+' mm','0.08 – 0.15 mm',side>=0.08&&side<=0.15);
+  const mouth=(CH.x1-CH.x0)-(T.bbox(CORE)[2]-T.bbox(CORE)[0]);
+  add('Lắp lõi','Miệng rãnh ở mép trên rộng hơn lõi',f2(mouth)+' mm','≥ 0.15 mm',mouth>=0.15);
+  let travel={d:Infinity,at:0};
+  for(let dy=0;dy<=SZ-2;dy+=0.25){const g=T.gap(shiftY(CORE,dy),FRAME_NB);if(g<travel.d)travel={d:g,at:dy};}
+  add('Lắp lõi',`Đường trượt vào (0–${SZ-2} mm): không chạm khung, trừ ngạnh`,travel.d<0?`chạm ở ${travel.at} mm`:`khe nhỏ nhất ${f2(travel.d)} mm`,'≥ 0.08 mm',travel.d>=0.08);
+  const ovL=(CH.x0+LK.barbD)-T.bbox(CORE)[0], ovR=T.bbox(CORE)[2]-(CH.x1-LK.barbD);
+  add('Lắp lõi','Ngạnh lấn vào đường đi của lõi (độ khóa)',`${f2(ovL)} / ${f2(ovR)} mm`,'0.15 – 0.30 mm mỗi bên',[ovL,ovR].every(v=>v>=0.15&&v<=0.3));
+  /* barbs only (the core is meant to rest on the channel bottom, so whole-core contact there is intended) */
+  const BARBS=[[[CH.x1,LK.barbY[1]],[CH.x1-LK.barbD,LK.barbY[0]],[CH.x1,LK.barbY[0]]],[[CH.x0,LK.barbY[0]],[CH.x0+LK.barbD,LK.barbY[0]],[CH.x0,LK.barbY[1]]]];
+  const lock=[0,-(T.bbox(CORE)[1]-CH.y0)].map(dy=>({dy,g:Math.min(...BARBS.map(b=>T.gap(shiftY(CORE,dy),b))),play:(LK.barbY[0])-(CORE_NOTCH.y[0]+dy)}));
+  add('Lắp lõi','Khi đã vào: ngạnh nằm trong khía, không chạm',lock.map(l=>f2(l.g)).join(' / ')+' mm','≥ 0.05 mm (vị trí danh định / chạm đáy)',lock.every(l=>l.g>=0.05));
+  add('Lắp lõi','Độ rơ khi kéo ngược trước khi ngạnh giữ lại',lock.map(l=>f2(l.play)).join(' / ')+' mm','0.05 – 0.30 mm',lock.every(l=>l.play>=0.05&&l.play<=0.3));
+  const Lb=LK.yTop-LK.yRoot, strain=3*Math.max(ovL,ovR)*LK.beamW/(2*Lb*Lb)*100;
+  add('Lắp lõi','Biến dạng lò xo khi lõi đi qua (3·δ·t / 2L²)',f2(strain)+' %','≤ 1.0 % (mica giòn)',strain<=1.0);
+  const pinLk=Math.min(...G.pins.flatMap(p=>LKZ.map(z=>T.gap(T.circle(p,G.pR),rect(...z)))));
+  add('Lắp lõi','Trụ cách vùng lò xo (dung môi không làm dính lò xo)',f2(pinLk)+' mm','≥ 3.0 mm',pinLk>=3);
+  /* 2 mm: no L2 — M shows from the front through every hole cut in F (W1, WP, HD); the shutter is solid */
+  const seeL3=[rrect(G.W1),rrect(G.WP),rrect(G.HD),rrect(G.WT)];
+  const lkShapes=[...LKZ.map(z=>rect(...z)),...BARBS];
+  const lkHide=Math.min(...lkShapes.flatMap(s=>seeL3.map(h=>T.gap(s,h))));
+  add('Lắp lõi','Lò xo bị che kín cả mặt trước lẫn mặt sau',lkHide<0?'lộ ra':f2(lkHide)+' mm','≥ 0.3 mm tới chỗ nhìn xuyên được',lkHide>=0.3);
+  const mk=Math.min(T.margin(rect(...G.MARK),CORE),T.gap(rect(...G.MARK),rrect(G.W1)),T.gap(rect(...G.MARK),rrect(G.WT)));
+  add('Lắp lõi','Dấu chiều lắp trên lõi bị che sau khi lắp',mk<0?'lộ ra':f2(mk)+' mm','≥ 0.2 mm',mk>=0.2);
+  const w1c=T.margin(rrect(G.W1),CORE);
+  add('Khung L3','Nhãn W1 nằm trọn trên lõi trong (không thấy mối nối)',w1c<0?'lòi ra':f2(w1c)+' mm','≥ 0.4 mm',w1c>=0.4);
+  const wtc=T.margin(rrect(G.WT),CORE);
+  add('Khung L3','Cửa sổ WT nằm trọn trên lõi trong',wtc<0?'lòi ra':f2(wtc)+' mm','≥ 0.4 mm',wtc>=0.4);
+  /* engraving zones */
+  const lg=T.margin(rect(...G.LOGO),rrect(G.W1));
+  add('Khắc','Vùng khắc logo nằm trong nhãn W1',lg<0?'lòi ra':f2(lg)+' mm','≥ 0.2 mm',lg>=0.2);
+  /* the embedded LQDOJ engraving geometry must match its zone and stay inside the label window */
+  const zW=G.LOGO[2]-G.LOGO[0], zH=G.LOGO[3]-G.LOGO[1];
+  add('Logo','Khổ file khắc khớp vùng khắc trên lõi',`${LOGO_ENG.w} × ${LOGO_ENG.h} / ${f2(zW)} × ${f2(zH)} mm`,'bằng nhau',Math.abs(LOGO_ENG.w-zW)<1e-6&&Math.abs(LOGO_ENG.h-zH)<1e-6);
+  const lnum=LOGO_ENG.layers.flatMap(L=>T.nums(L.d)); const lx=lnum.filter((_,i)=>i%2===0), ly=lnum.filter((_,i)=>i%2===1);
+  const lb=[Math.min(...lx),Math.min(...ly),Math.max(...lx),Math.max(...ly)];
+  add('Logo','Nét khắc nằm trong khổ file',lb.map(v=>v.toFixed(2)).join(', '),`0–${LOGO_ENG.w} × 0–${LOGO_ENG.h}`,lb[0]>=-1e-3&&lb[1]>=-1e-3&&lb[2]<=LOGO_ENG.w+1e-3&&lb[3]<=LOGO_ENG.h+1e-3);
+  const inkRect=rect(G.LOGO[0]+lb[0],G.LOGO[3]-lb[3],G.LOGO[0]+lb[2],G.LOGO[3]-lb[1]);
+  const inkM=T.margin(inkRect,rrect(G.W1));
+  add('Logo','Nét khắc logo cách mép nhãn W1',inkM<0?'lòi ra':f2(inkM)+' mm','≥ 0.3 mm',inkM>=0.3);
+  const degs=LOGO_ENG.layers.map(L=>L.key+':'+L.deg+'°').join(' ');
+  add('Logo','Đủ 6 layer khắc, mỗi mảng màu một góc quét',degs,'6 layer',LOGO_ENG.layers.length===6&&LOGO_ENG.layers.every(L=>typeof L.d==='string'&&L.d.startsWith('M')));
+  add('Logo','Nét mảnh nhất của logo (đo khi xuất file, 100 px/mm)',f2(LOGO_ENG.minStroke)+' mm','≥ 0.15 mm',LOGO_ENG.minStroke>=0.15);
+  const tk=T.margin(rect(...G.TKZ),rrect(G.WT));
+  add('Khắc','Vùng khắc tài khoản nằm trong cửa sổ WT',tk<0?'lòi ra':f2(tk)+' mm','≥ 0.2 mm',tk>=0.2);
+  const arr=Math.min(T.margin(G.ARROW,L1P),T.gap(G.ARROW,rrect(G.W1)),T.gap(G.ARROW,rrect(G.WP)));
+  add('Khắc','Mũi tên khắc nằm trên mica đặc của L1',arr<0?'chạm lỗ':f2(arr)+' mm','≥ 0.5 mm',arr>=0.5);
+  const hubR=T.circle(G.HUB.c,G.HUB.r);
+  const hub=Math.min(T.margin(hubR,OUTN),T.gap(hubR,rrect(G.WT)),T.gap(hubR,rrect(G.HD)),...G.pins.map(p=>T.gap(hubR,T.circle(p,G.pR))));
+  add('Khắc','Vòng hub khắc trên L4 không chạm lỗ nào',hub<0?'chạm':f2(hub)+' mm','≥ 0.5 mm',hub>=0.5);
+  /* shutter */
+  const shOut=T.margin(SHUT,OUTN);
+  add('Shutter','Nằm trong viền móc khóa',shOut<0?`lòi ra ${f2(-shOut)} mm`:'trong viền','không lòi ra',shOut>=-0.01);
+  /* inlay: the gap to the pocket must be the same small value on all three closed sides */
+  const shL1=T.gap(SHUT,L1P);
+  const seam=T.densify(SHUT,0.05).filter(p=>p[1]<SZ-1e-6).map(p=>T.ptPolyDist(p,L1P));
+  const sMin=Math.min(...seam), sMax=Math.max(...seam);
+  add('Shutter','Khảm: khe đều giữa shutter và ô trên F (3 cạnh)',shL1<0?'chồng lấn':`${f2(sMin)} – ${f2(sMax)} mm`,'0.03 – 0.10 mm, chênh ≤ 0.01',shL1>=0.03&&sMin>=0.03&&sMax<=0.1&&sMax-sMin<=0.01);
+  const slotM=T.margin(rrect(G.SLOT),SHUT);
+  add('Shutter','Khe khắc nằm trên shutter, cách mép',slotM<0?'lòi ra':f2(slotM)+' mm','≥ 1.0 mm',slotM>=1);
+  const seam39=T.densify(SHUT,0.01).reduce((s,p,i,a)=>{const q=a[(i+1)%a.length];return (p[1]<SZ-1e-6||q[1]<SZ-1e-6)?s+Math.hypot(q[0]-p[0],q[1]-p[1]):s;},0);
+  add('Shutter','Chiều dài mép hàn (3 cạnh) × dày',`${f2(seam39)} × 2 mm`,'≥ 30 mm',seam39>=30);
+  /* front face hides every pin (under solid L1 or under the shutter) */
+  /* "solid" = inside the outline AND outside every hole cut in that part; returns clearance or -1 */
+  const solidDist=(p,outline,holes)=>{if(!T.inside(p,outline))return -1;let d=T.ptPolyDist(p,outline);for(const h of holes){if(T.inside(p,h))return -1;d=Math.min(d,T.ptPolyDist(p,h));}return d;};
+  const L1holes=[rrect(G.W1),rrect(G.WP),rrect(G.HD)], SHholes=[];   // slot is engraved, not cut
+  const coverDist=p=>Math.max(solidDist(p,L1P,L1holes),solidDist(p,SHUT,SHholes));
+  window.__coverDist=coverDist;
+  let hide={d:Infinity,p:''};
+  G.pins.forEach((c,i)=>{T.densify(T.circle(c,G.pR),0.1).forEach(p=>{const d=coverDist(p);if(d<hide.d)hide={d,p:'P'+(i+1)};});});
+  add('Mặt trước','Trụ bị che kín khi nhìn mặt trước (trừ các lỗ khoét)',hide.d<0?`${hide.p} lộ ra`:`che, thừa ${f2(hide.d)} mm (${hide.p})`,'thừa ≥ 0.3 mm',hide.d>=0.3);
+  /* the account (engraved on the core) must never be visible from the front: no see-through path F/shutter → core → WT */
+  const tkPts=[];for(let x=G.TKZ[0];x<=G.TKZ[2]+1e-9;x+=0.1)for(let y=G.TKZ[1];y<=G.TKZ[3]+1e-9;y+=0.1)tkPts.push([x,y]);
+  const tkHide=Math.min(...tkPts.map(coverDist));
+  add('Mặt trước','Tài khoản trên lõi bị che kín khi nhìn từ trước',tkHide<0?'lộ ra':`che, thừa ${f2(tkHide)} mm`,'thừa ≥ 0.3 mm',tkHide>=0.3);
+  /* stack */
+  const stack=G.zL.L3[1]-G.zL.L4[0];
+  add('Chiều dày','Trụ cao bằng M + B, ghép từ đĩa 2 mm',`${f2(G.pinLen)} / ${f2(stack)} mm, ${G.pinLen/G.pinDisc} đĩa`,'bằng nhau, số đĩa nguyên',Math.abs(G.pinLen-stack)<1e-9&&Number.isInteger(G.pinLen/G.pinDisc));
+  add('Chiều dày','Các lớp nối liền, tổng dày',f2(G.zL.L1[1]-G.zL.L4[0])+' mm',`${G.TH.toFixed(2)} mm, 3 lớp × 2, không hở`,G.zL.L4[1]===G.zL.L3[0]&&G.zL.L3[1]===G.zL.L1[0]&&G.zL.L1[1]===G.TH&&[G.zL.L4,G.zL.L3,G.zL.L1].every(z=>z[1]-z[0]===2));
+  add('Hình vẽ','Bo góc hợp lệ (bán kính không lớn hơn cạnh)',ROUND_WARN.length?ROUND_WARN.join('; '):'0 lỗi','0 lỗi',ROUND_WARN.length===0);
+  /* tables vs geometry */
+  const row=k=>D.feat.find(r=>r[0]===k), bom=k=>D.bom.find(r=>r[1].startsWith(k));
+  const eq=(a,b)=>a.length===b.length&&a.every((x,i)=>Math.abs(x-b[i])<0.051);
+  [['W1',G.W1],['WT',G.WT],['SL',G.SLOT],['WP',G.WP],['HD',G.HD],['CH',[CH.x0,CH.y0,CH.x1,SZ]]].forEach(([k,a])=>{const r=row(k);add('Bảng khớp hình',`Tọa độ ${k}`,r[2]+' / '+r[3],`${a[0]}–${a[2]} / ${a[1]}–${a[3]}`,eq([...T.nums(r[2]),...T.nums(r[3])],[a[0],a[2],a[1],a[3]]));});
+  const tr=row('TR'); add('Bảng khớp hình','Tọa độ rãnh shutter TR',tr[2]+' / '+tr[3],`${TRACK[0]}–${TRACK[2]} / ${TRACK[1]}–${SZ}`,eq([...T.nums(tr[2]),...T.nums(tr[3])],[TRACK[0],TRACK[2],TRACK[1],SZ]));
+  const lkRow=row('LK'); add('Bảng khớp hình','Tọa độ lò xo LK',lkRow[2]+' / '+lkRow[3],`${f2(CH.x0-LK.beamW-LK.relW)}–${f2(CH.x0+LK.barbD)} / ${f2(CH.x1-LK.barbD)}–${f2(CH.x1+LK.beamW+LK.relW)}`,
+    eq([...T.nums(lkRow[2]),...T.nums(lkRow[3])],[CH.x0-LK.beamW-LK.relW,CH.x0+LK.barbD,CH.x1-LK.barbD,CH.x1+LK.beamW+LK.relW,LK.yRoot,LK.yRel]));
+  const bc=T.bbox(CORE), bC=bom('Lõi'); add('Bảng khớp hình','Kích thước lõi trong trong BOM',bC[3],`${f2(bc[2]-bc[0])} × ${f2(bc[3]-bc[1])}`,eq(T.nums(bC[3]).slice(0,2),[bc[2]-bc[0],bc[3]-bc[1]]));
+  const bs=T.bbox(SHUT), bS=bom('Shutter'); add('Bảng khớp hình','Kích thước shutter trong BOM',bS[3],`${f2(bs[2]-bs[0])} × ${f2(bs[3]-bs[1])}`,eq(T.nums(bS[3]).slice(0,2),[bs[2]-bs[0],bs[3]-bs[1]]));
+  const bp=bom('Trụ'), nDisc=G.pins.length*G.pinLen/G.pinDisc; add('Bảng khớp hình','Số đĩa trụ trong BOM',bp[5],String(nDisc),+bp[5]===nDisc);
+  /* cut polygons must be simple (a self-crossing outline gives a wrong laser file and a broken 3D mesh) */
+  const selfX=P=>{const n=P.length,o=(p,q,r)=>Math.sign((q[0]-p[0])*(r[1]-p[1])-(q[1]-p[1])*(r[0]-p[0]));let k=0;for(let i=0;i<n;i++)for(let j=i+2;j<n;j++){if(i===0&&j===n-1)continue;const a=P[i],b=P[(i+1)%n],c=P[j],d=P[(j+1)%n];if(o(a,b,c)*o(a,b,d)<0&&o(c,d,a)*o(c,d,b)<0)k++;}return k;};
+  const sx=[['L1',L1P],['khung L3',FRAME],['lõi',CORE],['viền',OUTN],['shutter',SHUT]].map(([n,p])=>[n,selfX(p)]).filter(x=>x[1]);
+  add('Hình vẽ','Đường cắt không tự cắt chéo',sx.length?sx.map(x=>x[0]).join(', '):'0 lỗi','0 lỗi',sx.length===0);
+  /* drawing legibility: no two labels overlap, none leaves the sheet */
+  const svg=document.querySelector('#drawing svg');
+  if(svg){
+    const bx=[...svg.querySelectorAll('text')].map(t=>{const b=t.getBBox();return {t:t.textContent,x0:b.x,y0:b.y,x1:b.x+b.width,y1:b.y+b.height};}).filter(b=>b.x1>b.x0);
+    const ov=[];for(let i=0;i<bx.length;i++)for(let j=i+1;j<bx.length;j++){const a=bx[i],b=bx[j];if(Math.min(a.x1,b.x1)-Math.max(a.x0,b.x0)>1&&Math.min(a.y1,b.y1)-Math.max(a.y0,b.y0)>1)ov.push(`${a.t} × ${b.t}`);}
+    add('Hình vẽ','Chữ trên bản vẽ không đè lên nhau',ov.length?ov.join('; '):'0 chỗ','0 chỗ',ov.length===0);
+    const vb=svg.viewBox.baseVal, outT=bx.filter(b=>b.x0<0||b.y0<0||b.x1>vb.width||b.y1>vb.height).map(b=>b.t);
+    add('Hình vẽ','Chữ nằm trong khung bản vẽ',outT.length?outT.join('; '):'0 chỗ','0 chỗ',outT.length===0);
+  }
+  return (TEST_ROWS=rows);
+}
+function showTests(){
+  const rows=runTests(), ok=rows.filter(r=>r.pass).length;
+  document.getElementById('tests').innerHTML=rows.map(r=>`<tr><td>${r.grp}</td><td>${r.name}</td><td class="n">${r.val}</td><td class="n">${r.rule}</td><td style="color:${r.pass?'var(--accent)':'var(--warn)'};font-weight:600">${r.pass?'Đạt':'Không đạt'}</td></tr>`).join('');
+  const nan=document.getElementById('drawing').innerHTML.includes('NaN');
+  document.getElementById('testSummary').textContent=`${ok}/${rows.length} đạt${nan?' · bản vẽ có lỗi NaN':''}`;
+}
+window.__geomTests=()=>runTests();
+window.__geom={T,roundPoly,OUTN,L1P,SHUT,CORE,FRAME,FRAME_NB,LKZ,CH,LK,CORE_NOTCH,G,LOGO_ENG,TRACK,INLAY,SZ,K,CHAMF,variant:'2mm'};
+
+/* ================= page fill ================= */
+document.getElementById('legend').innerHTML=D.legend.map(l=>`<li><span class="ball">${l[0]}</span><span class="sw" style="background:${l[1]}"></span>${l[2]}</li>`).join('');
+document.getElementById('bom').innerHTML=D.bom.map(r=>`<tr><td class="n">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="n">${r[3]}</td><td>${r[4]}</td><td class="n">${r[5]}</td></tr>`).join('');
+document.getElementById('feat').innerHTML=D.feat.map(r=>`<tr><td class="n">${r[0]}</td><td>${r[1]}</td><td class="n">${r[2]}</td><td class="n">${r[3]}</td><td class="n">${r[4]}</td><td>${r[5]}</td></tr>`).join('');
+document.getElementById('steps').innerHTML=D.steps.map(s=>`<li>${s}</li>`).join('');
+document.getElementById('laser').innerHTML=D.laser.map(s=>`<li>${s}</li>`).join('');
+document.getElementById('cmpHead').innerHTML=D.cmpHead.map(h=>`<th>${h}</th>`).join('');
+document.getElementById('cmp').innerHTML=D.cmp.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('');
+document.getElementById('checks').innerHTML=D.checks.map(c=>`<li${c[0]?' class="warn"':''}>${c[1]}</li>`).join('');
+build2D();
+try{build3D();}catch(err){console.error(err);}
+showTests();
+})();
+</script>
+
+</html>
