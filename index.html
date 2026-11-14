@@ -69,11 +69,12 @@ a{color:var(--accent)}
 
 <div class="wrap">
 <header>
-  <span class="eyebrow">Bản vẽ LQD-FD-001 · Rev J · 14.11.2026</span>
+  <span class="eyebrow">Bản vẽ LQD-FD-001 · Rev K · 14.11.2026</span>
   <h1>Móc khóa đĩa mềm LQĐ</h1>
-  <p class="lede">Bộ lắp ráp 30 × 30 × 4 mm, toàn bộ mica cắt xuyên ở một tiệm CO2, ghép bằng 3 trụ mica ẩn và hàn dung môi. Lõi mica trong được bọc trong một khung cùng màu nên nhìn từ cạnh không thấy lớp trong. Đơn vị: mm. Các số đang làm tròn, sẽ chốt sau khi cắt thử.</p>
-  <p class="rev"><b>Rev J</b><span>Logo LQDOJ thật, chuyển vector bằng dò biên từ ảnh gốc, chữ đầy đủ "Le Quy Don / Online Judge". Vùng khắc 17 × 12.4 mm. Thêm cách làm nét khắc trắng bằng sơn. File khắc tải ở thư mục logo-lqdoj.</span></p>
+  <p class="lede">Bộ lắp ráp 30 × 30 × 4 mm, toàn bộ mica cắt xuyên ở một tiệm CO2, ghép bằng 3 trụ mica ẩn và hàn dung môi. Lõi mica trong được bọc trong một khung cùng màu nên nhìn từ hai bên và mép dưới không thấy lớp trong; ở mép trên, cạnh lõi nằm phẳng với mép. Đơn vị: mm. Các số đang làm tròn, sẽ chốt sau khi cắt thử. Có thêm <a href="mica-2mm.html">phương án mica 2 mm</a>.</p>
+  <p class="rev"><b>Rev K</b><span>Lõi trong cao thêm 2 mm (25.5 → 27.5): khi lắp xong, mép trên của lõi nằm phẳng với mép trên móc khóa, không còn khe trống. Vị trí khóa, logo, tài khoản giữ nguyên.</span></p>
   <details class="hist"><summary>Lịch sử sửa đổi trước</summary>
+  <p class="rev"><b>Rev J</b><span>Logo LQDOJ thật, chuyển vector bằng dò biên từ ảnh gốc, chữ đầy đủ "Le Quy Don / Online Judge". Vùng khắc 17 × 12.4 mm. Thêm cách làm nét khắc trắng bằng sơn. File khắc tải ở thư mục logo-lqdoj.</span></p>
   <p class="rev"><b>Rev I</b><span>Lõi mica trong lắp sau, không cần keo: thân (có khung) làm sẵn và hàn trước; khung L3 có rãnh hở ở mép trên và 2 lò xo có ngạnh. Lõi khắc xong đẩy vào từ mép trên tới khi nghe "tách". Dời 3 trụ ra xa lò xo.</span></p>
   <p class="rev"><b>Rev H</b><span>Chỉ giữ shutter cố định. Thêm chi tiết đĩa mềm: rãnh shutter, khe cửa sổ trên shutter, ô chống ghi, lỗ HD vuông (xỏ khoen), rãnh hai cạnh, mũi tên, vòng hub và viền shutter khắc ở mặt sau. Lớp L3 tách thành lõi trong + khung màu. Nhãn trong rộng hơn 25%. Còn 3 trụ. Logo khắc đổi sang LQDOJ.</span></p>
   <p class="rev"><b>Rev G</b><span>Thêm bộ kiểm tra hình học tự động; sửa thành mica P7 (0.8 → 1.1 mm) và trụ P6 bị lộ.</span></p>
@@ -218,8 +219,8 @@ const LKZ=[[CH.x0-LK.beamW-LK.relW,LK.yRoot,CH.x0,LK.yRel],[CH.x1,LK.yRoot,CH.x1
 /* clear core: rectangle with a lock notch on each side edge */
 const CORE_NOTCH={y:[17.5,18.6],d:0.4};
 const CORE_PTS=[[5.3,2.5],[24.7,2.5],[24.7,CORE_NOTCH.y[0]],[24.7-CORE_NOTCH.d,CORE_NOTCH.y[0]],[24.7-CORE_NOTCH.d,CORE_NOTCH.y[1]],[24.7,CORE_NOTCH.y[1]],
-  [24.7,28],[5.3,28],[5.3,CORE_NOTCH.y[1]],[5.3+CORE_NOTCH.d,CORE_NOTCH.y[1]],[5.3+CORE_NOTCH.d,CORE_NOTCH.y[0]],[5.3,CORE_NOTCH.y[0]]];
-const CORE=roundPoly(CORE_PTS,[0.8,0.8,0,0,0,0,0.5,0.5,0,0,0,0]);
+  [24.7,30],[5.3,30],[5.3,CORE_NOTCH.y[1]],[5.3+CORE_NOTCH.d,CORE_NOTCH.y[1]],[5.3+CORE_NOTCH.d,CORE_NOTCH.y[0]],[5.3,CORE_NOTCH.y[0]]];
+const CORE=roundPoly(CORE_PTS,[0.8,0.8,0,0,0,0,0.2,0.2,0,0,0,0]);   // top edge flush with the keychain top once inserted
 const G={
   W1:[5.8,3,24.2,16.5,1.2],           // clear label window (L1, L2)
   WT:[11,19.5,22,27.5,0.6],           // account window (L4, read from the back)
@@ -242,7 +243,7 @@ const D={
   bom:[
     ['1','L1 mặt trước','Mica màu (xanh navy)','30 × 30 × 1','Cắt: nhãn W1, rãnh shutter, ô chống ghi WP, lỗ HD. Khắc nhẹ mũi tên','1'],
     ['2','L2','Mica màu, cùng tấm L1','30 × 30 × 1','Cắt: nhãn W1, nửa ô WP, lỗ HD, 3 lỗ trụ','1'],
-    ['3','L3 lõi trong','Mica đúc (cast) trong suốt','19.4 × 25.5 × 1','Cắt: 2 khía khóa ở hai cạnh. Khắc mặt B: logo lật gương, tài khoản không lật (CSV), dấu chiều lắp','1'],
+    ['3','L3 lõi trong','Mica đúc (cast) trong suốt','19.4 × 27.5 × 1','Cắt: 2 khía khóa ở hai cạnh. Khắc mặt B: logo lật gương, tài khoản không lật (CSV), dấu chiều lắp','1'],
     ['4','L3 khung','Mica màu, cùng tấm L1','30 × 30 × 1','Cắt: rãnh lắp lõi hở mép trên, 2 lò xo khóa có ngạnh, lỗ HD, 3 lỗ trụ','1'],
     ['5','L4 mặt sau','Mica màu, cùng tấm L1','30 × 30 × 1','Cắt: cửa sổ WT, lỗ HD, 3 lỗ trụ. Khắc nhẹ vòng hub và viền shutter','1'],
     ['6','Shutter','Mica gương bạc','16 × 11.3 × 1','Cắt: khe cửa sổ 4 × 7.5','1'],
@@ -355,7 +356,7 @@ function build3D(){
   const anchors=[[1,P.L1,[0.5,9,4]],[2,P.L2,[0,14,2.5]],[3,P.L3,[24.7,9,1.5]],[4,P.L3F,[30,9,1.5]],[5,P.L4,[10,0,0.5]],[6,P.SH,[23,26,4]],[7,P.PIN,[2.6,10,0]],[9,P.L4,ringC.clone().addScaledVector(dv,R).toArray()]]
     .map(a=>({n:a[0],obj:a[1],p:new THREE.Vector3(...a[2])}));
 
-  const CORE_OUT=28;   // core start position: lifted fully above the top edge
+  const CORE_OUT=30;   // core start position: lifted fully above the top edge
   const state={e:0,eT:0,c:0.6,cT:0.6};
   const exp=document.getElementById('explode'); exp.addEventListener('input',()=>{state.eT=+exp.value;});
   const cin=document.getElementById('coreIn'); cin.addEventListener('input',()=>{state.cT=+cin.value;});
@@ -500,7 +501,7 @@ function build2D(){
   const R=(y0,y1,z0,z1,fill,cls='v')=>{const a=H(y0,z1),b=H(y1,z0);out.push(`<rect x="${a[0]}" y="${a[1]}" width="${b[0]-a[0]}" height="${b[1]-a[1]}" class="${cls}" style="fill:${fill}"/>`);};
   const pA='url(#pA)', pB='url(#pB)', pM='url(#pM)';
   R(0,G.WT[1],0,1,pA); R(G.WT[3],30,0,1,pA);
-  R(0,CH.y0,1,2,pB); R(2.5,28,1,2,pM);   /* y 28–30 of L3 is the open insertion slot */
+  R(0,CH.y0,1,2,pB); R(2.5,30,1,2,pM);   /* core fills the channel up to the top edge */
   R(0,G.W1[1],2,3,pA); R(G.W1[3],30,2,3,pA);
   R(0,G.W1[1],3,4,pB); R(G.W1[3],TRACK[1],3,4,pB);
   R(18.7,G.SLOT[1],3,4,'var(--tint-al)'); R(G.SLOT[3],30,3,4,'var(--tint-al)');
@@ -518,7 +519,7 @@ function build2D(){
   leader([H(14,1.5)[0],H(14,1.5)[1]],[H(14,1.5)[0]-30,604],'3 · lõi trong','end');
   leader([H(24,1.02)[0],H(24,1.02)[1]],[H(24,1.02)[0]+20,624],'khắc tài khoản, mặt B');
   leader([H(2.45,1.9)[0],H(2.45,1.9)[1]],[H(2.45,1.9)[0]+30,622],'khe 0.1 lõi–rãnh');
-  leader([H(29,1.5)[0],H(29,1.5)[1]],[H(29,1.5)[0]+16,642],'khe lắp lõi');
+  leader([H(29,1.5)[0],H(29,1.5)[1]],[H(29,1.5)[0]+16,642],'lõi sát mép');
   leader([H(9,1.02)[0],H(9,1.02)[1]],[H(9,1.02)[0]+60,640],'khắc logo, mặt B');
   txt(120,666,`MẶT CẮT A–A   20:1   (x = ${G.cutX})`,'tt');
 
@@ -542,10 +543,10 @@ function build2D(){
   txt(40,1040,'6 · SHUTTER','tt'); txt(40,1056,'gương · 5:1','tx');
 
   /* L3 core 3:1 */
-  const Cm=(x,y)=>[175+(x-5.3)*3,900+(28-y)*3];
+  const Cm=(x,y)=>[175+(x-5.3)*3,900+(30-y)*3];
   poly(Cm,CORE,'v','fill:var(--tint-mica)');
   dimH(Cm(5.3,0)[0],Cm(24.7,0)[0],996,Cm(5.3,2.5)[1]+4,Cm(24.7,2.5)[1]+4,'19.4');
-  dimV(247,Cm(0,28)[1],Cm(0,2.5)[1],Cm(24.7,28)[0]+4,Cm(24.7,2.5)[0]+4,'25.5','r');
+  dimV(247,Cm(0,30)[1],Cm(0,2.5)[1],Cm(24.7,30)[0]+4,Cm(24.7,2.5)[0]+4,'27.5','r');
   txt(175,1040,'3 · LÕI TRONG','tt'); txt(175,1056,'trong · 3:1','tx');
 
   /* pin 10:1 */
@@ -566,7 +567,7 @@ function build2D(){
   tb(540,900,180,36,'TÊN','MÓC KHÓA ĐĨA MỀM LQĐ');
   tb(720,900,90,36,'SỐ BẢN VẼ','LQD-FD-001');
   tb(540,936,90,32,'VẬT LIỆU','Mica (PMMA)');
-  tb(630,936,70,32,'PHIÊN BẢN','Rev J');
+  tb(630,936,70,32,'PHIÊN BẢN','Rev K');
   tb(700,936,110,32,'NGÀY','14.11.2026');
   tb(540,968,270,32,'CHIẾU','Góc 1 (E) · đơn vị mm');
 
@@ -648,8 +649,10 @@ function runTests(){
   add('Thành mica','L1: dải giữa nhãn W1 và rãnh shutter',f2(strip)+' mm','≥ 1.0 mm',strip>=1);
   /* L3: frame with an insertion channel + two barbed spring arms; the clear core slides in later */
   const shiftY=(poly,dy)=>poly.map(p=>[p[0],p[1]+dy]);
-  const coreSide=T.margin(CORE,OUTN);
-  add('Khung L3','Lõi cách mép ngoài khi đã lắp (khung che cạnh lõi)',f2(coreSide)+' mm','≥ 2.0 mm',coreSide>=2);
+  const cb=T.bbox(CORE), ob=T.bbox(OUTN), coreSide=Math.min(cb[0]-ob[0],ob[2]-cb[2],cb[1]-ob[1]);
+  add('Khung L3','Lõi cách mép trái / phải / dưới (khung che cạnh lõi)',f2(coreSide)+' mm','≥ 2.0 mm',coreSide>=2);
+  const coreTop=ob[3]-cb[3];
+  add('Khung L3','Mép trên lõi phẳng với mép trên móc khóa (không còn khe trống)',f2(coreTop)+' mm','0.00 mm',Math.abs(coreTop)<1e-9);
   const side=T.gap(CORE,FRAME_NB);
   add('Lắp lõi','Khe hai bên giữa lõi và rãnh',f2(side)+' mm','0.08 – 0.15 mm',side>=0.08&&side<=0.15);
   const mouth=(CH.x1-CH.x0)-(T.bbox(CORE)[2]-T.bbox(CORE)[0]);

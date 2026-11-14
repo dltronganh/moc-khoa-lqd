@@ -71,14 +71,14 @@ a{color:var(--accent)}
 <header>
   <span class="eyebrow">Bản vẽ LQD-FD-002 · Phương án mica 2 mm · 14.11.2026</span>
   <h1>Móc khóa đĩa mềm LQĐ · bản mica 2 mm</h1>
-  <p class="lede">Phương án thay thế cho tiệm chỉ có mica từ 2 mm trở lên. 30 × 30 × 6 mm, 3 lớp mica 2 mm thay cho 4 lớp 1 mm. Mặt ngoài, logo, lõi lắp sau không keo và 3 trụ ẩn giữ nguyên như <a href="index.html">bản 1 mm (Rev J)</a>. Đơn vị: mm.</p>
-  <p class="rev"><b>Khác bản 1 mm</b><span>Bỏ lớp L2 (mặt trước 2 mm đã đủ sâu cho nhãn). Shutter được <b>khảm</b> vừa khít vào mặt trước và hàn theo mép, vì bên dưới nó giờ là lõi tháo rời. Khe cửa sổ trên shutter chuyển sang <b>khắc</b>: nếu cắt xuyên sẽ nhìn thấy tài khoản qua lõi trong. Thanh lò xo rộng 0.8 mm thay cho 0.6 mm để cắt được trên tấm dày. Trụ cao 4 mm, ghép từ 2 đĩa 2 mm.</span></p>
+  <p class="lede">Phương án thay thế cho tiệm chỉ có mica từ 2 mm trở lên. 30 × 30 × 6 mm, 3 lớp mica 2 mm thay cho 4 lớp 1 mm. Mặt ngoài, logo, lõi lắp sau không keo và 3 trụ ẩn giữ nguyên như <a href="index.html">bản 1 mm (Rev K)</a>. Đơn vị: mm.</p>
+  <p class="rev"><b>Khác bản 1 mm</b><span>Bỏ lớp L2 (mặt trước 2 mm đã đủ sâu cho nhãn). Shutter được <b>khảm</b> vừa khít vào mặt trước và hàn theo mép, vì bên dưới nó giờ là lõi tháo rời. Khe cửa sổ trên shutter chuyển sang <b>khắc</b>: nếu cắt xuyên sẽ nhìn thấy tài khoản qua lõi trong. Thanh lò xo rộng 0.8 mm thay cho 0.6 mm để cắt được trên tấm dày. Trụ cao 4 mm, ghép từ 2 đĩa 2 mm. Lõi cao 27.5 mm, lắp xong phẳng với mép trên (giống Rev K).</span></p>
 </header>
 
 <section class="sheet" aria-labelledby="tcmp">
   <div class="sheet-head"><h2 id="tcmp">So sánh với bản 1 mm</h2><span class="code">Có hợp lý không?</span></div>
   <div class="scroll"><table>
-    <thead><tr><th>Tiêu chí</th><th>Bản 1 mm (Rev J)</th><th>Bản 2 mm (trang này)</th><th>Đánh giá</th></tr></thead>
+    <thead><tr><th>Tiêu chí</th><th>Bản 1 mm (Rev K)</th><th>Bản 2 mm (trang này)</th><th>Đánh giá</th></tr></thead>
     <tbody id="cmp"></tbody>
   </table></div>
 </section>
@@ -223,8 +223,8 @@ const LKZ=[[CH.x0-LK.beamW-LK.relW,LK.yRoot,CH.x0,LK.yRel],[CH.x1,LK.yRoot,CH.x1
 /* clear core: rectangle with a lock notch on each side edge */
 const CORE_NOTCH={y:[17.5,18.6],d:0.4};
 const CORE_PTS=[[5.3,2.5],[24.7,2.5],[24.7,CORE_NOTCH.y[0]],[24.7-CORE_NOTCH.d,CORE_NOTCH.y[0]],[24.7-CORE_NOTCH.d,CORE_NOTCH.y[1]],[24.7,CORE_NOTCH.y[1]],
-  [24.7,28],[5.3,28],[5.3,CORE_NOTCH.y[1]],[5.3+CORE_NOTCH.d,CORE_NOTCH.y[1]],[5.3+CORE_NOTCH.d,CORE_NOTCH.y[0]],[5.3,CORE_NOTCH.y[0]]];
-const CORE=roundPoly(CORE_PTS,[0.8,0.8,0,0,0,0,0.5,0.5,0,0,0,0]);
+  [24.7,30],[5.3,30],[5.3,CORE_NOTCH.y[1]],[5.3+CORE_NOTCH.d,CORE_NOTCH.y[1]],[5.3+CORE_NOTCH.d,CORE_NOTCH.y[0]],[5.3,CORE_NOTCH.y[0]]];
+const CORE=roundPoly(CORE_PTS,[0.8,0.8,0,0,0,0,0.2,0.2,0,0,0,0]);   // top edge flush with the keychain top once inserted
 const G={
   W1:[5.8,3,24.2,16.5,1.2],           // clear label window (F)
   WT:[11,19.5,22,27.5,0.6],           // account window (B, read from the back)
@@ -248,7 +248,7 @@ const D={
   bom:[
     ['1','F mặt trước','Mica màu (xanh dương)','30 × 30 × 2','Cắt: nhãn W1, ô khảm shutter hở mép trên, ô chống ghi WP, lỗ HD. Khắc nhẹ mũi tên','1'],
     ['2','M khung','Mica màu, cùng tấm F','30 × 30 × 2','Cắt: rãnh lắp lõi hở mép trên, 2 lò xo khóa có ngạnh, nửa ô WP, lỗ HD, 3 lỗ trụ','1'],
-    ['3','Lõi trong','Mica đúc (cast) trong suốt','19.4 × 25.5 × 2','Cắt: 2 khía khóa ở hai cạnh. Khắc mặt B: logo lật gương, tài khoản không lật (CSV), dấu chiều lắp','1'],
+    ['3','Lõi trong','Mica đúc (cast) trong suốt','19.4 × 27.5 × 2','Cắt: 2 khía khóa ở hai cạnh. Khắc mặt B: logo lật gương, tài khoản không lật (CSV), dấu chiều lắp','1'],
     ['4','B mặt sau','Mica màu, cùng tấm F','30 × 30 × 2','Cắt: cửa sổ WT, lỗ HD, 3 lỗ trụ. Khắc nhẹ vòng hub và viền shutter','1'],
     ['5','Shutter','Mica xám','16 × 11.3 × 2','Cắt viền. Khắc phủ khe cửa sổ 4 × 7.5 (không cắt xuyên)','1'],
     ['6','Trụ','Mica màu, cùng tấm F','Ø3.0* × 2','Cắt. 2 đĩa chồng thành 1 trụ cao 4. *Cỡ theo test','6'],
@@ -368,7 +368,7 @@ function build3D(){
   const anchors=[[1,P.L1,[0.5,9,6]],[2,P.L3F,[30,9,3]],[3,P.L3,[24.7,9,3]],[4,P.L4,[10,0,1]],[5,P.SH,[23,26,6]],[6,P.PIN,[2.6,10,0]],[8,P.L4,ringC.clone().addScaledVector(dv,R).toArray()]]
     .map(a=>({n:a[0],obj:a[1],p:new THREE.Vector3(...a[2])}));
 
-  const CORE_OUT=28;   // core start position: lifted fully above the top edge
+  const CORE_OUT=30;   // core start position: lifted fully above the top edge
   const state={e:0,eT:0,c:0.6,cT:0.6};
   const exp=document.getElementById('explode'); exp.addEventListener('input',()=>{state.eT=+exp.value;});
   const cin=document.getElementById('coreIn'); cin.addEventListener('input',()=>{state.cT=+cin.value;});
@@ -514,7 +514,7 @@ function build2D(){
   const pA='url(#pA)', pB='url(#pB)', pM='url(#pM)';
   const zB=G.zL.L4, zM=G.zL.L3, zF=G.zL.L1;
   R(0,G.WT[1],...zB,pA); R(G.WT[3],30,...zB,pA);                       /* B */
-  R(0,CH.y0,...zM,pB); R(2.5,28,...zM,pM);                              /* M frame + core; y 28–30 is the open insertion slot */
+  R(0,CH.y0,...zM,pB); R(2.5,30,...zM,pM);                              /* M frame + core; core reaches the top edge */
   R(0,G.W1[1],...zF,pA); R(G.W1[3],TRACK[1],...zF,pA);                  /* F */
   R(SH_BOX[1],30,...zF,'var(--tint-al)');                               /* inlaid shutter */
   R(G.SLOT[1],G.SLOT[3],zF[1]-0.3,zF[1],'var(--tint-dark)','t');        /* engraved slot, ~0.3 deep */
@@ -531,7 +531,7 @@ function build2D(){
   leader([H(14,3)[0],H(14,3)[1]],[H(14,3)[0]-30,644],'3 · lõi trong','end');
   leader([H(24,2.04)[0],H(24,2.04)[1]],[H(24,2.04)[0]+20,664],'khắc tài khoản, mặt B');
   leader([H(2.45,2.9)[0],H(2.45,2.9)[1]],[H(2.45,2.9)[0]+95,666],'khe 0.1 lõi–rãnh');
-  leader([H(29,3)[0],H(29,3)[1]],[H(29,3)[0]+16,682],'khe lắp lõi');
+  leader([H(29,3)[0],H(29,3)[1]],[H(29,3)[0]+16,682],'lõi sát mép');
   leader([H(9,2.04)[0],H(9,2.04)[1]],[H(9,2.04)[0]+60,680],'khắc logo, mặt B');
   txt(120,706,`MẶT CẮT A–A   20:1   (x = ${G.cutX})`,'tt');
 
@@ -554,10 +554,10 @@ function build2D(){
   txt(40,1080,'5 · SHUTTER','tt'); txt(40,1096,'xám · khe khắc · 5:1','tx');
 
   /* core 3:1 */
-  const Cm=(x,y)=>[175+(x-5.3)*3,940+(28-y)*3];
+  const Cm=(x,y)=>[175+(x-5.3)*3,940+(30-y)*3];
   poly(Cm,CORE,'v','fill:var(--tint-mica)');
   dimH(Cm(5.3,0)[0],Cm(24.7,0)[0],1036,Cm(5.3,2.5)[1]+4,Cm(24.7,2.5)[1]+4,'19.4');
-  dimV(247,Cm(0,28)[1],Cm(0,2.5)[1],Cm(24.7,28)[0]+4,Cm(24.7,2.5)[0]+4,'25.5','r');
+  dimV(247,Cm(0,30)[1],Cm(0,2.5)[1],Cm(24.7,30)[0]+4,Cm(24.7,2.5)[0]+4,'27.5','r');
   txt(175,1080,'3 · LÕI TRONG','tt'); txt(175,1096,'trong · 3:1','tx');
 
   /* pin disc 10:1 — two discs per pin */
@@ -661,8 +661,10 @@ function runTests(){
   add('Thành mica','F: tay hai bên ô khảm (chỗ hẹp nhất)',f2(arm)+' mm','≥ 2.0 mm',arm>=2);
   /* L3: frame with an insertion channel + two barbed spring arms; the clear core slides in later */
   const shiftY=(poly,dy)=>poly.map(p=>[p[0],p[1]+dy]);
-  const coreSide=T.margin(CORE,OUTN);
-  add('Khung L3','Lõi cách mép ngoài khi đã lắp (khung che cạnh lõi)',f2(coreSide)+' mm','≥ 2.0 mm',coreSide>=2);
+  const cb=T.bbox(CORE), ob=T.bbox(OUTN), coreSide=Math.min(cb[0]-ob[0],ob[2]-cb[2],cb[1]-ob[1]);
+  add('Khung L3','Lõi cách mép trái / phải / dưới (khung che cạnh lõi)',f2(coreSide)+' mm','≥ 2.0 mm',coreSide>=2);
+  const coreTop=ob[3]-cb[3];
+  add('Khung L3','Mép trên lõi phẳng với mép trên móc khóa (không còn khe trống)',f2(coreTop)+' mm','0.00 mm',Math.abs(coreTop)<1e-9);
   const side=T.gap(CORE,FRAME_NB);
   add('Lắp lõi','Khe hai bên giữa lõi và rãnh',f2(side)+' mm','0.08 – 0.15 mm',side>=0.08&&side<=0.15);
   const mouth=(CH.x1-CH.x0)-(T.bbox(CORE)[2]-T.bbox(CORE)[0]);
