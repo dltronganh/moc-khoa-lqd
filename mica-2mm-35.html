@@ -65,6 +65,22 @@ a{color:var(--accent)}
 .hist summary{cursor:pointer;font-size:13px;color:var(--muted)}
 .hist .rev{margin-top:6px}
 @media (max-width:640px){#viewer{height:360px}.sheet{padding:14px}}
+.colors{display:flex;flex-direction:column;gap:10px;border:1px solid var(--rule);border-radius:5px;padding:12px}
+.crow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.clab{font-size:13px;font-weight:500;min-width:96px}
+.sws{display:flex;flex-wrap:wrap;gap:20px 6px;padding-bottom:14px}   /* row gap leaves room for the code under each swatch */
+.swb{width:30px;height:30px;border-radius:5px;border:1px solid var(--rule);cursor:pointer;padding:0;position:relative}
+.swb[aria-pressed="true"]{outline:2px solid var(--accent);outline-offset:2px}
+.swb span{position:absolute;left:-4px;right:-4px;bottom:-15px;font:500 9.5px var(--f-mono);color:var(--muted);text-align:center}
+.cname{font-size:13px;color:var(--muted)}
+.cmet{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
+.cmet div{background:var(--paper);border-radius:5px;padding:8px 10px;font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:2px}
+.cmet b{font-size:15px;color:var(--ink);font-weight:600}
+.cmet i{font-style:normal;font-weight:500}
+.ok{color:#1a7f37}.mid{color:var(--warn)}.bad{color:#c62828}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ok{color:#4cc764}:root:not([data-theme="light"]) .bad{color:#ff6b6b}}
+:root[data-theme="dark"] .ok{color:#4cc764}:root[data-theme="dark"] .bad{color:#ff6b6b}
+.cwarn{margin:0;font-size:13px}
 </style>
 
 <div class="wrap">
@@ -98,6 +114,18 @@ a{color:var(--accent)}
     </div>
   </div>
   <div id="viewer"><svg id="balloons" aria-hidden="true"></svg></div>
+  <div class="colors" aria-labelledby="tcol">
+    <div class="crow"><span class="clab" id="tcol">Màu thân</span><div class="sws" id="swBody" role="group" aria-label="Màu thân (F, M, B)"></div><span class="cname" id="nmBody"></span></div>
+    <div class="crow"><span class="clab">Màu shutter</span><div class="sws" id="swSh" role="group" aria-label="Màu shutter"></div><span class="cname" id="nmSh"></span></div>
+    <div class="cmet">
+      <div><span>Logo trắng trên nền thân</span><b id="cm1"></b></div>
+      <div><span>Chữ tài khoản trên nền shutter</span><b id="cm2"></b></div>
+      <div><span>Shutter khác màu thân (ΔE)</span><b id="cm3"></b></div>
+      <div><span>Khe khắc trên shutter</span><b id="cm4"></b></div>
+    </div>
+    <p class="cwarn" id="cwarn"></p>
+    <p class="hint">Bảng màu mica FS của tiệm; màu trên màn hình lấy gần đúng từ ảnh chụp, xin mẫu thật để chốt. Lõi giữa: mica trong FS 000 (đã chốt). Bấm "Sau" để xem chữ tài khoản. Link của trang giữ lựa chọn màu: gửi đi là người nhận thấy đúng phối màu này.</p>
+  </div>
   <ul class="legend" id="legend"></ul>
   <p class="hint">Logo LQDOJ đã chuyển sang vector bằng cách dò biên từ ảnh gốc; hình trên lõi dùng đúng hình học của file khắc.</p>
 </section>
@@ -380,7 +408,7 @@ function build3D(){
   const ringC=K3.clone().addScaledVector(dv,R); torus.position.copy(ringC); P.L4.add(torus);
   /* inlaid shutter: solid gray, the window slot is an engraved pocket on its front face (drawn as a darker inset) */
   P.SH=new THREE.Group(); P.SH.add(extr(shape(SHUT),...Z.L1,M.mirror));
-  const slotM=new THREE.Mesh(new THREE.ShapeGeometry(shape(rrect(G.SLOT))),new THREE.MeshStandardMaterial({color:0x4c535c,roughness:0.9,side:DS}));
+  const slotM=new THREE.Mesh(new THREE.ShapeGeometry(shape(rrect(G.SLOT))),M.slot=new THREE.MeshStandardMaterial({color:0x4c535c,roughness:0.9,side:DS}));
   slotM.position.z=Z.L1[1]+0.02; P.SH.add(slotM); P.SH.add(loop(rrect(G.SLOT),Z.L1[1]+0.03));
   for(const k in P) root.add(P[k]);
   const OFF={L4:0,L3F:6,L3:6,L1:12,SH:18,PIN:-9};
@@ -424,6 +452,11 @@ function build3D(){
     controls.update(); renderer.render(scene,camera); drawBalloons(el.clientWidth,el.clientHeight);
     requestAnimationFrame(tick);
   })();
+  /* colour hook for the picker: body sheets F, M, B share one colour; shutter has its own; engravings read as a frosted tint */
+  window.__set3DColors=(b,s,translucent,engrB,engrS)=>{
+    M.navy.color.set(b);M.navy2.color.set(b);M.engr.color.set(engrB);
+    M.mirror.color.set(s);M.mirror.transparent=!!translucent;M.mirror.opacity=translucent?0.8:1;M.mirror.depthWrite=!translucent;M.mirror.needsUpdate=true;
+    M.slot.color.set(engrS);};
   return true;
 }
 
@@ -571,7 +604,7 @@ function build2D(){
   poly(Sh,SHUT,'v','fill:var(--tint-al)'); rp(Sh,G.SLOT,'eg2','fill:var(--tint-dark)');
   dimH(Sh(SH_BOX[0],0)[0],Sh(SH_BOX[2],0)[0],1022,Sh(SH_BOX[0],SH_BOX[1])[1]+4,Sh(SH_BOX[2],SH_BOX[1])[1]+4,nf(shW));
   dimV(Sh(SH_BOX[2],0)[0]+10,Sh(0,SZ)[1],Sh(0,SH_BOX[1])[1],Sh(SH_BOX[2],SZ)[0]+4,Sh(SH_BOX[2],SH_BOX[1])[0]+4,nf(shH),'r');
-  txt(40,1080,'5 · SHUTTER','tt'); txt(40,1096,'tối màu · khe khắc · 5:1','tx');
+  txt(40,1080,'5 · SHUTTER','tt'); txt(40,1096,'khe khắc · 5:1','tx');
 
   /* core */
   const Cx0=SZ<=30?175:190, Cs=SZ<=30?3:2.4, Cm=(x,y)=>[Cx0+(x-CX0)*Cs,940+(SZ-y)*Cs];
@@ -772,6 +805,11 @@ function runTests(){
     eq([...T.nums(lkRow[2]),...T.nums(lkRow[3])],[CH.x0-LK.beamW-LK.relW,CH.x0+LK.barbD,CH.x1-LK.barbD,CH.x1+LK.beamW+LK.relW,LK.yRoot,LK.yRel]));
   const bc=T.bbox(CORE), bC=bom('Lõi'); add('Bảng khớp hình','Kích thước lõi trong trong BOM',bC[3],`${f2(bc[2]-bc[0])} × ${f2(bc[3]-bc[1])}`,eq(T.nums(bC[3]).slice(0,2),[bc[2]-bc[0],bc[3]-bc[1]]));
   const bs=T.bbox(SHUT), bS=bom('Shutter'); add('Bảng khớp hình','Kích thước shutter trong BOM',bS[3],`${f2(bs[2]-bs[0])} × ${f2(bs[3]-bs[1])}`,eq(T.nums(bS[3]).slice(0,2),[bs[2]-bs[0],bs[3]-bs[1]]));
+  /* default colour choice: white logo and white account text must read clearly */
+  const cc=colourChecks(FS_DEFAULT.body,FS_DEFAULT.sh);
+  add('Màu',`Phối mặc định FS ${FS_DEFAULT.body} + ${FS_DEFAULT.sh}: logo trắng / chữ tài khoản trắng`,`${f2(cc.logo)} / ${cc.account===null?'lộ':f2(cc.account)}`,'≥ 4.5 cả hai',cc.logo>=4.5&&cc.account!==null&&cc.account>=4.5);
+  const cBad=colourChecks('322','425'), cSee=colourChecks('322','422');
+  add('Màu','Bộ đo màu nhận ra shutter sáng làm chìm chữ tài khoản (thử 425 và 422)',`${f2(cBad.account)} / ${cSee.seeThrough?'lộ':'không lộ'}`,'< 3 / lộ',cBad.account<3&&cSee.seeThrough);
   /* cut polygons must be simple (a self-crossing outline gives a wrong laser file and a broken 3D mesh) */
   const selfX=P=>{const n=P.length,o=(p,q,r)=>Math.sign((q[0]-p[0])*(r[1]-p[1])-(q[1]-p[1])*(r[0]-p[0]));let k=0;for(let i=0;i<n;i++)for(let j=i+2;j<n;j++){if(i===0&&j===n-1)continue;const a=P[i],b=P[(i+1)%n],c=P[j],d=P[(j+1)%n];if(o(a,b,c)*o(a,b,d)<0&&o(c,d,a)*o(c,d,b)<0)k++;}return k;};
   const sx=[['L1',L1P],['khung L3',FRAME],['lõi',CORE],['viền',OUTN],['shutter',SHUT]].map(([n,p])=>[n,selfX(p)]).filter(x=>x[1]);
@@ -796,6 +834,27 @@ function showTests(){
 window.__geomTests=()=>runTests();
 window.__geom={T,roundPoly,OUTN,L1P,SHUT,CORE,FRAME,FRAME_NB,LKZ,CH,LK,CORE_NOTCH,G,LOGO_ENG,TRACK,INLAY,SZ,K,CHAMF,GZ,GZ_SPRING,GZ_CH,variant:'2mm',pins:false};
 
+/* ================= colour choice (shop palette FS) ================= */
+/* colours approximated from the shop's swatch photo; 422 is translucent frosted */
+const FS=[['322','Xanh dương','#2146c6'],['324','Xanh dương đậm','#1a3aa6'],['327','Xanh dương tím','#1c30a2'],['835','Xanh da trời','#2f88de'],
+  ['502','Đen','#151515'],['425','Trắng sữa','#f2f2ef'],['422','Trắng mờ (đục mờ)','#d6d8da',1],['135','Đỏ','#d22a27'],['266','Cam','#f06a2a'],
+  ['348','Xanh lá đậm','#13873a'],['347','Xanh lá','#26a646'],['226','Vàng cam','#f5ae1c'],['235','Vàng chanh','#f3d92e']];
+const FS_DEFAULT={body:'322',sh:'502'};
+const fsC=id=>FS.find(p=>p[0]===id);
+const hx=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+const toH=a=>'#'+a.map(v=>Math.round(Math.max(0,Math.min(255,v))).toString(16).padStart(2,'0')).join('');
+const cmix=(a,b,t)=>{const A=hx(a),B=hx(b);return toH(A.map((v,i)=>v+(B[i]-v)*t));};
+const linRGB=h=>hx(h).map(v=>{v/=255;return v<=0.04045?v/12.92:Math.pow((v+0.055)/1.055,2.4);});
+const relLum=h=>{const c=linRGB(h);return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2];};
+const contrast=(a,b)=>{const x=relLum(a),y=relLum(b);return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05);};
+const toLab=h=>{const [r,g,b]=linRGB(h);const f=t=>t>0.008856?Math.cbrt(t):7.787*t+16/116;const X=f((0.4124*r+0.3576*g+0.1805*b)/0.95047),Y=f(0.2126*r+0.7152*g+0.0722*b),Z=f((0.0193*r+0.1192*g+0.9505*b)/1.08883);return [116*Y-16,500*(X-Y),200*(Y-Z)];};
+const deltaE=(a,b)=>{const A=toLab(a),B=toLab(b);return Math.hypot(A[0]-B[0],A[1]-B[1],A[2]-B[2]);};
+const engrTone=c=>cmix(c,'#ffffff',0.45);          // laser-frosted surface reads as a lighter tint of the sheet
+/* the four checks shown under the picker (and re-used by the self-tests) */
+function colourChecks(bodyId,shId){
+  const b=fsC(bodyId)[2],s=fsC(shId)[2],tr=!!fsC(shId)[3];
+  return {logo:contrast('#ffffff',b),account:tr?null:contrast('#ffffff',s),seeThrough:tr,dE:deltaE(s,b),slot:contrast(engrTone(s),s)};}
+
 /* ================= page fill ================= */
 document.getElementById('legend').innerHTML=D.legend.map(l=>`<li><span class="ball">${l[0]}</span><span class="sw" style="background:${l[1]}"></span>${l[2]}</li>`).join('');
 document.getElementById('bom').innerHTML=D.bom.map(r=>`<tr><td class="n">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="n">${r[3]}</td><td>${r[4]}</td><td class="n">${r[5]}</td></tr>`).join('');
@@ -808,6 +867,48 @@ document.getElementById('checks').innerHTML=D.checks.map(c=>`<li${c[0]?' class="
 build2D();
 try{build3D();}catch(err){console.error(err);}
 showTests();
+/* text widths change once the web fonts arrive: re-run the label-overlap checks then */
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{TEST_ROWS=null;showTests();});
+/* colour picker: two rows of shop swatches; choice kept in the link (#than=…&shutter=…) */
+(function(){
+  const q=new URLSearchParams(location.hash.slice(1));
+  let body=fsC(q.get('than'))?q.get('than'):FS_DEFAULT.body, sh=fsC(q.get('shutter'))?q.get('shutter'):FS_DEFAULT.sh;
+  const lvl=(v,a,b)=>v>=a?'ok':v>=b?'mid':'bad';
+  const word={ok:'Rõ',mid:'Tạm',bad:'Khó thấy'};
+  const show=(id,v,cls,txt)=>{document.getElementById(id).innerHTML=`${v} <i class="${cls}">${txt}</i>`;};
+  const d1=v=>(Math.floor(v*10)/10).toFixed(1);   /* truncate, so a value shown as 4.5 is really ≥ 4.5 */
+  function apply(){
+    const B=fsC(body),Sx=fsC(sh),c=colourChecks(body,sh);
+    if(window.__set3DColors)window.__set3DColors(B[2],Sx[2],!!Sx[3],engrTone(B[2]),engrTone(Sx[2]));
+    document.getElementById('nmBody').textContent=`FS ${B[0]} · ${B[1]}`;
+    document.getElementById('nmSh').textContent=`FS ${Sx[0]} · ${Sx[1]}`;
+    document.querySelectorAll('#swBody .swb').forEach(x=>x.setAttribute('aria-pressed',x.dataset.id===body));
+    document.querySelectorAll('#swSh .swb').forEach(x=>x.setAttribute('aria-pressed',x.dataset.id===sh));
+    const l1=lvl(c.logo,4.5,3);show('cm1',d1(c.logo),l1,word[l1]);
+    if(c.seeThrough)show('cm2','—','bad','Lộ tài khoản ra mặt trước');else{const l2=lvl(c.account,4.5,3);show('cm2',d1(c.account),l2,word[l2]);}
+    const l3=lvl(c.dE,40,20);show('cm3',Math.round(c.dE),l3,l3==='bad'?'Gần cùng màu':word[l3]);
+    const l4=lvl(c.slot,4.5,3);show('cm4',d1(c.slot),l4,word[l4]);
+    const w=[];
+    if(c.seeThrough)w.push(['bad','Shutter trắng mờ (422) cho ánh sáng đi qua: nhìn từ trước sẽ thấy lờ mờ chữ tài khoản ở bên dưới.']);
+    else if(c.account<3)w.push(['bad','Shutter sáng màu: chữ tài khoản sơn trắng đọc trên nền shutter sẽ gần như không thấy.']);
+    else if(c.account<4.5)w.push(['mid','Chữ tài khoản trên nền shutter này chỉ ở mức tạm đọc.']);
+    if(c.logo<3)w.push(['bad','Thân sáng màu: logo trắng nhìn qua nhãn sẽ chìm.']);
+    else if(c.logo<4.5)w.push(['mid','Logo trắng trên nền thân này chỉ ở mức tạm rõ.']);
+    if(c.dE<20)w.push(['mid','Shutter gần trùng màu thân, không còn nổi khối shutter.']);
+    if(c.slot<3)w.push(['mid','Khe khắc trên shutter này gần như không thấy (có thể tô bút sơn).']);
+    document.getElementById('cwarn').innerHTML=w.length?w.map(x=>`<span class="${x[0]}">${x[1]}</span>`).join(' '):'<span class="ok">Phối màu này đạt: logo và chữ tài khoản đều rõ, shutter nổi trên thân.</span>';
+    /* legend + BOM follow the choice */
+    D.legend.forEach(l=>{if([1,2,4].includes(l[0]))l[1]=B[2];if(l[0]===5)l[1]=Sx[2];});
+    document.getElementById('legend').innerHTML=D.legend.map(l=>`<li><span class="ball">${l[0]}</span><span class="sw" style="background:${l[1]}"></span>${l[2]}</li>`).join('');
+    D.bom[0][2]=`Mica FS ${B[0]} · ${B[1]}`; D.bom[4][2]=`Mica FS ${Sx[0]} · ${Sx[1]}`;
+    document.getElementById('bom').innerHTML=D.bom.map(r=>`<tr><td class="n">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="n">${r[3]}</td><td>${r[4]}</td><td class="n">${r[5]}</td></tr>`).join('');
+    clearTimeout(apply.t);apply.t=setTimeout(()=>{try{history.replaceState(null,'',`#than=${body}&shutter=${sh}`);}catch(e){}},250);   /* debounced: browsers throttle rapid URL updates */
+  }
+  for(const [el,set] of [['swBody',v=>body=v],['swSh',v=>sh=v]]){const r=document.getElementById(el);
+    FS.forEach(p=>{const t=document.createElement('button');t.className='swb';t.type='button';t.dataset.id=p[0];t.style.background=p[2];t.title=`FS ${p[0]} · ${p[1]}`;t.setAttribute('aria-label',`FS ${p[0]} ${p[1]}`);t.innerHTML=`<span>${p[0]}</span>`;t.onclick=()=>{set(p[0]);apply();};r.appendChild(t);});}
+  window.__pickColours=(b,s)=>{if(fsC(b))body=b;if(fsC(s))sh=s;apply();return {body,sh};};
+  apply();
+})();
 })();
 </script>
 
