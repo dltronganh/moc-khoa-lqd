@@ -141,13 +141,13 @@ a{color:var(--accent)}
 <section class="sheet" aria-labelledby="tacc">
   <div class="sheet-head"><h2 id="tacc">Thử chữ tài khoản (mặt sau)</h2><span class="code">Space Mono Bold · khắc, tô trắng · đọc qua cửa sổ WT</span></div>
   <div class="accform">
-    <label>Hàng 1<input id="acc1" type="text" spellcheck="false" autocomplete="off" value="hs-lqd-001"></label>
-    <label>Hàng 2<input id="acc2" type="text" spellcheck="false" autocomplete="off" value="K7qMw2x9Ab"></label>
-    <label>Hàng 3 (tùy chọn)<input id="acc3" type="text" spellcheck="false" autocomplete="off" value=""></label>
+    <label>Hàng 1<input id="acc1" type="text" spellcheck="false" autocomplete="off" value="nguyenhoangphuc"></label>
+    <label>Hàng 2<input id="acc2" type="text" spellcheck="false" autocomplete="off" value="an2026"></label>
+    <label>Hàng 3 (tùy chọn)<input id="acc3" type="text" spellcheck="false" autocomplete="off" value="K7qMw2x9Ab"></label>
     <label>Cỡ chữ (cao chữ hoa)<select id="accCap"></select></label>
   </div>
   <div class="accview">
-    <figure><svg id="accZoom" viewBox="-0.6 -0.6 14.03 10.53" role="img" aria-label="Cửa sổ mặt sau phóng to"></svg><figcaption>Phóng to · viền xanh = cửa sổ 12.83 × 9.33 mm · khung vàng = vùng khắc</figcaption></figure>
+    <figure><svg id="accZoom" viewBox="-0.6 -0.6 14.03 10.53" role="img" aria-label="Cửa sổ mặt sau phóng to"></svg><figcaption id="accCapZ"></figcaption></figure>
     <figure class="accreal"><svg id="accReal" viewBox="-0.6 -0.6 14.03 10.53" style="width:14.03mm;height:10.53mm" role="img" aria-label="Cửa sổ mặt sau cỡ thật"></svg><figcaption>Cỡ thật (gần đúng: tùy màn hình)</figcaption></figure>
   </div>
   <div class="cmet">
@@ -156,7 +156,7 @@ a{color:var(--accent)}
     <div><span>Độ rõ nét khắc</span><b id="am3"></b></div>
   </div>
   <p class="cwarn" id="accWarn"></p>
-  <p class="hint">Chữ gõ ở đây chỉ để xem thử: không được lưu, không đưa vào link. Phông Space Mono Bold (miễn phí, giấy phép SIL OFL) phân biệt rõ số 0 (có chấm) với chữ O, và l với 1. Mô hình 3D ở trên cũng đổi theo chữ gõ ở đây (bấm "Sau" để xem).</p>
+  <p class="hint">Tên dài hơn sức chứa một hàng thì xuống hàng (ví dụ tên 21 ký tự: 15 + 6). Chữ gõ ở đây chỉ để xem thử: không được lưu, không đưa vào link. Phông Space Mono Bold (miễn phí, giấy phép SIL OFL) phân biệt rõ số 0 (có chấm) với chữ O, và l với 1. Mô hình 3D ở trên cũng đổi theo chữ gõ ở đây (bấm "Sau" để xem).</p>
 </section>
 
 <section class="sheet" aria-labelledby="t2d">
@@ -294,16 +294,16 @@ const CORE_PTS=[[CX0,CY0],[CX1,CY0],[CX1,CORE_NOTCH.y[0]],[CX1-CORE_NOTCH.d,CORE
 const CORE=roundPoly(CORE_PTS,[0.8,0.8,0,0,0,0,0.2,0.2,0,0,0,0]);
 const G={
   W1:s5([5.8,3,24.2,16.5,1.2]),           // clear label window (F)
-  WT:s5([11,19.5,22,27.5,0.6]),           // account window (B, read from the back)
+  WT:[SH_BOX[0]+0.43,19.5*K,SH_BOX[2]-0.43,27.5*K,0.6],   // account window (B), widened to 0.43 mm inside the shutter outline: room for long names
   SLOT:s5([15.5,20.5,19.5,28,0.6]),       // window slot on the shutter: ENGRAVED (fill), not cut — a through-slot would show the account
   WP:s5([1.3,1.3,3.9,3.9,0.4]),           // write-protect square (F); left half also cut in the M frame
   WPH:s5([1.3,1.3,2.6,3.9,0.3]),
   HD:s5([26.1,1.3,28.7,3.9,0.4]),         // HD square through all layers, carries the key ring
   LOGO:s4([6.5,3.55,23.5,15.95]),         // engraving zone of the logo (core, face B, mirrored)
-  TKZ:s4([11.6,20.1,21.4,26.9]),          // engraving zone of the account (core, face B, not mirrored)
+  TKZ:[SH_BOX[0]+0.43+0.7,19.5*K+0.7,SH_BOX[2]-0.43-0.7,27.5*K-0.7],   // account engraving zone (core, face B, not mirrored) = WT inset 0.7
   ARROW:[[1.9,6],[3.3,6],[2.6,7.4]].map(sp),  // engraved arrow on F
   HUB:{c:sp([15,10.5]),r:5.5*K,ri:2.2*K}, // engraved hub ring on B (back face)
-  MARK:s4([6.2,22,10,27]),                // engraved "↓ SAU" orientation mark on the core, hidden once inserted
+  MARK:[SH_BOX[0]+0.4,27.5*K+0.35,SH_BOX[0]+0.4+4.8,27.5*K+0.35+2.2],   // "↓ SAU" laid flat above the account window, wholly behind the shutter (clear of the inlay seam), hidden once inserted
   /* no pins: the shop glues the three layers (glue zones GZ below) */
   /* 3 layers of 2 mm. Keys kept from the 1 mm page: L4 = back B, L3 = frame M + core, L1 = front F (+ inlaid shutter) */
   zL:{L4:[0,2],L3:[2,4],L1:[4,6]}, TH:6, cutX:18*K
@@ -550,11 +550,12 @@ function accTexture(lines=ACC.sample,cap=ACC.cap){
 }
 /* orientation mark on the core (face B): arrow = insert direction, "SAU" = this face goes to the back */
 function markTexture(){
-  const c=document.createElement('canvas');c.width=190;c.height=250;const x=c.getContext('2d');
-  x.strokeStyle='#ffffff';x.fillStyle='#ffffff';x.lineWidth=10;x.shadowColor='rgba(0,0,0,.5)';x.shadowBlur=2;
-  x.beginPath();x.moveTo(95,20);x.lineTo(95,150);x.stroke();
-  x.beginPath();x.moveTo(55,110);x.lineTo(95,160);x.lineTo(135,110);x.stroke();
-  x.font='700 54px "JetBrains Mono", Consolas, monospace';x.textAlign='center';x.textBaseline='middle';x.fillText('SAU',95,212);
+  /* horizontal mark (fits the strip above the widened account window): ↓ on the left, "SAU" on the right, read from the back */
+  const mw=G.MARK[2]-G.MARK[0],mh=G.MARK[3]-G.MARK[1],PX=100;const c=document.createElement('canvas');c.width=Math.round(mw*PX);c.height=Math.round(mh*PX);const x=c.getContext('2d');
+  x.strokeStyle='#ffffff';x.fillStyle='#ffffff';x.lineWidth=0.1*PX;x.lineCap='round';x.lineJoin='round';
+  x.beginPath();x.moveTo(0.6*PX,0.25*PX);x.lineTo(0.6*PX,(mh-0.25)*PX);x.stroke();
+  x.beginPath();x.moveTo(0.15*PX,(mh-0.7)*PX);x.lineTo(0.6*PX,(mh-0.25)*PX);x.lineTo(1.05*PX,(mh-0.7)*PX);x.stroke();
+  x.font=`700 ${1.4*PX}px "Space Mono", monospace`;x.textAlign='left';x.textBaseline='middle';x.fillText('SAU',1.55*PX,mh/2*PX);
   const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t;
 }
 
@@ -862,6 +863,14 @@ function runTests(){
   const tkPts=[];for(let x=G.TKZ[0];x<=G.TKZ[2]+1e-9;x+=0.1)for(let y=G.TKZ[1];y<=G.TKZ[3]+1e-9;y+=0.1)tkPts.push([x,y]);
   const tkHide=Math.min(...tkPts.map(coverDist));
   add('Mặt trước','Tài khoản trên lõi bị che kín khi nhìn từ trước',tkHide<0?'lộ ra':`che, thừa ${f2(tkHide)} mm`,'thừa ≥ 0.3 mm',tkHide>=0.3);
+  /* widened account window: background behind the text must be the shutter, and the moved mark stays hidden */
+  const wtSh=T.margin(rrect(G.WT),SHUT);
+  add('Cửa sổ WT','Cửa sổ tài khoản nằm trong viền shutter (nền sau chữ là shutter)',wtSh<0?'lòi ra':f2(wtSh)+' mm','≥ 0.4 mm',wtSh>=0.4-1e-6);
+  const mkTk=T.gap(rect(...G.MARK),rect(...G.TKZ));
+  add('Cửa sổ WT','Dấu "↓ SAU" không chạm vùng khắc tài khoản',mkTk<0?'chạm':f2(mkTk)+' mm','≥ 0.3 mm',mkTk>=0.3);
+  const mkPts=[];for(let x=G.MARK[0];x<=G.MARK[2]+1e-9;x+=0.1)for(let y=G.MARK[1];y<=G.MARK[3]+1e-9;y+=0.1)mkPts.push([x,y]);
+  const mkFront=Math.min(...mkPts.map(p=>coverDist(p)));
+  add('Cửa sổ WT','Dấu "↓ SAU" bị che khi nhìn từ trước (F hoặc shutter)',mkFront<0?'lộ ra':f2(mkFront)+' mm','≥ 0.2 mm',mkFront>=0.2);
   add('Chiều dày','Các lớp nối liền, tổng dày',f2(G.zL.L1[1]-G.zL.L4[0])+' mm',`${G.TH.toFixed(2)} mm, 3 lớp × 2, không hở`,G.zL.L4[1]===G.zL.L3[0]&&G.zL.L3[1]===G.zL.L1[0]&&G.zL.L1[1]===G.TH&&[G.zL.L4,G.zL.L3,G.zL.L1].every(z=>z[1]-z[0]===2));
   add('Hình vẽ','Bo góc hợp lệ (bán kính không lớn hơn cạnh)',ROUND_WARN.length?ROUND_WARN.join('; '):'0 lỗi','0 lỗi',ROUND_WARN.length===0);
   /* tables vs geometry */
@@ -891,6 +900,8 @@ function runTests(){
   const aT=document.querySelector('#accZoom text');
   if(aT){const cs=getComputedStyle(aT),fam=cs.fontFamily,fil=cs.fill;
     add('Chữ tài khoản','Ô thử chữ dùng đúng phông Space Mono, màu trắng',`${fam.split(',')[0]} · ${fil}`,'Space Mono · trắng',/Space Mono/.test(fam)&&/255, 255, 255|255, 107, 107/.test(fil));
+    const zvb=document.getElementById('accZoom').viewBox.baseVal, wW=G.WT[2]-G.WT[0], wH=G.WT[3]-G.WT[1];
+    add('Chữ tài khoản','Khung xem thử chữ khớp kích thước cửa sổ WT (không bị cắt)',`${f2(zvb.width)} × ${f2(zvb.height)}`,`${f2(wW+1.2)} × ${f2(wH+1.2)}`,Math.abs(zvb.width-(wW+1.2))<1e-6&&Math.abs(zvb.height-(wH+1.2))<1e-6);
     const adv=aT.getComputedTextLength()/20, exp=ACC.advPerCap*(+document.getElementById('accCap').value)*aT.textContent.length;
     add('Chữ tài khoản','Bề rộng chữ hiển thị khớp số liệu phông (tính sức chứa)',`${f2(adv)} / ${f2(exp)} mm`,'lệch ≤ 2 %',exp>0&&Math.abs(adv-exp)/exp<=0.02);}
   /* cut polygons must be simple (a self-crossing outline gives a wrong laser file and a broken 3D mesh) */
@@ -924,7 +935,7 @@ window.__geom={T,roundPoly,OUTN,L1P,SHUT,CORE,FRAME,FRAME_NB,LKZ,CH,LK,CORE_NOTC
 const ACC={font:'Space Mono Bold (SIL OFL 1.1)',advPerCap:0.874,descPerCap:0.516,capPerEm:0.7,pitchPerCap:1.75,inner:0.2,cap:1.2,
   sizes:[{cap:1.0,q:'bad',txt:'Mờ: nhiều nét mảnh hơn 0.15 mm'},{cap:1.1,q:'mid',txt:'Tạm: vài nét mảnh hơn 0.15 mm'},
          {cap:1.2,q:'ok',txt:'Rõ: mọi nét ≥ 0.15 mm (đề xuất)'},{cap:1.3,q:'ok',txt:'Rõ: mọi nét ≥ 0.15 mm'},{cap:1.4,q:'ok',txt:'Rõ: mọi nét ≥ 0.15 mm'}],
-  sample:['hs-lqd-001','K7qMw2x9Ab','']};
+  sample:['nguyenhoangphuc','an2026','K7qMw2x9Ab']};   // a 21-character name wrapped over two lines (15 + 6), password on line 3
 /* how many characters per line and how many lines fit in the engraving zone at a given cap height */
 function accCapacity(cap){const W=(G.TKZ[2]-G.TKZ[0])-2*ACC.inner,H=(G.TKZ[3]-G.TKZ[1])-2*ACC.inner;
   const chars=Math.floor(W/(ACC.advPerCap*cap)+1e-9);let lines=1;while(cap+lines*ACC.pitchPerCap*cap+ACC.descPerCap*cap<=H+1e-9)lines++;return {chars,lines,W,H};}
@@ -1023,7 +1034,9 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{TEST_ROWS
     /* text drawn 20× larger then scaled down (crisper tiny glyphs). Font and colour are INLINE styles: the drawing's global text{} rule would otherwise force JetBrains Mono and dark ink */
     const U=20;
     used.forEach((o,j)=>{const over=o.s.length>cp.chars||j>=cp.lines;svg+=`<text transform="scale(${1/U})" x="${W/2*U}" y="${(top+cap+j*pitch)*U}" text-anchor="middle" style="font-family:'Space Mono',monospace;font-weight:700;font-size:${cap/ACC.capPerEm*U}px;fill:${over?'#ff6b6b':'#ffffff'};white-space:pre">${esc(o.s)}</text>`;});
+    const vb=`-0.6 -0.6 ${W+1.2} ${H+1.2}`;$('accZoom').setAttribute('viewBox',vb);$('accReal').setAttribute('viewBox',vb);$('accReal').style.width=(W+1.2)+'mm';$('accReal').style.height=(H+1.2)+'mm';   /* view follows the real window size */
     $('accZoom').innerHTML=svg;$('accReal').innerHTML=svg;
+    $('accCapZ').textContent=`Phóng to · viền xanh = cửa sổ ${nf(W)} × ${nf(H)} mm · khung vàng = vùng khắc ${nf(ZW)} × ${nf(ZH)} mm`;
     const lens=used.map(o=>o.s.length),mx=lens.length?Math.max(...lens):0,sz=ACC.sizes.find(s=>s.cap===cap);
     $('am1').innerHTML=`${cp.chars} ký tự × ${cp.lines} hàng`;
     $('am2').innerHTML=`${used.length} hàng, dài nhất ${mx} ký tự <i class="${mx<=cp.chars&&used.length<=cp.lines?'ok':'bad'}">${mx<=cp.chars&&used.length<=cp.lines?'Vừa':'Quá chỗ'}</i>`;
