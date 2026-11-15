@@ -1,0 +1,77 @@
+﻿﻿CÔNG CỤ TẠO FILE KHẮC TÊN — MÓC KHÓA ĐĨA MỀM LQĐ (mica 2 mm, cạnh 35 mm)
+==========================================================================
+
+Công cụ này tự điền tên (tài khoản) và mật khẩu của từng học sinh vào lõi trong
+của móc khóa và xuất ra file SVG để gửi tiệm cắt/khắc laser. Chạy trên Windows,
+không cần cài gì, không cần mạng. Danh sách không gửi đi đâu, chỉ xử lý trên máy.
+
+TRONG THƯ MỤC NÀY
+  TAO-FILE-KHAC-TEN.html      Công cụ. Nháy đúp để mở (Edge hoặc Chrome).
+  mau\danh-sach-mau.csv       Danh sách mẫu (cột 1: STT, cột 2: Tên, cột 3: Mật khẩu).
+  mau\logo-mau-LQDOJ.svg      Logo mẫu LQDOJ, bản vector dùng để khắc.
+  HUONG-DAN.txt               File này.
+
+CÁCH DÙNG
+  1. Nháy đúp TAO-FILE-KHAC-TEN.html.
+  2. Bước 1 — Danh sách:
+       - Lần đầu: bấm "Tải file CSV mẫu về để sửa" (hoặc mở mau\danh-sach-mau.csv),
+         mở bằng Excel, gõ danh sách vào: cột A = STT, cột B = Tên, cột C = Mật khẩu.
+         Giữ dòng tiêu đề.
+       - QUAN TRỌNG với mật khẩu: trước khi gõ/dán, chọn cả cột C → chuột phải →
+         Format Cells → Text. Nếu không, Excel tự xóa số 0 ở đầu (00123 → 123) hoặc đổi
+         dãy số dài thành dạng 1.23E+11. Công cụ báo được trường hợp E+, nhưng KHÔNG
+         phát hiện được số 0 bị mất — hãy dò lại vài mật khẩu bắt đầu bằng 0.
+       - Lưu lại: File → Save As → chọn kiểu "CSV UTF-8 (Comma delimited) (*.csv)".
+         (Lưu kiểu CSV thường cũng được, công cụ tự nhận ra.)
+       - Bấm "Chọn file CSV…" và chọn file vừa lưu (hoặc kéo thả file vào ô).
+       - Muốn xem thử ngay: bấm "Dùng danh sách mẫu".
+     Mỗi lần nạp xong, công cụ hiện thông báo ở cuối màn hình, nút đang dùng có dấu ✓,
+     số của bước chuyển thành ✓ xanh (hoặc ! đỏ nếu có lỗi), và ghi giờ nạp.
+  3. Bước 2 — Logo: logo mẫu LQDOJ đã được chọn sẵn. Chỉ cần đổi khi muốn khắc logo khác
+     (bấm "Chọn file SVG…").
+  4. Bước 3 — Xem bảng "tự kiểm tra": phải là "Đạt 7/7". Xem hình từng lõi bên dưới.
+     Bấm tải 2 file:
+       - LOI-CO-TEN_mica-TRONG-FS000-2mm_<số>cai.svg  → gửi tiệm để khắc + cắt lõi.
+         (Hơn 120 học sinh thì công cụ chia thành nhiều tấm, mỗi tấm 1 file.)
+       - LOI-CO-TEN_danh-sach-vi-tri_<số>cai.csv     → giữ lại: học sinh nào nằm ở tấm/hàng/cột
+         nào, để đối chiếu khi gỡ lõi ra khỏi tấm và phát. File này KHÔNG ghi mật khẩu.
+     File tải về nằm trong thư mục Downloads (Tải xuống).
+
+CÁCH CHỮ ĐƯỢC KHẮC
+  - Tên ở 1–2 hàng trên, mỗi hàng tối đa 15 ký tự (tên tối đa 30 ký tự). Tên dài tự xuống hàng:
+      nguyenhoangphuc_k2026  →  nguyenhoangphuc / _k2026
+  - Mật khẩu LUÔN nằm riêng 1 hàng, ngay dưới tên, tối đa 15 ký tự.
+      Tên 1 hàng: 2 hàng chữ (tên, mật khẩu). Tên 2 hàng: 3 hàng chữ. Cả khối chữ căn giữa ô.
+  - Tên có dấu cách thì xuống hàng theo từ. Muốn tự chọn chỗ xuống hàng của tên: gõ dấu |
+    vào tên, ví dụ  nguyenhoang|phuc2026   (trong mật khẩu thì | là ký tự bình thường).
+  - Tên dùng được: chữ a–z, A–Z (có dấu tiếng Việt), chữ số 0–9, dấu cách, và  - _ . @
+  - Mật khẩu dùng được: mọi ký tự trên bàn phím (chữ, số, ! @ # $ % ^ & * ( ) … ).
+  - Ký tự không khắc được, tên/mật khẩu quá dài, thiếu mật khẩu: công cụ báo lỗi đỏ, chỉ rõ dòng.
+  - Dấu tiếng Việt rất nhỏ (cao khoảng 0.3 mm) nên có thể khắc mờ. Không dấu là đẹp nhất.
+  - Nếu thấy tên bị biến thành dấu "?" thì file đã lưu sai kiểu chữ: lưu lại bằng "CSV UTF-8".
+
+LOGO KHÁC (nếu cần)
+  - Phải là file vector .svg (vẽ bằng Inkscape, Illustrator, CorelDraw…). Ảnh .png/.jpg không dùng được.
+  - Logo được tự thu cho vừa vùng logo 19.83 × 14.47 mm, giữ đúng tỉ lệ, và tự lật gương
+    (vì khắc ở mặt sau của lõi, nhìn từ mặt trước sẽ đọc xuôi).
+  - Mỗi màu trong logo thành một lớp khắc riêng. Muốn khắc chung 1 lớp: tích "Gộp logo thành 1 màu".
+  - Chữ trong logo phải chuyển thành đường viền trước (Inkscape: Path → Object to Path).
+  - Nét quá mảnh (dưới khoảng 0.15 mm sau khi thu nhỏ) sẽ khắc không rõ.
+
+GỬI TIỆM
+  - File lõi có tên thay cho file 02_LOI_mica-TRONG-FS000-2mm_120cai.svg trong bộ file cắt.
+    Các file khác (thân, shutter, cắt thử) và README-DOC-TRUOC.txt giữ nguyên.
+  - File khắc có chứa mật khẩu: chỉ gửi cho tiệm, không đăng lên nhóm chung.
+  - Trong file: đỏ = cắt xuyên; xanh dương = khắc nét; các mảng màu = khắc phủ (mỗi màu một lớp);
+    lớp màu tím #A000A0 = chữ tài khoản + mật khẩu; khung xám nét đứt = chỉ để căn, không khắc.
+  - Đơn vị mm, tỉ lệ 1:1 — nhắc tiệm import đúng kích thước, không scale.
+  - Nên cắt thử 1 lõi trước khi chạy cả tấm.
+
+MỞ TRÊN ĐIỆN THOẠI
+  Công cụ mở được trên điện thoại (Chrome/Safari), tiếng Việt hiển thị đúng. Nhưng làm trên máy
+  tính sẽ dễ hơn: sửa CSV bằng Excel và tải file .svg gửi tiệm. Nếu mở từ Zalo/Messenger thì chọn
+  "Mở bằng trình duyệt", vì trình xem trong ứng dụng có thể không chạy được công cụ.
+
+KHI CÓ LỖI
+  Công cụ báo lỗi bằng chữ đỏ ngay tại bước bị lỗi (ví dụ dòng nào trong CSV sai).
+  Nếu hiện "Công cụ gặp lỗi" thì chụp màn hình gửi người làm công cụ.
