@@ -29,7 +29,11 @@ CÁCH DÙNG
      số của bước chuyển thành ✓ xanh (hoặc ! đỏ nếu có lỗi), và ghi giờ nạp.
   3. Bước 2 — Logo: logo mẫu LQDOJ đã được chọn sẵn. Chỉ cần đổi khi muốn khắc logo khác
      (bấm "Chọn file SVG…").
-  4. Bước 3 — Xem bảng "tự kiểm tra": phải là "Đạt 7/7". Xem hình từng lõi bên dưới.
+  4. Bước 3 — Xem bảng "tự kiểm tra": phải là "Đạt 7/7". Xem hình từng móc khóa bên dưới:
+       - "Xem như thật" (mặc định): móc khóa đã lắp, đúng màu đã chốt; mặt trước logo sơn trắng,
+         mặt sau tên + mật khẩu sơn đen trên nền shutter vàng cam.
+       - "Xem như file khắc": lõi trong nhìn từ mặt sau như trong file gửi tiệm (logo lật gương,
+         mỗi màu logo là 1 lớp khắc — màu chỉ để chia lớp, thực tế đều sơn trắng).
      Bấm tải 2 file:
        - LOI-CO-TEN_mica-TRONG-FS000-2mm_<số>cai.svg  → gửi tiệm để khắc + cắt lõi.
          (Hơn 120 học sinh thì công cụ chia thành nhiều tấm, mỗi tấm 1 file.)
